@@ -1,0 +1,146 @@
+@font-face {
+	font-family: 'Pretendard-Thin';
+	src:
+		url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Thin.woff')
+		format('woff');
+	font-weight: 100;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Pretendard-Light';
+	src:
+		url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Light.woff')
+		format('woff');
+	font-weight: 300;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Pretendard-Regular';
+	src:
+		url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
+		format('woff');
+	font-weight: 400;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Pretendard-Medium';
+	src:
+		url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Medium.woff')
+		format('woff');
+	font-weight: 500;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Pretendard-SemiBold';
+	src:
+		url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-SemiBold.woff')
+		format('woff');
+	font-weight: 600;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Pretendard-Bold';
+	src:
+		url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Bold.woff')
+		format('woff');
+	font-weight: 700;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Pretendard-Black';
+	src:
+		url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Black.woff')
+		format('woff');
+	font-weight: 900;
+	font-style: normal;
+}
+
+* {
+	font-family: 'Pretendard-Regular';
+}
+
+.bg-commom {
+	background: rgba(34, 44, 51, 0.6);
+}
+
+.bg-right {
+	background: #383f48;
+	height: 100vh;
+}
+
+.nav-link {
+	padding: 10px 0 10px 30px;
+	transition: all .2s;
+	color: #bfc0cd;
+}
+
+.nav-link:hover {
+	color: #fff;
+	text-decoration: none;
+}
+
+.card {
+	box-shadow: 0 0 8px 2px rgba(250, 250, 250, 0.1);
+}
+
+.card-left {
+	border-radius: 5px;
+}
+
+.profile h1 {
+	font-size: 24px;
+	margin: 0;
+	padding: 0;
+	font-weight: 600;
+	-moz-text-align-last: center;
+	text-align-last: center;
+	font-family: 'Pretendard-Regular';
+}
+
+.profile h4 {
+	font-size: 16px;
+	margin: 0;
+	padding: 0;
+	font-weight: 600;
+	-moz-text-align-last: center;
+	text-align-last: center;
+	font-family: 'Pretendard-Light';
+}
+
+.card-profile-stats {
+  padding: 1rem 0;
+}
+
+.card-profile-stats>div {
+  margin-right: 1rem;
+  text-align: center;
+}
+
+.card-profile-stats>div:last-child {
+  margin-right: 0;
+}
+
+.card-profile-stats>div .heading {
+  font-size: 1.1rem;
+  font-weight: bold;
+  display: block;
+  color: white;
+}
+
+.card-profile-stats>div .description {
+  font-size: .875rem;
+  color: white;
+}
+
+.myHistory {
+	border: 1px solid #ced4da;
+	border-radius: 0.25rem;
+	padding: .375rem .75rem;
+	min-width: 38px;
+}

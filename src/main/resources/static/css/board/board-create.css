@@ -1,0 +1,113 @@
+@charset "UTF-8";
+
+.create_section{
+	position:relative;
+	width: 1600px;
+	height:1200px;
+	left: 7%;
+	top: 10%;
+	
+}
+
+#contentTitle>p{
+	font-size: 25px;
+	color: #343a40;
+	font-weight: bolder;
+	position: relative;
+	top:15px;
+}
+
+#createTitle{
+	
+	border-right: 0;
+	border-top: 0;
+	border-left: 0;
+	outline: none;
+	border-bottom-color: #ccc;
+	width: 1100px;
+}
+
+
+#createHeader{
+	
+	height: 30px;
+	display: flex;
+}
+
+#createHeader>p{
+	position:relative;
+	left:50px;
+	color: #343a40;
+	font-weight: bolder;
+}
+#createHeader>input{
+	padding-left: 3vw;
+	font-weight: bolder;
+	color: #343a40;
+}
+
+
+#createBox{
+	position: relative;
+	border: 1px solid white;
+	height: 650px;
+	width: 1500px;
+	left: 2%;
+}
+#createBox>textarea{
+	position:relative;
+	border-color:lightGray;
+	padding: 1% 1% 1% 1%;
+	height: 100%;
+	width:100%;
+	resize: none;
+	color: #343a40;
+	font-weight: bolder;
+}
+
+#otherUtil{
+	position: relative;
+	left: 88%;
+	width: 150px;
+	text-decoration: underline;
+}
+#otherUtil>a{
+	position: relative;
+	margin-left: 5%;
+	font-weight: bolder;
+	text-align:center;
+	left: 2%;
+}
+
+.create_footer{
+	display: flex;
+}
+.create_footer button{
+	width:70px;
+	height: 40px;
+	background-color: #343a40;
+	color: rgba(255, 255, 255, 0.6);
+}
+.create_footer>#returnButton{
+	position: relative;
+	left:50%;
+}
+.create_footer>#wrapButton{
+	position: relative;
+	left:86.55%;
+}
+
+hr{
+	text-align: center;
+	width: 1600px !important;
+	position: relative;
+	border: 0;
+	height: 3px;
+	background: #ccc;
+}
+.py-4{
+	position: relative;
+	top:6%;
+}
+
+

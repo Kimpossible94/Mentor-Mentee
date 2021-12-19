@@ -1,0 +1,80 @@
+/*
+*
+* ==========================================
+* CUSTOM UTIL CLASSES
+* ==========================================
+*
+*/
+.border-md {
+	border-width: 2px;
+}
+
+.btn-primary {
+	background: #343a40;
+	color:white;
+	border: none;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+	background: gray;
+}
+
+/*
+*
+* ==========================================
+* FOR DEMO PURPOSES
+* ==========================================
+*
+*/
+body {
+	min-height: 100vh;
+}
+
+*{
+	font-family: 'Pretendard-Regular';
+}
+.form-control:not(select) {
+	padding: 1.5rem 0.5rem;
+}
+
+select.form-control {
+	height: 52px;
+	padding-left: 0.5rem;
+}
+
+.form-control::placeholder {
+	color: #ccc;
+	font-weight: bold;
+	font-size: 0.9rem;
+}
+
+.form-control:focus {
+	box-shadow: none;
+}
+
+.valid-msg{
+	color: red;
+	font-size: 13px;
+}
+
+#idCheck{
+	position: absolute;
+	top:148px;
+}
+
+#pwCheck{
+	position: absolute;
+	top: 225px;
+	
+}
+
+#emailCheck{
+	position: absolute;
+	top: 301px;
+}
+
+#tellCheck{
+	position: absolute;
+	top: 528px;
+}
+

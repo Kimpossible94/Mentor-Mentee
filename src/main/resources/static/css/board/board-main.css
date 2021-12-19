@@ -1,0 +1,254 @@
+@charset "UTF-8";
+
+.board_section{
+	position:relative;
+	width: 1600px;
+	height:100%;
+	left: 7%;
+	top: 10%;
+	
+}
+
+#boardHeader{
+	
+	height: 30px;
+	display: flex;
+}
+#boardTitle{
+	font-size:20px;
+	position:relative;
+	top: 20%;
+	
+}
+#boardTitle>p{
+	font-size: 25px;
+	color: #343a40;
+	font-weight: bolder;
+}
+.wrap_search{
+	position:relative;
+	left:925px;
+	display: flex;
+	bottom: 10%;
+}
+#dateList{
+	height: 40px !important;
+}
+
+#dateBox{	
+	height: 40px !important;
+	position: relative;
+	right: 10px;
+}
+#searchList{
+	height: 30px !important;
+	position: relative;
+	right: 5px;
+}
+#selectBox{
+	height: 40px !important;
+	color: #343a40;
+	font-weight: bolder;
+}
+#searchBox{
+	display: flex;
+	position: relative;
+	height: 30px !important;
+}
+
+#inputBox{
+	height: 40px !important;
+	width: 400px;
+}
+
+#buttonBox{
+	
+}
+#buttonBox button{
+	width: 70px;
+	height: 40px;
+	background-color: #343a40;
+	color: rgba(255, 255, 255, 0.6);
+}
+
+#boardBody{
+	height: 80%;
+}
+
+.board_table{
+	height: 800px;
+	text-align: center;
+	
+}
+.board_thead{
+	height:6.25%; 
+}
+.board_tbody{
+	height: 93.75%;
+}
+.board_tr{
+	height: 6.667%;
+}
+.board_th{
+	height: 50px;
+	background-color: #343a40;
+	color: rgba(255, 255, 255, 0.6);
+}
+.board_th>a{
+	color:#ccc;
+}
+
+.board_table, .board_th, .board_tr, .board_td{
+	width: 1500px;
+	margin-left: 50px;
+	margin-right: 50px;
+	border: 1px solid #ccc;
+	border-collapse: collapse;
+	border-left: none;
+	border-right: none;
+}
+.board_td{
+	color: #343a40 !important;
+	font-weight: bolder;
+}
+
+tr{
+	height: 3%; !important;
+}
+.board_td{
+	color: #343a40 !important;
+}
+
+.board_td>a{
+	color: #343a40 !important;
+}
+
+tr{
+	height: 3%; !important;
+}
+.board_td{
+	color: #343a40 !important;
+}
+
+.board_td>a{
+	color: #343a40 !important;
+}
+
+.board_td:nth-child(1){
+	width: 10%;
+}
+.board_td:nth-child(2){
+	width: 50%;
+	
+}
+.board_td:nth-child(3){
+	width: 10%;
+}
+.board_td:nth-child(4){
+	width: 10%;
+}
+.board_td:nth-child(5){
+	width: 10%;
+}
+
+#boardFooter{
+	height: 10%;
+	position: relative;
+	
+}
+
+#pagingWraaper{
+	display: flex;
+	position: relative;
+	left: 45%;
+	top: 10%;
+	width: 400px;
+}
+
+#pagingBox{
+	display: flex;
+}
+
+#buttonWrapper{
+	width: 120px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#pagingWraaper button{
+	margin-left: 5%;
+	margin-right: 5%;
+	background-color: white;
+	border: 0;
+	width: 25px;
+}
+
+
+
+#firstButton{
+	background-color:#343a40 !important;
+	color: rgba(255, 255, 255, 0.6);
+}
+
+#secondButton{
+	
+}
+#thirdButton{
+	
+}
+
+#count{
+	height: 30px !important;
+	width: 80px;
+	position: relative;
+	right:40%;
+}
+
+#rightArrow, #leftArrow{
+	font-size: 30px;
+	color: #343a40;
+}
+#rightArrow{
+	position: relative;
+	left: 10%;
+}
+#leftArrow{
+	position: relative;
+	right: 10%;
+}
+#rightArrow,#leftArrow{
+	cursor:pointer;
+}
+
+#writerButton{
+	position:relative;
+	left:96%;
+	width:20px;
+	height: 20px;
+	bottom: 50%;
+}
+#writerButton>button{
+	width: 70px;
+	height: 40px;
+	position: relative;
+	top: 130%;
+	right:30%;
+	background-color: #343a40;
+	color: rgba(255, 255, 255, 0.6);
+}
+
+hr{
+	text-align: center;
+	width: 1600px !important;
+	position: relative;
+	border: 0;
+	height: 5px;
+	background: #ccc;
+}
+.py-4{
+	position: relative;
+	top:6%;
+}
+
+

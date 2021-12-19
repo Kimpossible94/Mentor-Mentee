@@ -1,0 +1,76 @@
+@charset "UTF-8";
+
+
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+
+.wrap-input{
+   flex-flow: row;
+   align-items: center;
+   justify-content: center;
+   border-radius: 5px 5px 5px 5px;
+   border-style: solid;
+    border-width: thin;
+   border-color: silver;
+   margin-top: 7%;
+   margin-left: 10%;
+   margin-right: 10%;
+   margin-bottom: 10%;
+}
+
+
+.wrap-input>div{
+	display: flex;
+justify-content: center;
+align-items: center;
+ margin-bottom: 1%;
+}
+
+.top-div{
+	margin-top: 5%;
+}
+#titleInput{
+	margin-bottom: 5%;
+}
+
+#startInput{
+	margin-bottom: 5%;
+	
+}
+#endInput{
+	margin-bottom: 5%;
+	
+}#colorInput{
+	margin-bottom: 5%;
+	
+}
+.wrap-button{
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   margin: 5%;
+   height: 50%;
+}
+
+.wrap-button>button{
+   background-color: #343a40;
+   font-family: 'Pretendard-Regular';
+   color: white;
+   border-radius: 5px 5px 5px 5px;
+   height: 30px;
+   width: 20%;
+   font-size: 15px;
+   margin-left: 2%;
+   margin-right: 2%;
+}
+
+#deleteButton{
+	background-color: orange;
+}
+
+
