@@ -1,31 +1,30 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-  <title>MENTOR & MENTEE - 멘토링 신청완료</title>
-  <th:block th:replace="flagments::flg_head"></th:block>
-
+    <title>MENTOR & MENTEE - 멘토링 신청완료</title>
+    <th:block th:replace="flagments::flg_head"></th:block>
 </head>
 <body class="d-flex flex-column h-75">
-    <th:block th:replace="flagments::nav"></th:block>
-    <main class="flex-shrink-0">
-      <section class="pt-5">
+<th:block th:replace="flagments::flg_nav"></th:block>
+<main class="flex-shrink-0">
+    <section class="pt-5">
         <div class="container px-5 my-5 py-5">
-          <div class="row gx-5 pt-5 justify-content-md-around">
-            <div class="col-lg-5 mb-5 mb-lg-5">
-              <h2 class="fw-bolder mb-0 text-sm-center my-5">멘토 신청 완료</h2>
-              <hr>
-              <div class="text-sm-center mt-3">
-                <span>멘토에게 멘토 신청 메세지를 전송했습니다.<br>멘토의 연락을 기다려주세요.</span>
-              </div>
-              <div class="text-sm-center">
-                <input class="btn btn-primary-dark btn-lg px-4 me-sm-3 mt-5 fw-bolder" type="button" value="확인" onclick="location.href='/mentoring/manage-page'">
-              </div>
+            <div class="row gx-5 pt-5 justify-content-md-around">
+                <div class="col-lg-5 mb-5 mb-lg-5">
+                    <h2 class="fw-bolder mb-0 text-sm-center my-5">멘토 신청 완료</h2>
+                    <hr>
+                    <div class="text-sm-center mt-3">
+                        <span>멘토에게 멘토 신청 메세지를 전송했습니다.<br>멘토의 연락을 기다려주세요.</span>
+                    </div>
+                    <div class="text-sm-center">
+                        <input class="btn btn-primary-dark btn-lg px-4 me-sm-3 mt-5 fw-bolder" type="button" value="확인" onclick="location.href='/mentoring/manage-page'">
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </section>
-    </main>
-    <th:block th:replace="flagments::flg_footer"></th:block>
-    <th:block th:replace="flagments::flg_jsFiles"></th:block>
+    </section>
+</main>
+<th:block th:replace="flagments::flg_footer"></th:block>
+<th:block th:replace="flagments::flg_jsFiles"></th:block>
 </body>
 </html>

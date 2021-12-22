@@ -3,33 +3,33 @@
 <head>
     <title>MENTOR & MENTEE - 멘토링 신청</title>
     <th:block th:replace="fragments:: flg_head"></th:block>
-    <link rel="stylesheet" href="css/mentoring/calender.css">
+    <link rel="stylesheet" href="/static/css/mentoring/calender.css">
 </head>
 <body class="d-flex flex-column h-75">
-    <th:block th:replace="fragments::flg_nav"></th:block>
-    <main class="flex-shrink-0">
-        <section class="pt-5">
-            <div class="container px-5 mt-5 pt-5">
-                <div class="row gx-5">
-                    <h5 class="fw-bolder px-sm-0 mb-3 pb-2" style="border-bottom: solid 2px gray;">추천 멘토 리스트</h5>
-                    <div class="fw-bolder mb-0 py-2 small offcanvas-header">
-                        <span></span>
-                        <span style="font-size: 11px"> 님의 선택에 따른 추천 멘토 리스트 입니다.</span>
-                    </div>
+<th:block th:replace="fragments::flg_nav"></th:block>
+<main class="flex-shrink-0">
+    <section class="pt-5">
+        <div class="container px-5 mt-5 pt-5">
+            <div class="row gx-5">
+                <h5 class="fw-bolder px-sm-0 mb-3 pb-2" style="border-bottom: solid 2px gray;">추천 멘토 리스트</h5>
+                <div class="fw-bolder mb-0 py-2 small offcanvas-header">
+                    <span></span>
+                    <span style="font-size: 11px"> 님의 선택에 따른 추천 멘토 리스트 입니다.</span>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="py-3">
-            <div class="container px-5 my-5">
-                <div class="row gx-5">
-                </div>
+    <section class="py-3">
+        <div class="container px-5 my-5">
+            <div class="row gx-5">
             </div>
-        </section>
-    </main>
+        </div>
+    </section>
+</main>
 
-    <th:block th:replace="fragments::flg_footer"></th:block>
-    <script src="js/mentoring/mentor-list.js"></script>
+<th:block th:replace="fragments::flg_footer"></th:block>
+<script src="/static/js/mentoring/mentor-list.js"></script>
 
 </body>
 </html>

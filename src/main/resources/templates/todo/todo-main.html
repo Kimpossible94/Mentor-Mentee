@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <title>TODO-MAIN</title>
+    <th:block th:replace="flagments::flg_head"></th:block>
+    <link rel="stylesheet" href="/resources/css/todo/reset.css">
+    <link rel="stylesheet" href="/resources/css/todo/test.css">
+
+</head>
+<body class="d-flex flex-column h-100">
+<th:block th:replace="flagments::flg_nav"></th:block>
+<main class="flex-shrink-0">
+
+    <div class="user-name">
+        <h2>${authentication.userName} 님</h2>
+        <h3>오늘의 할 일입니다.</h3>
+    </div>
+
+    <div class="todo-list-wrap">
+        <div class="todo-list">
+            <form action="/todo/todaySave" method="post">
+<!--                <c:forEach var="todo" items="${todayList}" varStatus="s tatus">-->
+<!--                    <p>-->
+<!--                        &lt;!&ndash; 체크 여부 세팅 &ndash;&gt;-->
+<!--                        <c:if test="${todo.done eq '1'}">-->
+<!--                            <input type="checkbox" id="${todo.todoIdx}" name="todoList" class="cb_todo" onclick="cb_click(this.id)" checked>-->
+<!--                        </c:if>-->
+<!--                        <c:if test="${todo.done eq '0'}">-->
+<!--                            <input type="checkbox" id="${todo.todoIdx}" name="todoList" class="cb_todo" onclick="cb_click(this.id)">-->
+<!--                        </c:if>-->
+<!--                        <label for="${todo.todoIdx}" class="check-label">${todo.title}</label>-->
+<!--                    </p>-->
+<!--                </c:forEach>-->
+                <!--       		<div class="wrap-but"> -->
+                <!--       			<input type="submit" value="저장" class="save-but" id="save"> -->
+                <!--       		</div> -->
+            </form>
+        </div>
+    </div>
+
+    <div class="Aligner">
+        <div class="Aligner-item">
+            <div class="Aligner-under-item">　</div>
+        </div>
+    </div>
+
+    <div class="percent">
+        <h3>일정 <b id="percent">0</b>% 완료!</h3>
+    </div>
+
+    <div class="wrap-but">
+        <a href="/todo/detail">
+            <button class="submit-but">
+                세부 일정 관리
+            </button>
+        </a>
+    </div>
+</main>
+
+    <!-- Footer-->
+    <th:block th:replace="flagments::flg_footer"></th:block>
+    <th:block th:replace="flagments::flg_jsFiles"></th:block>
+    <script src="/static/js/todo/todo-main.js"></script>
+</body>
+</html>
