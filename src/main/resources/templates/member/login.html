@@ -2,11 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <title>로그인</title>
-    <th:block th:replace="flagments::flg_head"></th:block>
-    <link rel="stylesheet" href="/static/css/member/style.css">
+    <th:block th:replace="fragments:: flg_head"></th:block>
+    <link rel="stylesheet" href="/css/member/style.css">
 </head>
 <body style="height: 100vh">
-<th:block th:replace="flagments::flg_nav"></th:block>
+<th:block th:replace="fragments::flg_nav"></th:block>
 <div class="section" style="min-height:92vh">
     <div class="container">
         <div class="row justify-content-center">
@@ -16,7 +16,7 @@
                         <div class="card-3d-wrapper">
                             <div class="card-front">
                                 <div class="center-wrap">
-                                    <form class="section text-center" action="/member/login" method="get">
+                                    <form class="section text-center" action="/member/login" method="post">
                                         <h4 class="mb-4 pb-3">Log In</h4>
                                         <div class="form-group">
                                             <input type="text" name="userId" class="form-style" placeholder="아이디" id="userId" autocomplete="off">
@@ -27,9 +27,9 @@
                                             <i class="input-icon uil uil-lock-alt"></i>
                                         </div>
                                         <span style="color: moccasin">
-                                            <c:if test="${not empty param.err}">
+                                            <th:if test="${not empty param.err}">
                                                 아이디 또는 비밀번호가 틀렸습니다.
-                                            </c:if>
+                                            </th:if>
                                         </span>
                                         <p class="mb-0 mt-4 text-center">
                                             <a href="/member/forget-password" class="link">비밀번호를 잊으셨습니까?</a>
@@ -53,9 +53,9 @@
         </div>
     </div>
 </div>
-<th:block th:replace="flagments::flg_footer"></th:block>
-<th:block th:replace="flagments::flg_jsFiles"></th:block>
+<th:block th:replace="fragments::flg_footer"></th:block>
+<th:block th:replace="fragments::flg_jsFiles"></th:block>
 <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
-<script src="/static/js/member/login.js"></script>
+<script src="/js/member/login.js"></script>
 </body>
 </html>

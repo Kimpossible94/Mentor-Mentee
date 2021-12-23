@@ -9,13 +9,13 @@
         <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css'>
         <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.8.1/css/all.css'>
         <link rel='stylesheet' href='https://unicons.iconscout.com/release/v2.1.9/css/unicons.css'>
-        <link href="../static/css/common/style.css" rel="stylesheet" />
+        <link href="/css/common/style.css" rel="stylesheet" />
         <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
               integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
         <link href="https://fonts.googleapis.com/css?family=Quicksand:400,600,700&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="../static/css/font/style.css">
+        <link rel="stylesheet" href="/css/font/style.css">
         <!-- Style -->
-        <link rel="stylesheet" href="../static/css/common/styles.css">
+        <link rel="stylesheet" href="/css/common/styles.css">
     </th:block>
 </head>
 <body>
@@ -50,7 +50,7 @@
 
                                         <ul class="site-menu main-menu js-clone-nav d-none d-lg-block">
                                             <th:block th:unless="${session.authentication}">
-                                                <li><a href="/member/login-form" class="nav-link">로그인</a></li>
+                                                <li><a href="/member/login" class="nav-link">로그인</a></li>
                                                 <li><a href="/member/join-rule" class="nav-link">회원가입</a></li>
                                             </th:block>
                                             <th:block th:if="${session.authentication}">
@@ -59,10 +59,10 @@
                                                 </th:block>
                                                 <li>
                                                     <th:block th:if="${not empty session.authMentor}">
-                                                        <a href="/moboard/mentor" class="nav-link">멘토게시판</a>
+                                                        <a href="/board/mentor" class="nav-link">멘토게시판</a>
                                                     </th:block>
                                                     <th:block th:if="${empty session.authMentor}">
-                                                        <a href="/moboard/mentor" class="nav-link">멘티게시판</a>
+                                                        <a href="/board/mentor" class="nav-link">멘티게시판</a>
                                                     </th:block>
                                                 </li>
                                                 <li><a href="/todo/main" class="nav-link">일정관리</a></li>
@@ -104,10 +104,10 @@
         </footer>
     </th:block>
     <th:block th:fragment="flg_jsFiles">
-        <script src="../static/js/common/jquery-3.3.1.min.js"></script>
-        <script src="../static/js/common/bootstrap.min.js"></script>
-        <script src="../static/js/common/jquery.sticky.js"></script>
-        <script src="../static/js/common/main.js"></script>
+        <script src="/js/common/jquery-3.3.1.min.js"></script>
+        <script src="/js/common/bootstrap.min.js"></script>
+        <script src="/js/common/jquery.sticky.js"></script>
+        <script src="/js/common/main.js"></script>
     </th:block>
 </body>
 </html>
