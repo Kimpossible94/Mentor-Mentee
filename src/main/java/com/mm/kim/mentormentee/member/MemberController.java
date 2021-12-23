@@ -18,13 +18,37 @@ public class MemberController {
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @GetMapping("login")
-    public void login () {}
+    public void login() {
+    }
 
     @PostMapping("login")
-    public String login (Model model, Member member) {
+    public String login(Model model, Member inputMember) {
+        System.out.println(inputMember.toString());
 
-        memberService.selectMember(member);
-
+        Member member = memberService.selectMember(inputMember);
+        if (member == null) {
+            return "redirect:/member/login?err=1";
+        }
         return "redirect:/member/login";
     }
+
+    @GetMapping("join-rule")
+    public void joinRule() {}
+
+    @GetMapping("join-form")
+    public void joinForm(String type, Model model) {
+        if(type.equals("mentor")){
+            model.addAttribute("type", "mentor");
+        } else {
+            model.addAttribute("type", "mentee");
+        }
+    }
+
+    @PostMapping("join-mentor")
+    public void join(Member member, Mentor mentor){
+        mentor.setMember(member);
+        System.out.println(mentor.toString());
+    }
+
+
 }

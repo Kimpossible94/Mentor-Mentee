@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -28,4 +29,45 @@ class MemberControllerTest {
                 .andDo(print());
     }
 
+    @Test
+    @DisplayName("로그인")
+    public void loginImpl() throws Exception {
+        String userId = "test";
+        String password = "1234";
+        mockMvc.perform(post("/member/login")
+                .param("userId", userId)
+                .param("password", password))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("join-rule 페이지")
+    public void joinRule() throws Exception {
+        mockMvc.perform(get("/member/join-rule"))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("회원가입 양식 페이지")
+    public void joinForm() throws Exception {
+        mockMvc.perform(get("/member/join-form")
+                        .param("type", "mentor"))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("회원가입")
+    public void joinMentor() throws Exception {
+        mockMvc.perform(post("/member/join-mentor")
+                    .param("userId", "test")
+                    .param("password", "1234")
+                    .param("email", "aaa@bbb.com")
+                    .param("phone", "01047178981")
+                    .param("history", "이력사항"))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
 }

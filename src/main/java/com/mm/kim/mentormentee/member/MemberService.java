@@ -10,8 +10,8 @@ public class MemberService {
     private final MenteeRepository menteeRepository;
     private final MentorRepository mentorRepository;
 
-    public Object selectMember(Member member) {
-        Mentor mentor = new Mentor();
-        return mentor;
+    public Member selectMember(Member inputMember) {
+        Member member = new Member();
+        return member;
     }
 }
