@@ -61,12 +61,11 @@ class MemberControllerTest {
     @Test
     @DisplayName("회원가입")
     public void joinMentor() throws Exception {
-        mockMvc.perform(post("/member/join-mentor")
+        mockMvc.perform(post("/member/join-mentee")
                     .param("userId", "test")
                     .param("password", "1234")
                     .param("email", "aaa@bbb.com")
-                    .param("phone", "01047178981")
-                    .param("history", "이력사항"))
+                    .param("phone", "01047178981"))
                 .andExpect(status().isOk())
                 .andDo(print());
     }

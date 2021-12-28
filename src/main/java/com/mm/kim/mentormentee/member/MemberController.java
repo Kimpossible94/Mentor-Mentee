@@ -47,7 +47,11 @@ public class MemberController {
     @PostMapping("join-mentor")
     public void join(Member member, Mentor mentor){
         mentor.setMember(member);
-        System.out.println(mentor.toString());
+    }
+
+    @PostMapping("join-mentee")
+    public void join(Member member, Mentee mentee){
+        mentee.setMember(member);
     }
 
 
