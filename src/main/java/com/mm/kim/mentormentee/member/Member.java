@@ -4,8 +4,8 @@ import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.time.LocalDate;
 
@@ -16,10 +16,8 @@ import java.time.LocalDate;
 public class Member {
 
     @Id
-    @GeneratedValue
-    private Long userIdx;
-    private String userName;
     private String userId;
+    private String userName;
     private String password;
     private String email;
     private String gender;
@@ -27,7 +25,9 @@ public class Member {
     private String phone;
     private String nickname;
     private String role;
+    @Column(columnDefinition = "date default sysdate")
     private LocalDate joinDate;
+    @Column(columnDefinition = "number default 0")
     private int isLeave;
     private String kakaoJoin;
 }

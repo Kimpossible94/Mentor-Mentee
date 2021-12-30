@@ -22,7 +22,7 @@ class MemberControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    @DisplayName("로그인 페이지 확인")
+    @DisplayName("로그인 페이지 접속")
     public void login() throws Exception {
         mockMvc.perform(get("/member/login"))
                 .andExpect(status().isOk())
@@ -42,7 +42,7 @@ class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("join-rule 페이지")
+    @DisplayName("join-rule 페이지 접속")
     public void joinRule() throws Exception {
         mockMvc.perform(get("/member/join-rule"))
                 .andExpect(status().isOk())
@@ -50,10 +50,21 @@ class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("회원가입 양식 페이지")
+    @DisplayName("회원가입 양식 페이지 접속")
     public void joinForm() throws Exception {
         mockMvc.perform(get("/member/join-form")
                         .param("type", "mentor"))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("아이디 존재 유무 확인")
+    public void idCheck() throws Exception {
+        String userId = "test22";
+
+        mockMvc.perform(get("/member/id-check")
+                .param("userId", userId))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
@@ -69,4 +80,5 @@ class MemberControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print());
     }
+
 }

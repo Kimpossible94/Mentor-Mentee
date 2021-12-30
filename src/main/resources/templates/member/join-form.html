@@ -11,8 +11,12 @@
     <div class="row align-items-center">
         <!-- Registeration Form -->
         <div class="col-md-7 col-lg-6 m-auto">
-            <form th:if="${type == 'mentor'}" action="/member/join-mentor" method="post">
-            <form th:if="${type == 'mentee'}" action="/member/join-mentee" method="post">
+            <th:block th:if="${type == 'mentor'}">
+                <form action="/member/join-mentor" method="post" id="frm_join">
+            </th:block>
+            <th:block th:if="${type == 'mentor'}">
+                <form action="/member/join-mentee" method="post" id="frm_join">
+            </th:block>
                 <div class="row" style="padding: 22px;">
                     <!-- Name -->
                     <div class="input-group col-lg-12 mb-4">
@@ -21,14 +25,7 @@
                            <i class="fa fa-user text-muted"></i>
                         </span>
                         </div>
-                        <input id="userName" type="text" name="userName" placeholder="이름"
-                        <th:if test="${not empty param.err and empty joinValid.userName}">
-                            value="${joinForm.userName}"
-                        </th:if>
-                        <th:if test="${not empty kakao.userName}">
-                            value="${kakao.userName}"
-                        </th:if>
-                        required class="form-control bg-white border-left-0 border-md">
+                        <input id="userName" type="text" name="userName" placeholder="이름" required class="form-control bg-white border-left-0 border-md">
                     </div>
 
                     <!-- UserId -->
@@ -38,13 +35,8 @@
                            <i class="fa fa-user text-muted"></i>
                         </span>
                         </div>
-                        <input id="userId" type="text" name="userId" placeholder="아이디"
-                               required class="form-control bg-white border-left-0 border-md"
-                        <th:if test="${not empty param.err and empty joinValid.userId}">
-                            value="${joinForm.userId}"
-                        </th:if>
-                        >
-                        <button class="btn btn-outline-secondary checkIdBtn" style="font-weight: bold;">중복검사</button>
+                        <input th:value="*{#fields.hasErrors('userId') ? '' : userId}"
+                               id="userId" type="text" name="userId" placeholder="아이디" required class="form-control bg-white border-left-0 border-md" onkeyup="checkId()">
                     </div>
                     <span class="valid-msg" id="idCheck"> </span>
 
@@ -55,12 +47,7 @@
                            <i class="fa fa-lock text-muted"></i>
                         </span>
                         </div>
-                        <input id="password" type="password" name="password" required
-                        <th:if test="${not empty param.err and empty joinValid.password}">
-                            value="${joinForm.password}"
-                        </th:if>
-                        placeholder="비밀번호"
-                        class="form-control bg-white border-left-0 border-md">
+                        <input id="password" type="password" name="password" required placeholder="비밀번호" class="form-control bg-white border-left-0 border-md">
                     </div>
 
 
@@ -73,18 +60,7 @@
                         </div>
                         <input id="passwordConfirmation" type="password" name="passwordConfirmation" placeholder="비밀번호 확인" required class="form-control bg-white border-left-0 border-md">
                     </div>
-                    <span id="pwCheck" class="valid-msg">
-<!--                        <c:choose><c:when test="${not empty param.err and not empty joinValid.password}">-->
-                        <!--                            영어,숫자,특수문자 조합의 8글자 이상입니다.-->
-                        <!--                        </c:when>-->
-                        <!--                            <c:when test="${not empty param.err and not empty joinValid.passwordConfirmation}">-->
-                        <!--                                비밀번호가 일치하지 않습니다.-->
-                        <!--                            </c:when>-->
-                        <!--                            <c:otherwise>-->
-                        <!--                                <p style="color:black">영어,숫자,특수문자 조합의 8글자 이상입니다.</p>-->
-                        <!--                            </c:otherwise>-->
-                        <!--                        </c:choose>-->
-                    </span>
+                    <span id="pwCheck" class="valid-msg"></span>
 
                     <!-- Email Address -->
                     <div class="input-group col-lg-12 mb-4">
@@ -93,20 +69,9 @@
                            <i class="fa fa-envelope text-muted"></i>
                         </span>
                         </div>
-                        <input id="email" type="email" name="email" placeholder="이메일"
-                        <th:if test="${not empty param.err and empty joinValid.email}">
-                            value="${joinForm.email}"
-                        </th:if>
-                        <th:if test="${not empty kakao.email}">
-                            value="${kakao.email}"
-                        </th:if>
-                        required class="form-control bg-white border-left-0 border-md">
+                        <input id="email" type="email" name="email" placeholder="이메일" required class="form-control bg-white border-left-0 border-md">
                     </div>
-                    <span id="emailCheck" class="valid-msg">
-                        <th:if test="${not empty param.err and not empty joinValid.email}">
-                            이미 사용중이 email입니다.
-                        </th:if>
-                    </span>
+                    <span id="emailCheck" class="valid-msg"></span>
                     <!-- Gender -->
                     <div class="input-group col-lg-12 mb-4">
                         <div class="input-group-prepend">
@@ -114,10 +79,7 @@
                            <i class="fas fa-venus-mars text-muted"></i>
                         </span>
                         </div>
-                        <div id="gender" name="gender" placeholder="성별" class="form-control bg-white border-left-0 border-md text-muted"
-                             style="max-width: 80px; display: flex; align-content: center; flex-wrap: wrap; justify-content: flex-start;">
-                            성별
-                        </div>
+                        <div id="gender" name="gender" placeholder="성별" class="form-control bg-white border-left-0 border-md text-muted" style="max-width: 80px; display: flex; align-content: center; flex-wrap: wrap; justify-content: flex-start;">성별</div>
                         <div style="display: flex; justify-content: space-around; align-content: center; flex-wrap: wrap;" class="form-control bg-white border-left-0 border-md h-70 font-weight-bold">
                             <div>
                                 <input type="radio" id="gender-m" name="gender-radio" value="male" class="form-check-input" checked>
@@ -137,11 +99,7 @@
                            <i class="fas fa-home text-muted"></i>
                         </span>
                         </div>
-                        <input id="address" type="text" name="address" placeholder="주소"
-                        <th:if test="${not empty param.err and empty joinValid.address}">
-                            value="${joinForm.address}"
-                        </th:if>
-                        required class="form-control bg-white border-left-0 border-md">
+                        <input id="address" type="text" name="address" placeholder="주소" required class="form-control bg-white border-left-0 border-md">
                     </div>
 
                     <!-- Phone Number -->
@@ -157,17 +115,9 @@
                             <option value="019">019</option>
                             <option value="017">017</option>
                         </select>
-                        <input id="phone" type="tel" name="phone" placeholder="전화번호(-빼고 입력)" required
-                        <th:if test="${not empty param.err and empty joinValid.phone}">
-                            value="${joinForm.phone}"
-                        </th:if>
-                        class="form-control bg-white border-md border-left-0 pl-3">
+                        <input id="phone" type="tel" name="phone" placeholder="전화번호(-빼고 입력)" required class="form-control bg-white border-md border-left-0 pl-3">
                     </div>
-                    <span id="tellCheck" class="valid-msg">
-                        <th:if test="${not empty param.err and not empty joinValid.phone}">
-                            휴대폰 번호는 9-11자리의 숫자입니다.
-                        </th:if>
-                    </span>
+                    <span id="tellCheck" class="valid-msg"></span>
 
 
                     <!-- Nickname -->
@@ -177,19 +127,14 @@
                            <i class="fa fa-user text-muted"></i>
                         </span>
                         </div>
-                        <input id="nickname" type="text" name="nickname" placeholder="닉네임(선택)"
-                        <th:if test="${not empty param.err and empty joinValid.nickname}">
-                            value="${joinForm.nickname}"
-                        </th:if>
-                        class="form-control bg-white border-left-0 border-md">
+                        <input id="nickname" type="text" name="nickname" placeholder="닉네임(선택)" class="form-control bg-white border-left-0 border-md">
                     </div>
 
                     <!-- Divide Line -->
                     <th:block th:if="${type == 'mentor'}">
                         <div class="form-group col-lg-12 mx-auto d-flex align-items-center my-4">
                             <div class="border-bottom " style="width: 40%;"></div>
-                            <span class="px-2 small text-muted font-weight-bold text-muted"
-                                  style="width: 20%; text-align: center">대학교 정보</span>
+                            <span class="px-2 small text-muted font-weight-bold text-muted" style="width: 20%; text-align: center">대학교 정보</span>
                             <div class="border-bottom " style="width: 40%;"></div>
                         </div>
 
@@ -423,7 +368,7 @@
 
                     <!-- Submit Button -->
                     <div class="form-group col-lg-12 mx-auto mb-0">
-                        <input type="submit" class="btn btn-primary btn-block py-2" id="frm_join">
+                        <input type="submit" class="btn btn-primary btn-block py-2">
                         <span class="font-weight-bold" value="계정 생성"></span>
                     </div>
 

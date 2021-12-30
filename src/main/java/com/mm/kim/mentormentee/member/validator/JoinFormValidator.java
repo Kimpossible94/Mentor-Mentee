@@ -23,13 +23,18 @@ public class JoinFormValidator implements Validator {
     public void validate(Object target, Errors errors) {
         JoinForm form = (JoinForm) target;
 
-        //1. 아이디 존재 유무
-
-
+        //1. 비밀번호가 8글자 이상, 숫자 영문자 특수문자 조합인지 확인
         boolean valid = Pattern.matches("(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^a-zA-Zㄱ-힣0-9]).{8,}", form.getPassword());
         if(!valid){
-            errors.rejectValue("password", "error-password", "비밀번호는 8글자 이상의 숫자 영문자 특수문자 조합입니다.");
+            errors.rejectValue("password", "err-pw", "비밀번호는 8글자 이상의 숫자 영문자 특수문자 조합입니다.");
         }
+
+        //2. 전화번호가 9~11자리의 숫자
+        valid = Pattern.matches("^\\d{9,11}$", form.getPhone());
+        if(!valid) {
+            errors.rejectValue("tell", "err-phone", "전화번호는 9~11자리의 숫자입니다.");
+        }
+
 
 
     }
