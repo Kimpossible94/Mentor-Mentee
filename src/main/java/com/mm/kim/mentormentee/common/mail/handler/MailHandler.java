@@ -14,8 +14,7 @@ public class MailHandler {
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @PostMapping("mail")
-    public String writeMailTemplate(@RequestParam Map<String,String> template
-            , Model model) {
+    public String writeMailTemplate(@RequestParam Map<String,String> template, Model model) {
         model.addAllAttributes(template);
         return "mail-template/" +  template.get("mailTemplate");
     }

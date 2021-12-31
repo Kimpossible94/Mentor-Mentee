@@ -1,5 +1,5 @@
 (() => {
-    let idAvali = false;
+    let idAvail = false;
 
     checkId = () => {
         let userId = document.querySelector('#userId').value;
@@ -15,10 +15,10 @@
                 if (text == 'available') {
                     confirmId = userId;
                     document.querySelector('#idCheck').innerHTML = '사용 가능한 아이디 입니다.';
-                    idAvali = true;
+                    idAvail = true;
                 } else {
                     document.querySelector('#idCheck').innerHTML = '사용 불가능한 아이디 입니다.';
-                    idAvali = false;
+                    idAvail = false;
                 }
             })
             .catch(error => {
@@ -27,7 +27,7 @@
     }
 
     document.querySelector('#frm_join').addEventListener('submit', (e) => {
-        if(!idAvali){
+        if(!idAvail){
             alert("아이디를 확인해주세요.");
             e.preventDefault();
             return;

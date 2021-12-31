@@ -75,7 +75,7 @@ class MemberControllerTest {
         mockMvc.perform(post("/member/join-mentee")
                     .param("userId", "test")
                     .param("password", "1234")
-                    .param("email", "aaa@bbb.com")
+                    .param("email", "zerotiger94@gmail.com")
                     .param("phone", "01047178981"))
                 .andExpect(status().isOk())
                 .andDo(print());

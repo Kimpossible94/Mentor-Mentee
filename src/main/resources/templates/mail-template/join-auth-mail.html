@@ -184,7 +184,7 @@
                             <tr>
                                 <td align="left" style="font-size:0px;padding:0px 25px 0px 25px;padding-top:0px;padding-right:50px;padding-bottom:0px;padding-left:50px;word-break:break-word;">
                                     <div style="font-family:Open Sans, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;text-align:left;color:#797e82;">
-                                        <p style="margin: 10px 0; text-align: center;">안녕하세요! ${param.userName }님. 저희 M&M에 가입해주셔서 감사합니다.&nbsp;</p>
+                                        <p style="margin: 10px 0; text-align: center;">안녕하세요! [[${param.userId}]]님. 저희 M&M에 가입해주셔서 감사합니다.&nbsp;</p>
                                         <p style="margin: 10px 0; text-align: center;">회원가입을 완료하시려면 아래 버튼을 눌러주세요!</p>
                                     </div>
                                 </td>
@@ -194,7 +194,7 @@
                                     <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;line-height:100%;">
                                         <tr>
                                             <td align="center" bgcolor="#343A40" role="presentation" style="border:none;border-radius:100px;cursor:auto;padding:15px 25px 15px 25px;background:#343A40;" valign="middle">
-                                                <a href="http://localhost:7070/member/join-impl?persist-token=${param.persistToken}"
+                                                <a href="|#{mm.domain}/member/join-impl?persist-token=${persistToken}|"
                                                    style="background:#343A40;color:#ffffff;font-family:Open Sans, Helvetica, Arial, sans-serif;font-size:13px;font-weight:normal;line-height:120%;Margin:0;text-decoration:none;text-transform:none;" target="_blank">
                                                     <b style="font-weight:700"><b style="font-weight:700">Activate My Account</b></b>
                                                 </a>

@@ -1,11 +1,13 @@
 package com.mm.kim.mentormentee.member.validator;
 
 import com.mm.kim.mentormentee.member.MemberRepository;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import java.util.regex.Pattern;
 
+@Component
 public class JoinFormValidator implements Validator {
 
     private final MemberRepository memberRepository;

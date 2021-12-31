@@ -2,28 +2,38 @@ package com.mm.kim.mentormentee.member;
 
 import com.mm.kim.mentormentee.common.validator.ValidateResult;
 import com.mm.kim.mentormentee.member.validator.JoinForm;
-import lombok.RequiredArgsConstructor;
+import com.mm.kim.mentormentee.member.validator.JoinFormValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("member")
-@RequiredArgsConstructor
 public class MemberController {
-
-    private final MemberService memberService;
     Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private MemberService memberService;
+    private JoinFormValidator joinFormValidator;
+
+    public MemberController(MemberService memberService, JoinFormValidator joinFormValidator){
+        super();
+        this.memberService = memberService;
+        this.joinFormValidator = joinFormValidator;
+    }
+
+    @InitBinder(value = "joinForm")
+    public void initBinder(WebDataBinder webDataBinder){
+        webDataBinder.addValidators(joinFormValidator);
+    }
 
     @GetMapping("login")
     public void login() {
@@ -62,18 +72,49 @@ public class MemberController {
     }
 
     @PostMapping("join-mentor")
-    public void join(@Validated JoinForm form, Errors errors, Mentor mentor, Model model, HttpSession session, RedirectAttributes redirectAttr){
+    public String join(@Validated JoinForm form, Errors errors, Mentor mentor, Model model, HttpSession session, RedirectAttributes redirectAttr){
         form.setRole("MO00");
-
         ValidateResult vr = new ValidateResult();
-        model.addAttribute("error", vr.getError());
+
+        if(errors.hasErrors()){
+            vr.addErrors(errors);
+            model.addAttribute("error", vr.getError());
+            model.addAttribute("type", "mentor");
+            return "/member/join";
+        }
+
+        String token = UUID.randomUUID().toString();
+        session.setAttribute("persistUser", form);
+        session.setAttribute("persistToken", token);
+
+        memberService.authenticateByEmail(form, token);
+
+        redirectAttr.addAttribute("msg", "회원가입을 위한 이메일이 발송되었습니다.");
+        redirectAttr.addAttribute("url", "/");
+        return "redirect:/common/result";
     }
 
     @PostMapping("join-mentee")
-    public void join(@Validated JoinForm form, Errors errors, Mentee mentee){
+    public String join(@Validated JoinForm form, Errors errors, Mentee mentee, Model model, HttpSession session, RedirectAttributes redirectAttr){
         form.setRole("ME00");
+        ValidateResult vr = new ValidateResult();
+
+        if(errors.hasErrors()){
+            vr.addErrors(errors);
+            model.addAttribute("error", vr.getError());
+            model.addAttribute("type", "mentor");
+            return "/member/join";
+        }
+
+        String token = UUID.randomUUID().toString();
+        session.setAttribute("persistUser", form);
+        session.setAttribute("persistToken", token);
+
+        memberService.authenticateByEmail(form, token);
+
+        redirectAttr.addAttribute("msg", "회원가입을 위한 이메일이 발송되었습니다.");
+        redirectAttr.addAttribute("url", "/");
+        return "redirect:/common/result";
     }
-
-
 
 }
