@@ -1,5 +1,7 @@
 package com.mm.kim.mentormentee.member;
 
+import com.mm.kim.mentormentee.board.exception.HandlableException;
+import com.mm.kim.mentormentee.common.code.ErrorCode;
 import com.mm.kim.mentormentee.common.validator.ValidateResult;
 import com.mm.kim.mentormentee.member.validator.JoinForm;
 import com.mm.kim.mentormentee.member.validator.JoinFormValidator;
@@ -85,8 +87,10 @@ public class MemberController {
             return "/member/join-form";
         }
 
+        mentor.setMember(form.convertToMember());
+
         String token = UUID.randomUUID().toString();
-        session.setAttribute("persistUser", form);
+        session.setAttribute("persistMentor", mentor);
         session.setAttribute("persistToken", token);
 
         memberService.authenticateByEmail(form, token);
@@ -109,8 +113,10 @@ public class MemberController {
             return "/member/join-form";
         }
 
+        mentee.setMember(form.convertToMember());
+
         String token = UUID.randomUUID().toString();
-        session.setAttribute("persistUser", form);
+        session.setAttribute("persistMentee", mentee);
         session.setAttribute("persistToken", token);
 
         memberService.authenticateByEmail(form, token);
@@ -120,4 +126,29 @@ public class MemberController {
         return "redirect:/common/result";
     }
 
+    @GetMapping("join-impl/{token}")
+    public String joinImpl(@PathVariable String token, @SessionAttribute(value = "persistToken", required = false) String persistToken,
+                           @SessionAttribute(value = "persistMentor", required = false) Mentor mentor,
+                           @SessionAttribute(value = "persistMentee", required = false) Mentee mentee,
+                           HttpSession session, RedirectAttributes redirectAttr){
+
+        if(!token.equals(persistToken)){
+            throw new HandlableException(ErrorCode.AUTHENTICATION_FAILED_ERROR);
+        }
+
+        if(mentor != null){
+            memberService.persistMentor(mentor);
+            session.removeAttribute("persistMentor");
+        } else {
+            memberService.persistMentee(mentee);
+            session.removeAttribute("persistMentee");
+        }
+
+        session.removeAttribute("persistToken");
+
+        redirectAttr.addAttribute("msg", "회원가입을 환영합니다. 로그인 해주세요");
+        redirectAttr.addAttribute("url", "/member/login");
+        return "redirect:/common/result";
+
+    }
 }

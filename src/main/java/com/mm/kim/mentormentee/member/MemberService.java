@@ -6,7 +6,9 @@ import com.mm.kim.mentormentee.member.validator.JoinForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -20,6 +22,7 @@ public class MemberService {
     private final MentorRepository mentorRepository;
     private final EmailSender emailSender;
     private final RestTemplate http;
+    private final PasswordEncoder passwordEncoder;
 
     public Member selectMember(Member inputMember) {
         Member member = new Member();
@@ -44,4 +47,17 @@ public class MemberService {
         String htmlText = http.exchange(request, String.class).getBody();
         emailSender.send(form.getEmail(), "회원가입을 축하합니다.", htmlText);
     }
+
+    @Transactional
+    public void persistMentor(Mentor mentor) {
+        mentor.getMember().setPassword(passwordEncoder.encode(mentor.getMember().getPassword()));
+        mentorRepository.save(mentor);
+    }
+
+    @Transactional
+    public void persistMentee(Mentee mentee) {
+        mentee.getMember().setPassword(passwordEncoder.encode(mentee.getMember().getPassword()));
+        menteeRepository.save(mentee);
+    }
+
 }

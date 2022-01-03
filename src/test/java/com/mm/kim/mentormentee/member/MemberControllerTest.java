@@ -77,9 +77,30 @@ class MemberControllerTest {
                     .param("userId", "test")
                     .param("password", "123abc!@")
                     .param("email", "zerotiger94@gmail.com")
-                    .param("phone", "01047178981"))
+                    .param("phone", "01011112222"))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
 
+    @Test
+    @DisplayName("이메일 발송 후 회원가입 테스트")
+    public void joinImpl() throws Exception{
+        Member member = new Member();
+        Mentor mentor = new Mentor();
+        member.setUserId("test");
+        member.setPassword("123abc!@");
+        member.setEmail("zerotiger94@gmail.com");
+        member.setPhone("01011112222");
+
+        mentor.setMember(member);
+        mentor.setGrade(2);
+        mentor.setMajor("dd");
+        mentor.setWantTime("day");
+
+        mockMvc.perform(get("/member/join-impl/1234")
+                .sessionAttr("persistToken", "1234")
+                .sessionAttr("persistUser", mentor))
+                .andExpect(status().is3xxRedirection())
+                .andDo(print());
+    }
 }
