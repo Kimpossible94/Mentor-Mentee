@@ -11,6 +11,7 @@ public class JoinForm {
     private String email;
     private String gender;
     private String address;
+    private String countryCode;
     private String phone;
     private String nickname;
     private String role;

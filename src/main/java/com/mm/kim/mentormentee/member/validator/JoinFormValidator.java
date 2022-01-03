@@ -32,9 +32,9 @@ public class JoinFormValidator implements Validator {
         }
 
         //2. 전화번호가 9~11자리의 숫자
-        valid = Pattern.matches("^\\d{9,11}$", form.getPhone());
+        valid = Pattern.matches("^\\d{6,8}$", form.getPhone());
         if(!valid) {
-            errors.rejectValue("tell", "err-phone", "전화번호는 9~11자리의 숫자입니다.");
+            errors.rejectValue("phone", "err-phone", "전화번호는 9~11자리의 숫자입니다.");
         }
 
 

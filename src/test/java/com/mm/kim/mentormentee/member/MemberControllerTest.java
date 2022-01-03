@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -74,7 +75,7 @@ class MemberControllerTest {
     public void joinMentor() throws Exception {
         mockMvc.perform(post("/member/join-mentee")
                     .param("userId", "test")
-                    .param("password", "1234")
+                    .param("password", "123abc!@")
                     .param("email", "zerotiger94@gmail.com")
                     .param("phone", "01047178981"))
                 .andExpect(status().isOk())

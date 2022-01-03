@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html xmlns:th="http://thymeleaf.org" lang="ko">
 <head>
     <title>MM 멘티 가입 페이지</title>
     <th:block th:replace="fragments::flg_head"></th:block>
@@ -35,8 +35,7 @@
                            <i class="fa fa-user text-muted"></i>
                         </span>
                         </div>
-                        <input th:value="*{#fields.hasErrors('userId') ? '' : userId}"
-                               id="userId" type="text" name="userId" placeholder="아이디" required class="form-control bg-white border-left-0 border-md" onkeyup="checkId()">
+                        <input id="userId" type="text" name="userId" placeholder="아이디" required class="form-control bg-white border-left-0 border-md" onkeyup="checkId()">
                     </div>
                     <span class="valid-msg" id="idCheck"> </span>
 

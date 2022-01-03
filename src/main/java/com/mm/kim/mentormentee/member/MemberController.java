@@ -80,7 +80,9 @@ public class MemberController {
             vr.addErrors(errors);
             model.addAttribute("error", vr.getError());
             model.addAttribute("type", "mentor");
-            return "/member/join";
+            System.out.println(errors.getFieldErrors());
+            System.out.println("실행");
+            return "/member/join-form";
         }
 
         String token = UUID.randomUUID().toString();
@@ -89,6 +91,7 @@ public class MemberController {
 
         memberService.authenticateByEmail(form, token);
 
+        System.out.println("메일보냄");
         redirectAttr.addAttribute("msg", "회원가입을 위한 이메일이 발송되었습니다.");
         redirectAttr.addAttribute("url", "/");
         return "redirect:/common/result";
@@ -103,7 +106,7 @@ public class MemberController {
             vr.addErrors(errors);
             model.addAttribute("error", vr.getError());
             model.addAttribute("type", "mentor");
-            return "/member/join";
+            return "/member/join-form";
         }
 
         String token = UUID.randomUUID().toString();
