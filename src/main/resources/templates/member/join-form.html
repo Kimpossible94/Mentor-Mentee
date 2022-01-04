@@ -12,10 +12,10 @@
         <!-- Registeration Form -->
         <div class="col-md-7 col-lg-6 m-auto">
             <th:block th:if="${type == 'mentor'}">
-                <form action="/member/join-mentor" method="post" id="frm_join">
+                <form action="/member/join-mentor" method="post" id="frm_join" th:object="${joinForm}">
             </th:block>
             <th:block th:if="${type == 'mentor'}">
-                <form action="/member/join-mentee" method="post" id="frm_join">
+                <form action="/member/join-mentee" method="post" id="frm_join" th:object="${joinForm}">
             </th:block>
                 <div class="row" style="padding: 22px;">
                     <!-- Name -->
@@ -35,10 +35,10 @@
                            <i class="fa fa-user text-muted"></i>
                         </span>
                         </div>
-                        <input id="userId" type="text" name="userId" placeholder="아이디" required class="form-control bg-white border-left-0 border-md" onkeyup="checkId()">
+                        <input id="userId" type="text" name="userId" placeholder="아이디" required
+                               class="form-control bg-white border-left-0 border-md" onkeyup="checkId()">
                     </div>
-                    <span class="valid-msg" id="idCheck"> </span>
-
+                    <span id="idCheck" class="valid-msg"></span>
                     <!-- Password -->
                     <div class="input-group col-lg-6 mb-4">
                         <div class="input-group-prepend">
@@ -114,9 +114,11 @@
                             <option value="019">019</option>
                             <option value="017">017</option>
                         </select>
-                        <input id="phone" type="tel" name="phone" placeholder="전화번호(-빼고 입력)" required class="form-control bg-white border-md border-left-0 pl-3">
+                        <input id="phone" type="tel" name="phone" placeholder="전화번호(-빼고 입력)" required
+                               class="form-control bg-white border-md border-left-0 pl-3"
+                               th:value="${#fields.hasErrors('phone')} ? '' : *{phone}">
                     </div>
-                    <span id="tellCheck" class="valid-msg"></span>
+                    <span id="tellCheck" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" class="valid-msg"></span>
 
 
                     <!-- Nickname -->

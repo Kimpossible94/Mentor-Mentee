@@ -57,6 +57,7 @@ public class MemberController {
 
     @GetMapping("join-form")
     public void joinForm(String type, Model model) {
+        model.addAttribute(new JoinForm()).addAttribute("error",new ValidateResult().getError());
         if(type.equals("mentor")){
             model.addAttribute("type", "mentor");
         } else {
@@ -82,8 +83,6 @@ public class MemberController {
             vr.addErrors(errors);
             model.addAttribute("error", vr.getError());
             model.addAttribute("type", "mentor");
-            System.out.println(errors.getFieldErrors());
-            System.out.println("실행");
             return "/member/join-form";
         }
 
