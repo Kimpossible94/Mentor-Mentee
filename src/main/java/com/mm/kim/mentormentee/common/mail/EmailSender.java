@@ -2,7 +2,7 @@ package com.mm.kim.mentormentee.common.mail;
 
 import com.mm.kim.mentormentee.common.code.Config;
 import com.mm.kim.mentormentee.common.code.ErrorCode;
-import com.mm.kim.mentormentee.board.exception.HandlableException;
+import com.mm.kim.mentormentee.common.exception.HandlableException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 

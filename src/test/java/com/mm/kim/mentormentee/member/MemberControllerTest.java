@@ -99,7 +99,7 @@ class MemberControllerTest {
 
         mockMvc.perform(get("/member/join-impl/1234")
                 .sessionAttr("persistToken", "1234")
-                .sessionAttr("persistUser", mentor))
+                .sessionAttr("persistMentor", mentor))
                 .andExpect(status().is3xxRedirection())
                 .andDo(print());
     }

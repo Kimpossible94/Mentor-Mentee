@@ -8,14 +8,7 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 public class MentorMenteeApplication {
-
-	@Bean
-	public RestTemplate restTemplate(RestTemplateBuilder builder){
-		return builder.build();
-	}
-
 	public static void main(String[] args) {
 		SpringApplication.run(MentorMenteeApplication.class, args);
 	}
-
 }

@@ -25,6 +25,7 @@ public class JoinForm {
         member.setGender(gender);
         member.setAddress(address);
         member.setPhone(phone);
+        member.setCountryCode(countryCode);
         member.setNickname(nickname);
         member.setRole(role);
         return member;

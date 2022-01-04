@@ -16,8 +16,8 @@ public class Mentor {
     @GeneratedValue
     private Long mentorIdx;
 
-    @OneToOne
-    @JoinColumn(name = "userIdx")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "userId")
     private Member member;
     private String universityName;
     private String universityType;

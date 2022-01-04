@@ -1,4 +1,4 @@
-package com.mm.kim.mentormentee.board.exception;
+package com.mm.kim.mentormentee.common.exception;
 
 import com.mm.kim.mentormentee.common.code.ErrorCode;
 

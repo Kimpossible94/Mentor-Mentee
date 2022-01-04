@@ -1,7 +1,7 @@
 package com.mm.kim.mentormentee.common.interceptor;
 
 import com.mm.kim.mentormentee.common.code.ErrorCode;
-import com.mm.kim.mentormentee.board.exception.HandlableException;
+import com.mm.kim.mentormentee.common.exception.HandlableException;
 import com.mm.kim.mentormentee.member.Member;
 import com.mm.kim.mentormentee.member.Mentor;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -86,28 +86,9 @@ public class AuthInterceptor implements HandlerInterceptor {
     private void memberAuthorize(HttpServletRequest request, HttpServletResponse response, String[] uriArr) {
         switch (uriArr[2]) {
             case "mypage":
-                loginAuthorize(request);
-                break;
-            case "join-impl":
-                checkEqualToken(request);
             case "password-impl":
                 loginAuthorize(request);
-                checkEqualToken(request);
             default: break;
         }
     }
-
-    private void checkEqualToken(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        String serverToken = null;
-        String clientToken = null;
-
-        serverToken = (String) session.getAttribute("persist-token");
-        clientToken = (String) session.getAttribute("client-token");
-
-        if (serverToken == null || !serverToken.contentEquals(clientToken)) {
-            throw new HandlableException(ErrorCode.AUTHENTICATION_FAILED_ERROR);
-        }
-    }
-
 }

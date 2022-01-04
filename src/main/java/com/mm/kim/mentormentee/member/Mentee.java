@@ -16,8 +16,8 @@ public class Mentee {
     @GeneratedValue
     private Long menteeIdx;
 
-    @OneToOne
-    @JoinColumn(name = "userIdx")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "userId")
     private Member member;
     private String schoolName;
     private String major;

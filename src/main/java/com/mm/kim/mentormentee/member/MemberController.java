@@ -1,6 +1,6 @@
 package com.mm.kim.mentormentee.member;
 
-import com.mm.kim.mentormentee.board.exception.HandlableException;
+import com.mm.kim.mentormentee.common.exception.HandlableException;
 import com.mm.kim.mentormentee.common.code.ErrorCode;
 import com.mm.kim.mentormentee.common.validator.ValidateResult;
 import com.mm.kim.mentormentee.member.validator.JoinForm;
@@ -127,10 +127,15 @@ public class MemberController {
     }
 
     @GetMapping("join-impl/{token}")
-    public String joinImpl(@PathVariable String token, @SessionAttribute(value = "persistToken", required = false) String persistToken,
+    public String joinImpl(@PathVariable(name = "token", required = false) String token,
+                           @SessionAttribute(value = "persistToken", required = false) String persistToken,
                            @SessionAttribute(value = "persistMentor", required = false) Mentor mentor,
                            @SessionAttribute(value = "persistMentee", required = false) Mentee mentee,
                            HttpSession session, RedirectAttributes redirectAttr){
+
+        System.out.println("token" + token);
+        System.out.println("persistToken" + persistToken);
+        System.out.println(mentor);
 
         if(!token.equals(persistToken)){
             throw new HandlableException(ErrorCode.AUTHENTICATION_FAILED_ERROR);
