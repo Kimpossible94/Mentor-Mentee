@@ -5,6 +5,8 @@ import com.mm.kim.mentormentee.common.code.ErrorCode;
 import com.mm.kim.mentormentee.common.validator.ValidateResult;
 import com.mm.kim.mentormentee.member.validator.JoinForm;
 import com.mm.kim.mentormentee.member.validator.JoinFormValidator;
+import com.mm.kim.mentormentee.member.validator.ModifyPassword;
+import com.mm.kim.mentormentee.member.validator.ModifyPasswordValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -25,31 +27,47 @@ public class MemberController {
 
     private MemberService memberService;
     private JoinFormValidator joinFormValidator;
+    private ModifyPasswordValidator passwordValidator;
 
-    public MemberController(MemberService memberService, JoinFormValidator joinFormValidator){
+    public MemberController(MemberService memberService, JoinFormValidator joinFormValidator
+            , ModifyPasswordValidator passwordValidator){
         super();
         this.memberService = memberService;
         this.joinFormValidator = joinFormValidator;
+        this.passwordValidator = passwordValidator;
     }
 
     @InitBinder(value = "joinForm")
-    public void initBinder(WebDataBinder webDataBinder){
+    public void initJoiFormBinder(WebDataBinder webDataBinder){
         webDataBinder.addValidators(joinFormValidator);
     }
 
-    @GetMapping("login")
-    public void login() {
+    @InitBinder(value = "modifyPassword")
+    public void initPwModifyBinder(WebDataBinder webDataBinder){
+        webDataBinder.addValidators(passwordValidator);
     }
 
-    @PostMapping("login")
-    public String login(Model model, Member inputMember) {
-        System.out.println(inputMember.toString());
+    @GetMapping("login")
+    public void login() {}
 
-        Member member = memberService.selectMember(inputMember);
-        if (member == null) {
-            return "redirect:/member/login?err=1";
+    @PostMapping("login")
+    public String loginImpl(RedirectAttributes redirectAttr, Member member, HttpSession session) {
+
+        Member certifiedMember = memberService.authenticateUser(member);
+        if (certifiedMember == null) {
+            redirectAttr.addFlashAttribute("message", "아이디나 비밀번호가 틀렸습니다.");
+            return "redirect:/member/login";
         }
-        return "redirect:/member/login";
+
+        if(certifiedMember.getRole().contains("MO")){
+            Mentor certifiedMentor = memberService.findMentorByMember(certifiedMember);
+            session.setAttribute("authentication", certifiedMentor);
+        } else {
+            Mentee certifiedMentee = memberService.findMenteeByMember(certifiedMember);
+            session.setAttribute("authentication", certifiedMentee);
+        }
+
+        return "redirect:/member/mypage";
     }
 
     @GetMapping("join-rule")
@@ -57,12 +75,9 @@ public class MemberController {
 
     @GetMapping("join-form")
     public void joinForm(String type, Model model) {
-        model.addAttribute(new JoinForm()).addAttribute("error",new ValidateResult().getError());
-        if(type.equals("mentor")){
-            model.addAttribute("type", "mentor");
-        } else {
-            model.addAttribute("type", "mentee");
-        }
+        model.addAttribute("joinForm", new JoinForm())
+                .addAttribute("error",new ValidateResult().getError())
+                .addAttribute("type", type);
     }
 
     @GetMapping("id-check")
@@ -75,54 +90,59 @@ public class MemberController {
     }
 
     @PostMapping("join-mentor")
-    public String join(@Validated JoinForm form, Errors errors, Mentor mentor, Model model, HttpSession session, RedirectAttributes redirectAttr){
+    public String join(@Validated JoinForm form, Errors errors
+            , Mentor mentor, Model model, HttpSession session, RedirectAttributes redirectAttr){
         form.setRole("MO00");
         ValidateResult vr = new ValidateResult();
 
         if(errors.hasErrors()){
             vr.addErrors(errors);
-            model.addAttribute("error", vr.getError());
-            model.addAttribute("type", "mentor");
+            model.addAttribute("joinForm", form)
+                    .addAttribute("error", vr.getError())
+                    .addAttribute("type", "mentor");
             return "/member/join-form";
         }
 
         mentor.setMember(form.convertToMember());
 
-        String token = UUID.randomUUID().toString();
-        session.setAttribute("persistMentor", mentor);
-        session.setAttribute("persistToken", token);
-
-        memberService.authenticateByEmail(form, token);
-
-        System.out.println("메일보냄");
-        redirectAttr.addAttribute("msg", "회원가입을 위한 이메일이 발송되었습니다.");
-        redirectAttr.addAttribute("url", "/");
+        sendEmail(form, session, redirectAttr, mentor);
         return "redirect:/common/result";
     }
 
     @PostMapping("join-mentee")
-    public String join(@Validated JoinForm form, Errors errors, Mentee mentee, Model model, HttpSession session, RedirectAttributes redirectAttr){
+    public String join(@Validated JoinForm form, Errors errors
+            , Mentee mentee, Model model, HttpSession session, RedirectAttributes redirectAttr){
         form.setRole("ME00");
         ValidateResult vr = new ValidateResult();
 
         if(errors.hasErrors()){
             vr.addErrors(errors);
-            model.addAttribute("error", vr.getError());
-            model.addAttribute("type", "mentor");
+            model.addAttribute("joinForm", form)
+                    .addAttribute("error", vr.getError())
+                    .addAttribute("type", "mentee");
             return "/member/join-form";
         }
 
         mentee.setMember(form.convertToMember());
 
+        sendEmail(form, session, redirectAttr, mentee);
+
+        return "redirect:/common/result";
+    }
+
+    public void sendEmail(JoinForm form, HttpSession session, RedirectAttributes redirectAttr, Object mm){
         String token = UUID.randomUUID().toString();
-        session.setAttribute("persistMentee", mentee);
+        if(form.getRole().equals("ME00")){
+            session.setAttribute("persistMentee", (Mentee)mm);
+        } else {
+            session.setAttribute("persistMentor", (Mentor)mm);
+        }
         session.setAttribute("persistToken", token);
 
         memberService.authenticateByEmail(form, token);
 
         redirectAttr.addAttribute("msg", "회원가입을 위한 이메일이 발송되었습니다.");
         redirectAttr.addAttribute("url", "/");
-        return "redirect:/common/result";
     }
 
     @GetMapping("join-impl/{token}")
@@ -155,4 +175,23 @@ public class MemberController {
         return "redirect:/common/result";
 
     }
+
+    @GetMapping("logout")
+    public String logout(HttpSession session){
+        session.removeAttribute("authentication");
+        return "redirect:/";
+    }
+
+    @GetMapping("mypage")
+    public void mypage(){}
+
+    @PostMapping("modify-password")
+    public String modifyPw(@Validated ModifyPassword modifyPassword, Errors errors){
+        if(errors.hasErrors()){
+            return "/member/mypage";
+        }
+
+        return "/member/1234";
+    }
+
 }

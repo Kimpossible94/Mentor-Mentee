@@ -8,7 +8,7 @@ public enum ErrorCode {
     HTTP_CONNECT_ERROR("HTTP 통신 중 에러가 발생하였습니다."),
     AUTHENTICATION_FAILED_ERROR("유효하지 않은 인증입니다."),
     UNAUTHORIZED_PAGE_ERROR("접근 권한이 없는 페이지 입니다."),
-    UNLOGINED_ERROR("로그인이 필요합니다.","/member/login-form"),
+    UNLOGINED_ERROR("로그인이 필요합니다.","/member/login"),
     ALREADY_REGISTERED_COMMENT("이미 이 멘토에 대한 평가를 등록 하셨습니다.","/mentoring/manage-page"),
     ACCESS_ONLY_MENTOR("멘토만 접근할 수 있습니다."),
     ACCESS_ONLY_MENTEE("멘티만 접근할 수 있습니다."),

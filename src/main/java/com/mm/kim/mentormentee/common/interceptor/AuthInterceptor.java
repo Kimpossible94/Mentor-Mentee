@@ -39,8 +39,8 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     private void loginAuthorize(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        Member member = (Member) session.getAttribute("authentication");
-        if (member == null) {
+        Object user = session.getAttribute("authentication");
+        if (user == null) {
             throw new HandlableException(ErrorCode.UNLOGINED_ERROR);
         }
     }
@@ -87,6 +87,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         switch (uriArr[2]) {
             case "mypage":
             case "password-impl":
+            case "logout":
                 loginAuthorize(request);
             default: break;
         }

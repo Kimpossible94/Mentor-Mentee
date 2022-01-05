@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://thymeleaf.org" lang="ko">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>MM 멘티 가입 페이지</title>
     <th:block th:replace="fragments::flg_head"></th:block>
@@ -11,12 +11,8 @@
     <div class="row align-items-center">
         <!-- Registeration Form -->
         <div class="col-md-7 col-lg-6 m-auto">
-            <th:block th:if="${type == 'mentor'}">
-                <form action="/member/join-mentor" method="post" id="frm_join" th:object="${joinForm}">
-            </th:block>
-            <th:block th:if="${type == 'mentor'}">
-                <form action="/member/join-mentee" method="post" id="frm_join" th:object="${joinForm}">
-            </th:block>
+            <form th:action="${type == 'mentor' ? '/member/join-mentor' : '/member/join-mentee'}" method="post"
+                  id="frm_join" th:object="${joinForm}">
                 <div class="row" style="padding: 22px;">
                     <!-- Name -->
                     <div class="input-group col-lg-12 mb-4">
@@ -36,7 +32,8 @@
                         </span>
                         </div>
                         <input id="userId" type="text" name="userId" placeholder="아이디" required
-                               class="form-control bg-white border-left-0 border-md" onkeyup="checkId()">
+                               class="form-control bg-white border-left-0 border-md" onkeyup="checkId()"
+                               th:value="*{#fields.hasErrors('*') ? '' : userId}">
                     </div>
                     <span id="idCheck" class="valid-msg"></span>
                     <!-- Password -->
@@ -68,7 +65,9 @@
                            <i class="fa fa-envelope text-muted"></i>
                         </span>
                         </div>
-                        <input id="email" type="email" name="email" placeholder="이메일" required class="form-control bg-white border-left-0 border-md">
+                        <input id="email" type="email" name="email" placeholder="이메일" required
+                               class="form-control bg-white border-left-0 border-md"
+                               th:value="*{#fields.hasErrors('*') ? '' : email}">
                     </div>
                     <span id="emailCheck" class="valid-msg"></span>
                     <!-- Gender -->
@@ -98,7 +97,9 @@
                            <i class="fas fa-home text-muted"></i>
                         </span>
                         </div>
-                        <input id="address" type="text" name="address" placeholder="주소" required class="form-control bg-white border-left-0 border-md">
+                        <input id="address" type="text" name="address" placeholder="주소" required
+                               class="form-control bg-white border-left-0 border-md"
+                               th:value="*{#fields.hasErrors('*') ? '' : address}">
                     </div>
 
                     <!-- Phone Number -->
@@ -116,7 +117,7 @@
                         </select>
                         <input id="phone" type="tel" name="phone" placeholder="전화번호(-빼고 입력)" required
                                class="form-control bg-white border-md border-left-0 pl-3"
-                               th:value="${#fields.hasErrors('phone')} ? '' : *{phone}">
+                               th:value="*{#fields.hasErrors('phone') ? '' : phone}">
                     </div>
                     <span id="tellCheck" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" class="valid-msg"></span>
 
@@ -146,7 +147,8 @@
                                     <i class="fas fa-school text-muted"></i>
                                 </span>
                             </div>
-                            <input id="universityName" type="text" name="universityName" required placeholder="재학중인 대학명" class="form-control bg-white border-left-0 border-md">
+                            <input id="universityName" type="text" name="universityName" required placeholder="재학중인 대학명"
+                                   class="form-control bg-white border-left-0 border-md">
                         </div>
 
                         <!-- 대학 종류 -->

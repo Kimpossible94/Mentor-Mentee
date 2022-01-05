@@ -5,9 +5,9 @@
 </head>
 <body>
 <script th:inline="javascript">
-  if([[${param.msg}]]) alert([[${param.msg}]]);
-  if([[${param.back}]]) history.back();
-  if([[${param.url}]]) location.href = [[${param.url}]];
+  if([[${application.msg}]]) alert([[${application.msg}]]);
+  if([[${application.back}]]) history.back();
+  if([[${application.url}]]) location.href = [[${application.url}]];
 </script>
 
 

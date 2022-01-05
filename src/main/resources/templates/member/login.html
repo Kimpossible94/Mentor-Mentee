@@ -27,9 +27,7 @@
                                             <i class="input-icon uil uil-lock-alt"></i>
                                         </div>
                                         <span style="color: moccasin">
-                                            <th:if test="${not empty param.err}">
-                                                아이디 또는 비밀번호가 틀렸습니다.
-                                            </th:if>
+                                            <th:if th:if="${message}" th:text="${message}"/>
                                         </span>
                                         <p class="mb-0 mt-4 text-center">
                                             <a href="/member/forget-password" class="link">비밀번호를 잊으셨습니까?</a>

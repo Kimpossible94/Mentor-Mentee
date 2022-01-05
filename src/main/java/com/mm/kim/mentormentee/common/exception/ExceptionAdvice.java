@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Component
 @ControllerAdvice(basePackages = "com.mm.kim.mentormentee")
@@ -19,19 +20,19 @@ public class ExceptionAdvice {
 
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(HandlableException.class)
-    public String handlableExceptionProcess(HandlableException e, Model model){
-        model.addAttribute("msg", e.errorCode.MESSAGE);
-        model.addAttribute("url", e.errorCode.URL);
-        return "common/result";
+    public String handleExceptionProcess(HandlableException e, RedirectAttributes redirectAttr){
+        redirectAttr.addAttribute("msg", e.errorCode.MESSAGE);
+        redirectAttr.addAttribute("url", e.errorCode.URL);
+        return "/common/result";
     }
 
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(DataAccessException.class)
-    public String dataAccessExceptionProcess(DataAccessException e, Model model){
+    public String dataAccessExceptionProcess(DataAccessException e, RedirectAttributes redirectAttr){
         e.printStackTrace();
-        model.addAttribute("msg", "데이터베이스 접근 중 에러가 발생하였습니다.");
-        model.addAttribute("url", "/");
-        return "common/result";
+        redirectAttr.addAttribute("msg", "데이터베이스 접근 중 에러가 발생하였습니다.");
+        redirectAttr.addAttribute("url", "/");
+        return "/common/result";
     }
 
 }

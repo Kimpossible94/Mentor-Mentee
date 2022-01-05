@@ -1,5 +1,6 @@
 package com.mm.kim.mentormentee.member;
 
+import com.mm.kim.mentormentee.member.validator.ModifyPassword;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,8 +34,8 @@ class MemberControllerTest {
     @Test
     @DisplayName("로그인")
     public void loginImpl() throws Exception {
-        String userId = "test";
-        String password = "1234";
+        String userId = "test1";
+        String password = "123abc!@";
         mockMvc.perform(post("/member/login")
                 .param("userId", userId)
                 .param("password", password))
@@ -74,10 +75,10 @@ class MemberControllerTest {
     @DisplayName("회원가입")
     public void joinMentor() throws Exception {
         mockMvc.perform(post("/member/join-mentee")
-                    .param("userId", "test")
+                    .param("userId", "test1234")
                     .param("password", "123abc!@")
                     .param("email", "zerotiger94@gmail.com")
-                    .param("phone", "01011112222"))
+                    .param("phone", "11112222"))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
@@ -101,6 +102,37 @@ class MemberControllerTest {
                 .sessionAttr("persistToken", "1234")
                 .sessionAttr("persistMentor", mentor))
                 .andExpect(status().is3xxRedirection())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("마이페이지 접속 확인")
+    public void mypage() throws Exception{
+        Member member = new Member();
+        member.setRole("ME00");
+        member.setUserName("김영범");
+        Mentor mentor = new Mentor();
+        mentor.setMember(member);
+
+        mockMvc.perform(get("/member/mypage"))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("마이페이지 비밀번호 변경 확인")
+    public void modifyPw() throws Exception {
+        String userId = "test";
+        String curPw = "123abc!!!";
+        String newPw = "123abc!!!!";
+        String confirmNewPw = "123abc!!!!";
+
+        mockMvc.perform(post("member/modify-password")
+                .param("userId", userId)
+                .param("curPw", curPw)
+                .param("newPw", newPw)
+                .param("confirmNewPw", confirmNewPw))
+                .andExpect(status().isOk())
                 .andDo(print());
     }
 }

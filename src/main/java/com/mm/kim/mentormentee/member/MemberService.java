@@ -24,9 +24,13 @@ public class MemberService {
     private final RestTemplate http;
     private final PasswordEncoder passwordEncoder;
 
-    public Member selectMember(Member inputMember) {
-        Member member = new Member();
-        return member;
+    public Member authenticateUser(Member member) {
+        Member memberEntity = memberRepository.findById(member.getUserId()).orElse(null);
+
+        if(memberEntity == null) return null;
+        if(!passwordEncoder.matches(member.getPassword(), memberEntity.getPassword())) return null;
+
+        return memberEntity;
     }
 
     public boolean existsMemberById(String userId) {
@@ -60,4 +64,11 @@ public class MemberService {
         menteeRepository.save(mentee);
     }
 
+    public Mentor findMentorByMember(Member certifiedMember) {
+        return mentorRepository.findMentorByMember(certifiedMember);
+    }
+
+    public Mentee findMenteeByMember(Member certifiedMember) {
+        return mentorRepository.findMenteeByMember(certifiedMember);
+    }
 }
