@@ -4,12 +4,12 @@
   <th:block th:replace="fragments::flg_head"></th:block>
 </head>
 <body>
-<script th:inline="javascript">
-  if([[${application.msg}]]) alert([[${application.msg}]]);
-  if([[${application.back}]]) history.back();
-  if([[${application.url}]]) location.href = [[${application.url}]];
+<script type="text/javascript">
+  if('[(${msg})]') alert("[(${msg})]");
+
+  if('[(${back})]') history.back();
+
+  if('[(${url})]') location.href = '[(${url})]';
 </script>
-
-
 </body>
 </html>

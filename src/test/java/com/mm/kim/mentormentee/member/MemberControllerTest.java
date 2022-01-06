@@ -114,7 +114,8 @@ class MemberControllerTest {
         Mentor mentor = new Mentor();
         mentor.setMember(member);
 
-        mockMvc.perform(get("/member/mypage"))
+        mockMvc.perform(get("/member/mypage")
+                        .sessionAttr("authentication", member))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
@@ -122,12 +123,12 @@ class MemberControllerTest {
     @Test
     @DisplayName("마이페이지 비밀번호 변경 확인")
     public void modifyPw() throws Exception {
-        String userId = "test";
-        String curPw = "123abc!!!";
-        String newPw = "123abc!!!!";
-        String confirmNewPw = "123abc!!!!";
+        String userId = "test1";
+        String curPw = "123abc!@";
+        String newPw = "123abc!!";
+        String confirmNewPw = "123abc!!";
 
-        mockMvc.perform(post("member/modify-password")
+        mockMvc.perform(post("/member/modify-password")
                 .param("userId", userId)
                 .param("curPw", curPw)
                 .param("newPw", newPw)
@@ -135,4 +136,5 @@ class MemberControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print());
     }
+
 }

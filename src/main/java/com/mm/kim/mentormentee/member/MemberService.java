@@ -3,6 +3,7 @@ package com.mm.kim.mentormentee.member;
 import com.mm.kim.mentormentee.common.code.Config;
 import com.mm.kim.mentormentee.common.mail.EmailSender;
 import com.mm.kim.mentormentee.member.validator.JoinForm;
+import com.mm.kim.mentormentee.member.validator.ModifyPassword;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
@@ -69,6 +70,15 @@ public class MemberService {
     }
 
     public Mentee findMenteeByMember(Member certifiedMember) {
-        return mentorRepository.findMenteeByMember(certifiedMember);
+        return menteeRepository.findMenteeByMember(certifiedMember);
+    }
+
+    @Transactional
+    public void modifyPassword(ModifyPassword modifyPassword) {
+        Member member = memberRepository.findMemberByUserId(modifyPassword.getUserId());
+
+        member.setPassword(passwordEncoder.encode(modifyPassword.getNewPw()));
+        memberRepository.findById(member.getUserId());
+
     }
 }

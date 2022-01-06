@@ -7,9 +7,9 @@
 </head>
 <body class="bg-right" style="height: 100vh">
 <th:block th:replace="fragments::flg_nav"></th:block>
-<div class="container-fluid" style="padding-top: 9rem; padding-bottom: 9rem; min-height: 92vh">
+<div class="container-fluid" style="padding-top: 9rem; padding-bottom: 9rem; min-height: 92vh" th:object="${session.authentication}">
    <div class="row">
-      <div class="col-md-10 col-11 mx-auto" th:object="${session.authentication}">
+      <div class="col-md-10 col-11 mx-auto">
          <!-- Side navbar -->
          <div class="row">
             <div class="col-lg-3 col-md-4 d-md-block">
@@ -245,18 +245,17 @@
                      <div class="tab-pane " id="security">
                         <h6>Security Setting</h6>
                         <hr>
-                        <form action="/member/modify-password" method="post">
+                        <form th:action="@{/member/modify-password}" method="post">
                            <div class="mb-3">
-                              <input type="hidden" th:value="*{member.userId}">
+                              <input type="hidden" name="userId" th:value="*{member.userId}">
                               <label class="form-label">현재 비밀번호</label>
                               <input type="Password" class="form-control" id="currPw" name="curPw" placeholder="현재 비밀번호">
-                              <p th:if="${#fields.hasErrors('wrongPw')}" class='text-muted small' id="infoCurrPw" th:errors="*{wrongPw}"></p>
+                              <p th:if="${error}" class='text-muted small' id="infoCurrPw" th:text="${error.curPw}"></p>
                               <label class="form-label">새로운 비밀번호</label>
                               <input type="Password" class="form-control mb-2" id="newPw" name="newPw" placeholder="새로운 비밀번호">
                               <input type="Password" class="form-control mb-2" id="confirmNewPw" name="confirmNewPw" placeholder="비밀번호 확인">
-                              <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class='text-muted small' id="infoNewPw"></div>
-                              <button class="btn btn-outline-info" id="btnModifyPw" type="submit">비밀번호 변경
-                              </button>
+                              <div th:if="${error}" th:text="${error.newPw}" class='text-muted small' id="infoNewPw"></div>
+                              <button class="btn btn-outline-info" id="btnModifyPw" type="submit">비밀번호 변경</button>
                            </div>
                         </form>
                         <hr>
@@ -305,26 +304,32 @@
 <th:block th:replace="fragments::flg_footer"></th:block>
 <th:block th:replace="fragments::flg_jsFiles"></th:block>
 <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
-<script src="/static/js/member/mypage.js"></script>
-(() => {
-if ("${authMentor}" != "") {
-var dataArr = ["${authMentor.grade}", "${authMentor.major}", "${authMentor.wantDay}", "${authMentor.wantTime}",
-"${authMentor.requirement}"];
-} else {
-var dataArr = ["${authMentee.major}", "${authMentee.grade}"];
-}
+<script src="/js/member/mypage.js"></script>
+<script th:inline="javascript">
+    var authentication = [[${session.authentication}]];
+    (() => {
+        if (authentication.member.role.includes('MO')) {
+            var dataArr = [authentication.grade, authentication.major, authentication.wantDay, authentication.wantTime,
+                authentication.requirement];
+        } else {
+            var dataArr = [authentication.major, authentication.major];
+        }
 
-var i = 0;
+        var i = 0;
 
-document.querySelectorAll('select').forEach(e => {
-document.querySelectorAll('#' + e.dataset.sel + ' option').forEach(t => {
-console.dir(t.value)
-console.dir(dataArr[i])
-if (t.value == dataArr[i]) t.selected = true;
-})
-i++;
-})
-})();
+        document.querySelectorAll('select').forEach(e => {
+            document.querySelectorAll('#' + e.dataset.sel + ' option').forEach(t => {
+                if (t.value == dataArr[i]) t.selected = true;
+            })
+            i++;
+        });
+
+
+        if([[${error}]]){
+            document.querySelector('#profile').className = "tab-pane";
+            document.querySelector('#security').className += "active";
+        }
+    })();
 </script>
 </body>
 </html>

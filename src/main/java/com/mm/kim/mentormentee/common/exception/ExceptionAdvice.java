@@ -20,18 +20,18 @@ public class ExceptionAdvice {
 
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(HandlableException.class)
-    public String handleExceptionProcess(HandlableException e, RedirectAttributes redirectAttr){
-        redirectAttr.addAttribute("msg", e.errorCode.MESSAGE);
-        redirectAttr.addAttribute("url", e.errorCode.URL);
+    public String handleExceptionProcess(HandlableException e, Model model){
+        model.addAttribute("msg", e.errorCode.MESSAGE);
+        model.addAttribute("url", e.errorCode.URL);
         return "/common/result";
     }
 
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(DataAccessException.class)
-    public String dataAccessExceptionProcess(DataAccessException e, RedirectAttributes redirectAttr){
+    public String dataAccessExceptionProcess(DataAccessException e, Model model){
         e.printStackTrace();
-        redirectAttr.addAttribute("msg", "데이터베이스 접근 중 에러가 발생하였습니다.");
-        redirectAttr.addAttribute("url", "/");
+        model.addAttribute("msg", "데이터베이스 접근 중 에러가 발생하였습니다.");
+        model.addAttribute("url", "/");
         return "/common/result";
     }
 

@@ -91,7 +91,7 @@ public class MemberController {
 
     @PostMapping("join-mentor")
     public String join(@Validated JoinForm form, Errors errors
-            , Mentor mentor, Model model, HttpSession session, RedirectAttributes redirectAttr){
+            , Mentor mentor, Model model, HttpSession session){
         form.setRole("MO00");
         ValidateResult vr = new ValidateResult();
 
@@ -105,13 +105,13 @@ public class MemberController {
 
         mentor.setMember(form.convertToMember());
 
-        sendEmail(form, session, redirectAttr, mentor);
-        return "redirect:/common/result";
+        sendEmail(form, session, model, mentor);
+        return "/common/result";
     }
 
     @PostMapping("join-mentee")
     public String join(@Validated JoinForm form, Errors errors
-            , Mentee mentee, Model model, HttpSession session, RedirectAttributes redirectAttr){
+            , Mentee mentee, Model model, HttpSession session){
         form.setRole("ME00");
         ValidateResult vr = new ValidateResult();
 
@@ -125,12 +125,12 @@ public class MemberController {
 
         mentee.setMember(form.convertToMember());
 
-        sendEmail(form, session, redirectAttr, mentee);
+        sendEmail(form, session, model, mentee);
 
-        return "redirect:/common/result";
+        return "/common/result";
     }
 
-    public void sendEmail(JoinForm form, HttpSession session, RedirectAttributes redirectAttr, Object mm){
+    public void sendEmail(JoinForm form, HttpSession session, Model model, Object mm){
         String token = UUID.randomUUID().toString();
         if(form.getRole().equals("ME00")){
             session.setAttribute("persistMentee", (Mentee)mm);
@@ -141,8 +141,8 @@ public class MemberController {
 
         memberService.authenticateByEmail(form, token);
 
-        redirectAttr.addAttribute("msg", "회원가입을 위한 이메일이 발송되었습니다.");
-        redirectAttr.addAttribute("url", "/");
+        model.addAttribute("msg", "회원가입을 위한 이메일이 발송되었습니다.");
+        model.addAttribute("url", "/index");
     }
 
     @GetMapping("join-impl/{token}")
@@ -150,7 +150,7 @@ public class MemberController {
                            @SessionAttribute(value = "persistToken", required = false) String persistToken,
                            @SessionAttribute(value = "persistMentor", required = false) Mentor mentor,
                            @SessionAttribute(value = "persistMentee", required = false) Mentee mentee,
-                           HttpSession session, RedirectAttributes redirectAttr){
+                           HttpSession session, Model model){
 
         System.out.println("token" + token);
         System.out.println("persistToken" + persistToken);
@@ -170,9 +170,9 @@ public class MemberController {
 
         session.removeAttribute("persistToken");
 
-        redirectAttr.addAttribute("msg", "회원가입을 환영합니다. 로그인 해주세요");
-        redirectAttr.addAttribute("url", "/member/login");
-        return "redirect:/common/result";
+        model.addAttribute("msg", "회원가입을 환영합니다. 로그인 해주세요");
+        model.addAttribute("url", "/member/login");
+        return "common/result";
 
     }
 
@@ -183,15 +183,27 @@ public class MemberController {
     }
 
     @GetMapping("mypage")
-    public void mypage(){}
+    public void mypage(Model model){
+        model.addAttribute(new ModifyPassword());
+    }
 
     @PostMapping("modify-password")
-    public String modifyPw(@Validated ModifyPassword modifyPassword, Errors errors){
+    public String modifyPw(@Validated ModifyPassword modifyPassword, Errors errors, Model model){
+
+        ValidateResult vr = new ValidateResult();
+
         if(errors.hasErrors()){
+            vr.addErrors(errors);
+            model.addAttribute(new ModifyPassword())
+                    .addAttribute("error", vr.getError());
             return "/member/mypage";
         }
 
-        return "/member/1234";
+        memberService.modifyPassword(modifyPassword);
+
+        model.addAttribute("msg", "비밀번호 수정이 완료되었습니다.");
+        model.addAttribute("url", "/member/mypage");
+        return "/common/result";
     }
 
 }
