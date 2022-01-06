@@ -154,7 +154,6 @@ public class MemberController {
 
         System.out.println("token" + token);
         System.out.println("persistToken" + persistToken);
-        System.out.println(mentor);
 
         if(!token.equals(persistToken)){
             throw new HandlableException(ErrorCode.AUTHENTICATION_FAILED_ERROR);
@@ -202,6 +201,47 @@ public class MemberController {
         memberService.modifyPassword(modifyPassword);
 
         model.addAttribute("msg", "비밀번호 수정이 완료되었습니다.");
+        model.addAttribute("url", "/member/mypage");
+        return "/common/result";
+    }
+
+    @PostMapping("modify-mentor")
+    public String modifyMentor(Member member, Mentor mentor, Model model, HttpSession session){
+        mentor.setMember(member);
+        Mentor modifedMentor = memberService.modifyMentor(mentor);
+
+        session.removeAttribute("authentication");
+        session.setAttribute("authentication", modifedMentor);
+
+        model.addAttribute("msg", "회원정보 수정이 완료되었습니다.");
+        model.addAttribute("url", "/member/mypage");
+        return "/common/result";
+    }
+
+    @PostMapping("modify-mentee")
+    public String modifyMentee(Member member, Mentee mentee, Model model, HttpSession session){
+        mentee.setMember(member);
+        Mentee modifiedMentee = memberService.modifyMentee(mentee);
+
+        session.removeAttribute("authentication");
+        session.setAttribute("authentication", modifiedMentee);
+
+        model.addAttribute("msg", "회원정보 수정이 완료되었습니다.");
+        model.addAttribute("url", "/member/mypage");
+        return "/common/result";
+    }
+
+    @PostMapping("modify-account")
+    public String modifyAccount(String bank, String accountNum, Model model, HttpSession session){
+        Mentor mentor = (Mentor) session.getAttribute("authentication");
+        mentor.setBank(bank);
+        mentor.setAccountNum(accountNum);
+        Mentor modifiedMentor = memberService.modifyAccount(mentor, bank, accountNum);
+
+        session.removeAttribute("authentication");
+        session.setAttribute("authentication", modifiedMentor);
+
+        model.addAttribute("msg", "계좌정보 수정이 완료되었습니다.");
         model.addAttribute("url", "/member/mypage");
         return "/common/result";
     }

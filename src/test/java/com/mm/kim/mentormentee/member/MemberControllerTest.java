@@ -137,4 +137,10 @@ class MemberControllerTest {
                 .andDo(print());
     }
 
+    @Test
+    @DisplayName("계좌정보 변경 테스트")
+    public void modifyAccount() throws Exception{
+
+    }
+
 }

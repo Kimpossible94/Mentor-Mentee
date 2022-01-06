@@ -28,8 +28,8 @@ public class MemberService {
     public Member authenticateUser(Member member) {
         Member memberEntity = memberRepository.findById(member.getUserId()).orElse(null);
 
-        if(memberEntity == null) return null;
-        if(!passwordEncoder.matches(member.getPassword(), memberEntity.getPassword())) return null;
+        if (memberEntity == null) return null;
+        if (!passwordEncoder.matches(member.getPassword(), memberEntity.getPassword())) return null;
 
         return memberEntity;
     }
@@ -78,7 +78,47 @@ public class MemberService {
         Member member = memberRepository.findMemberByUserId(modifyPassword.getUserId());
 
         member.setPassword(passwordEncoder.encode(modifyPassword.getNewPw()));
-        memberRepository.findById(member.getUserId());
+    }
 
+    @Transactional
+    public Mentor modifyMentor(Mentor mentor) {
+        Mentor curMentor = mentorRepository.findByMentorIdx(mentor.getMentorIdx());
+        curMentor.getMember().setUserName(mentor.getMember().getUserName());
+        curMentor.getMember().setEmail(mentor.getMember().getEmail());
+        curMentor.getMember().setPhone(mentor.getMember().getPhone());
+        curMentor.getMember().setAddress(mentor.getMember().getAddress());
+        curMentor.setUniversityName(mentor.getUniversityName());
+        curMentor.setUniversityType(mentor.getUniversityType());
+        curMentor.setGrade(mentor.getGrade());
+        curMentor.setWantTime(mentor.getWantTime());
+        curMentor.setWantDay(mentor.getWantDay());
+        if (mentor.getHistory() != null) {
+            curMentor.setHistory(curMentor.getHistory() + "," + mentor.getHistory());
+        }
+
+        return curMentor;
+    }
+
+    @Transactional
+    public Mentee modifyMentee(Mentee mentee) {
+        Mentee curMentee = menteeRepository.findByMenteeIdx(mentee.getMenteeIdx());
+        curMentee.getMember().setUserName(mentee.getMember().getUserName());
+        curMentee.getMember().setEmail(mentee.getMember().getEmail());
+        curMentee.getMember().setPhone(mentee.getMember().getPhone());
+        curMentee.getMember().setAddress(mentee.getMember().getAddress());
+        curMentee.setGrade(mentee.getGrade());
+        curMentee.setHopeMajor(mentee.getHopeMajor());
+        curMentee.setMajor(mentee.getMajor());
+        curMentee.setHopeUniversity(mentee.getHopeUniversity());
+        curMentee.setSchoolName(mentee.getSchoolName());
+        return curMentee;
+    }
+
+    @Transactional
+    public Mentor modifyAccount(Mentor mentor, String bank, String accountNum) {
+        Mentor curMentor = mentorRepository.findByMentorIdx(mentor.getMentorIdx());
+        curMentor.setBank(mentor.getBank());
+        curMentor.setAccountNum(mentor.getAccountNum());
+        return curMentor;
     }
 }

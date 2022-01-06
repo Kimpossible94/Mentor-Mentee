@@ -70,7 +70,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     private void checkMentor(HttpServletRequest request) {
         HttpSession session = request.getSession();
         Member member = new Member();
-        if(!member.getRole().equals("MO00") || !member.getRole().equals("MO01")){
+        if (!member.getRole().contains("MO")) {
             throw new HandlableException(ErrorCode.ACCESS_ONLY_MENTOR);
         }
     }
@@ -78,18 +78,22 @@ public class AuthInterceptor implements HandlerInterceptor {
     private void checkMentee(HttpServletRequest request) {
         HttpSession session = request.getSession();
         Member member = new Member();
-        if(!member.getRole().equals("ME00") || !member.getRole().equals("ME01")){
+        if (!member.getRole().contains("ME")) {
             throw new HandlableException(ErrorCode.ACCESS_ONLY_MENTEE);
         }
     }
 
     private void memberAuthorize(HttpServletRequest request, HttpServletResponse response, String[] uriArr) {
+        if (uriArr[2].contains("modify")) {
+            loginAuthorize(request);
+        }
         switch (uriArr[2]) {
             case "mypage":
             case "password-impl":
             case "logout":
                 loginAuthorize(request);
-            default: break;
+            default:
+                break;
         }
     }
 }

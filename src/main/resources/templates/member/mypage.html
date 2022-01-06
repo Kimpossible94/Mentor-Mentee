@@ -74,7 +74,9 @@
                      <div class="tab-pane active" id="profile">
                         <h6>프로필 정보</h6>
                         <hr>
-                        <form th:action="*{member.role.contains('MO') ? '/member/modify-mentor' : '/member/modify-mentee'}">
+                        <form th:action="*{member.role.contains('MO') ? '/member/modify-mentor' : '/member/modify-mentee'}" method="post">
+                           <input type="hidden" th:name="*{member.role.contains('MO')} ? mentorIdx : menteeIdx"
+                                  th:value="*{member.role.contains('MO')} ? *{mentorIdx} : *{menteeIdx}">
                            <div class="mb-3">
                               <label for="userName" class="form-label">이름</label>
                               <input type="text" class="form-control" id="userName" name="userName" required
@@ -99,7 +101,7 @@
                               <div class="mb-3">
                                  <label for="university" class="form-label">학교</label>
                                  <input type="text" class="form-control" id="university"
-                                        name="university" required th:value="*{universityName}">
+                                        name="universityName" required th:value="*{universityName}">
                               </div>
                               <div class="mb-3">
                                  <label for="grade" class="form-label">학년</label>
@@ -162,7 +164,7 @@
                               </div>
                               <div class="mb-3">
                                  <label for="originHistory" class="form-label">이력사항</label>
-                                 <div th:if="*{history ne null}" class='myHistory' id="originHistory" name="originHistory"
+                                 <div th:if="*{history ne null}" class='myHistory' id="originHistory" name="history"
                                       th:each="prod : *{history.split(',')}">
                                     <div th:text="${prod}"></div>
                                  </div>
@@ -179,7 +181,7 @@
                               <div class="mb-3">
                                  <label for="schoolName" class="form-label">학교</label>
                                  <input type="text" class="form-control" id="schoolName"
-                                        name="schoolName" required value="*{schoolName}">
+                                        name="schoolName" required th:value="*{schoolName}">
                               </div>
                               <div class="mb-3">
                                  <label for="major" class="form-label">현재 계열</label>
@@ -204,12 +206,12 @@
                               <div class="mb-3">
                                  <label for="hopeUniversity" class="form-label">희망 대학</label>
                                  <input type="text" class="form-control" id="hopeUniversity"
-                                        name="hopeUniversity" value="*{hopeUniversity}">
+                                        name="hopeUniversity" th:value="*{hopeUniversity}">
                               </div>
                               <div class="mb-3">
                                  <label for="hopeMajor" class="form-label">희망 학과</label>
                                  <input type="text" class="form-control" id="hopeMajor" name="hopeMajor"
-                                        value="*{hopeMajor}">
+                                        th:value="*{hopeMajor}">
                               </div>
                            </th:block>
                            <br>
@@ -262,37 +264,31 @@
                         <form action="javascript:loginFormWithKakao()">
                            <div class="form-group">
                               <label class="d-block mb-2">카카오 계정 연동</label>
-                              <!--                                        <c:choose>-->
-                              <!--                                            <c:when test="${authentication.kakaoJoin == 'y' }">-->
-                              <!--                                                <div class='text-muted small'>카카오 연동이 되어있습니다.</div>-->
-                              <!--                                            </c:when>-->
-                              <!--                                            <c:otherwise>-->
-                              <!--                                                <button class="btn" type="submit">-->
-                              <!--                                                    <img src="/resources/img/kakaoLogo.png">-->
-                              <!--                                                </button>-->
-                              <!--                                                <div class='text-muted small'>버튼을 클릭해 카카오아이디로 로그인 하세요~</div>-->
-                              <!--                                            </c:otherwise>-->
-                              <!--                                        </c:choose>-->
+                              <div th:if="*{member.kakaoJoin eq 'y'}" class='text-muted small'>카카오 연동이 되어있습니다.</div>
+                              <button th:unless="*{member.kakaoJoin eq 'y'}" class="btn" type="submit">
+                                 <img src="/img/kakaoLogo.png">
+                              </button>
+                              <div class='text-muted small'>버튼을 클릭해 카카오아이디로 로그인 하세요~</div>
                            </div>
                         </form>
                      </div>
 
-                     <!--                            <c:if test="${not empty sessionScope.authMentor }">-->
-                     <!--                                <div class="tab-pane " id="billing">-->
-                     <!--                                    <h6>계좌정보</h6>-->
-                     <!--                                    <hr>-->
-                     <!--                                    <form action="/member/modify-account" method="post">-->
-                     <!--                                        <div class="mb-3">-->
-                     <!--                                            <label for="accountNum" class="form-label">계좌번호</label>-->
-                     <!--                                            <input type="text" class="form-control" id="accountNum" value="${authMentor.accountNum}" name="accountNum" required placeholder="계좌번호">-->
-                     <!--                                            <p class='text-muted small' id="infoCurrPw">- 빼고 입력하세요</p>-->
-                     <!--                                            <label for="bankName" class="form-label">은행명</label>-->
-                     <!--                                            <input type="text" class="form-control mb-2" id="bankName" required name="bankName" value="${authMentor.bank}" placeholder="은행명">-->
-                     <!--                                            <button class="btn btn-outline-info" type="submit">계좌번호 변경</button>-->
-                     <!--                                        </div>-->
-                     <!--                                    </form>-->
-                     <!--                                </div>-->
-                     <!--                            </c:if>-->
+                     <div th:if="*{member.role.contains('MO')}" class="tab-pane " id="billing">
+                        <h6>계좌정보</h6>
+                        <hr>
+                        <form th:action="@{/member/modify-account}" method="post">
+                           <div class="mb-3">
+                              <label for="accountNum" class="form-label">계좌번호</label>
+                              <input type="text" class="form-control" id="accountNum" th:value="*{accountNum}" name="accountNum" required
+                                     placeholder="계좌번호">
+                              <p class='text-muted small'>- 빼고 입력하세요</p>
+                              <label for="bankName" class="form-label">은행명</label>
+                              <input type="text" class="form-control mb-2" id="bankName" required name="bank" th:value="*{bank}"
+                                     placeholder="은행명">
+                              <button class="btn btn-outline-info" type="submit">계좌번호 변경</button>
+                           </div>
+                        </form>
+                     </div>
                   </div>
                </div>
             </div>
@@ -325,7 +321,7 @@
         });
 
 
-        if([[${error}]]){
+        if ([[${error}]]) {
             document.querySelector('#profile').className = "tab-pane";
             document.querySelector('#security').className += "active";
         }
