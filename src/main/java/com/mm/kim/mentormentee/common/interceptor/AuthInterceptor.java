@@ -3,6 +3,7 @@ package com.mm.kim.mentormentee.common.interceptor;
 import com.mm.kim.mentormentee.common.code.ErrorCode;
 import com.mm.kim.mentormentee.common.exception.HandlableException;
 import com.mm.kim.mentormentee.member.Member;
+import com.mm.kim.mentormentee.member.Mentee;
 import com.mm.kim.mentormentee.member.Mentor;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -69,16 +70,16 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     private void checkMentor(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        Member member = new Member();
-        if (!member.getRole().contains("MO")) {
+        Mentor mentor = (Mentor) session.getAttribute("authentication");
+        if (!mentor.getMember().getRole().contains("MO")) {
             throw new HandlableException(ErrorCode.ACCESS_ONLY_MENTOR);
         }
     }
 
     private void checkMentee(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        Member member = new Member();
-        if (!member.getRole().contains("ME")) {
+        Mentee mentee = (Mentee) session.getAttribute("authentication");
+        if (!mentee.getMember().getRole().contains("ME")) {
             throw new HandlableException(ErrorCode.ACCESS_ONLY_MENTEE);
         }
     }
@@ -88,9 +89,13 @@ public class AuthInterceptor implements HandlerInterceptor {
             loginAuthorize(request);
         }
         switch (uriArr[2]) {
+            case "upload-img":
+                checkMentor(request);
             case "mypage":
             case "password-impl":
             case "logout":
+            case "kakao-auth":
+            case "confirm-pw":
                 loginAuthorize(request);
             default:
                 break;

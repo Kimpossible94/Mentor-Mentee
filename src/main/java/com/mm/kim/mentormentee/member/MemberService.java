@@ -1,7 +1,11 @@
 package com.mm.kim.mentormentee.member;
 
 import com.mm.kim.mentormentee.common.code.Config;
+import com.mm.kim.mentormentee.common.code.ErrorCode;
+import com.mm.kim.mentormentee.common.exception.HandlableException;
 import com.mm.kim.mentormentee.common.mail.EmailSender;
+import com.mm.kim.mentormentee.common.util.file.FileInfo;
+import com.mm.kim.mentormentee.common.util.file.FileUtil;
 import com.mm.kim.mentormentee.member.validator.JoinForm;
 import com.mm.kim.mentormentee.member.validator.ModifyPassword;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpSession;
 
 @Service
 @RequiredArgsConstructor
@@ -120,5 +127,49 @@ public class MemberService {
         curMentor.setBank(mentor.getBank());
         curMentor.setAccountNum(mentor.getAccountNum());
         return curMentor;
+    }
+
+    public Member findMemberByKaKaoId(String id) {
+        return memberRepository.findMemberByKakaoJoin(id).orElse(null);
+    }
+
+    @Transactional
+    public void modifyMemberKakaoJoin(Member member) {
+        Member curMember = memberRepository.findById(member.getUserId()).orElseThrow(() ->
+                new HandlableException(ErrorCode.VALIDATOR_FAIL_ERROR));
+        curMember.setKakaoJoin(member.getKakaoJoin());
+    }
+
+    @Transactional
+    public Mentor modifyMentorImage(MultipartFile image, Mentor mentor) {
+        Mentor curMentor =  mentorRepository.findByMentorIdx(mentor.getMentorIdx());
+
+        FileInfo fileInfo = new FileInfo();
+        FileUtil fileUtil = new FileUtil();
+
+        fileInfo = fileUtil.fileUpload(image);
+
+        curMentor.setFileInfo(fileInfo);
+
+        return curMentor;
+    }
+
+    public boolean deleteMember(HttpSession session, String role, String password) {
+        if(role.contains("MO")){
+            Mentor mentor = (Mentor) session.getAttribute("authentication");
+            Mentor certifiedMentor = mentorRepository.findByMentorIdx(mentor.getMentorIdx());
+            if(!checkMatches(password, certifiedMentor.getMember().getPassword())) return false;
+            mentorRepository.delete(certifiedMentor);
+        } else {
+            Mentee mentee = (Mentee) session.getAttribute("authentication");
+            Mentee certifiedMentee = menteeRepository.findByMenteeIdx(mentee.getMenteeIdx());
+            if(!checkMatches(password, certifiedMentee.getMember().getPassword())) return false;
+            menteeRepository.delete(certifiedMentee);
+        }
+        return true;
+    }
+
+    private boolean checkMatches(String password, String encodedPassword) {
+        return passwordEncoder.matches(password, encodedPassword);
     }
 }

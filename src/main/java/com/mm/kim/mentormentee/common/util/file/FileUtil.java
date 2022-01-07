@@ -15,18 +15,18 @@ public class FileUtil {
 
     public FileInfo fileUpload(MultipartFile file) {
 
-        FileInfo fileDTO = null;
+        FileInfo fileinfo = null;
 
         try {
             String uploadPath = createUploadPath(createSubPath());
-            fileDTO = createFileDTO(file);
-            File dest = new File(uploadPath + fileDTO.getRenameFileName());
+            fileinfo = createFileDTO(file);
+            File dest = new File(uploadPath + fileinfo.getRenameFileName());
             file.transferTo(dest);
         } catch (IllegalStateException | IOException e) {
             throw new HandlableException(ErrorCode.FAILED_FILE_UPLOAD_ERROR	,e);
         }
 
-        return fileDTO;
+        return fileinfo;
     }
 
     private String createSubPath() {
@@ -59,12 +59,12 @@ public class FileUtil {
 
         String savePath = createSubPath();
 
-        FileInfo fileDTO = new FileInfo();
-        fileDTO.setOriginFileName(originFileName);
-        fileDTO.setRenameFileName(renameFileName);
-        fileDTO.setSavePath(savePath);
+        FileInfo fileinfo = new FileInfo();
+        fileinfo.setOriginFileName(originFileName);
+        fileinfo.setRenameFileName(renameFileName);
+        fileinfo.setSavePath(savePath);
 
-        return fileDTO;
+        return fileinfo;
     }
 
     public void removeFile(String path) {

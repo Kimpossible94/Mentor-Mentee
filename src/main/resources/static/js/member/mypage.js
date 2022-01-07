@@ -1,3 +1,7 @@
+(()=>{
+    Kakao.init("3848");
+})();
+
 let cnt = 1;
 let div = document.createElement('div');
 let addHist = () => {
@@ -24,58 +28,56 @@ document.querySelector('#resetBtn').addEventListener('click', (e) => {
 })
 
 
-Kakao.init("0f53e9a65e6dce062add32c866c84d39");
 
 function loginFormWithKakao() {
-    Kakao.Auth
-        .loginForm({
-            success: function (authObj) {
-                Kakao.Auth
-                    .login({
-                        scope: 'profile_nickname,account_email,gender',
-                        success: function (e) {
-                            console.dir(e)
-                            Kakao.API
-                                .request({
+    if(!Kakao.isInitialized()){
+        alert("카카오 인스턴스가 존재하지 않습니다.");
+        return;
+    }
 
-                                    url: '/v2/user/me',
-                                    success: function (res) {
-                                        fetch("/member/kakao-auth?kakao=" + res.id)
-                                            .then((response) => {
-                                                if (response.ok) {
-                                                    return response.text()
+    var type = document.getElementById('memberRole').value;
 
-                                                } else {
-                                                    throw new Error(response.status);
-                                                }
-                                            }).then(text => {
-                                            if (text == "available") {
-                                                alert("연동이 완료되었습니다.")
-                                            } else {
-                                                alert("이미 등록된 계정입니다.")
-                                            }
-
-                                            location.href = "/member/mypage"
-                                        })
-
-                                    },
-                                    fail: function (error) {
-                                        alert('login success, but failed to request user information: '
-                                            + JSON.stringify(error))
+    Kakao.Auth.loginForm({
+        success: function (authObj) {
+            Kakao.Auth.login({
+                scope: 'profile_nickname,account_email,gender',
+                success: function (e) {
+                    console.dir("aaaaa" + e);
+                    Kakao.API.request({
+                        url: '/v2/user/me',
+                        success: function (res) {
+                            console.dir(res);
+                            fetch("/member/kakao-auth?kakao=" + res.id + "&type=" + type)
+                                .then((response) => {
+                                    if (response.ok) {
+                                        return response.text()
+                                    } else {
+                                        throw new Error(response.status);
                                     }
+                                })
+                                .then(text => {
+                                    if (text == "available") {
+                                        alert("연동이 완료되었습니다.")
+                                    } else {
+                                        alert("이미 등록된 계정입니다.")
+                                    }
+                                    location.href = "/member/mypage"
                                 })
                         },
                         fail: function (error) {
-                            console.dir(error)
-                        },
-
+                            alert('login success, but failed to request user information: ' + JSON.stringify(error))
+                        }
                     })
-
-            },
-            fail: function (err) {
-                showResult(JSON.stringify(err))
-            },
-        })
+                },
+                fail: function (error) {
+                    console.dir(error);
+                },
+                })
+        },
+        fail: function (err) {
+            console.dir(JSON.stringify(err));
+        },
+    })
 }
 		
 		

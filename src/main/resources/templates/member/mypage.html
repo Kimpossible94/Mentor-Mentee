@@ -14,9 +14,9 @@
          <div class="row">
             <div class="col-lg-3 col-md-4 d-md-block">
                <div class="card bg-common card-left bg-commom">
-                  <div class="profile">
+                  <div class="profile"
                      <th:block th:if="*{member.role.contains('MO')}">
-                        <img th:if="*{profileImg != 0}" src="${files.downloadURL}"
+                        <img th:if="*{fileInfo ne null}" th:src="*{fileInfo.link}"
                              class="card-img-top img-fluid roundned-circle" alt
                              style="margin: 15px auto; width: 120px; height: 120px; display: block">
                      </th:block>
@@ -90,7 +90,7 @@
                            <div class="mb-3">
                               <label for="phone" class="form-label">핸드폰</label>
                               <input type="text" class="form-control" id="phone" name="phone" required
-                                     th:value="*{member.phone}">
+                                     th:value="*{member.countryCode + member.phone}">
                            </div>
                            <div class="mb-3">
                               <label for="address" class="form-label">주소</label>
@@ -229,7 +229,8 @@
                               enctype="multipart/form-data">
                            <div class="mb-3">
                               <label for="profile_img" class="form-label">사진등록</label>
-                              <input type="file" class="btn form-control" name="files" id="profile_img">
+                              <input type="file" class="btn form-control" name="image" id="profile_img"
+                                     accept="image/png, image/gif, image/jpeg">
                               <small class='form-text text-muted'>사진을 등록하세요.</small>
                            </div>
                            <button class="btn btn-success">사진 등록하기</button>
@@ -262,13 +263,14 @@
                         </form>
                         <hr>
                         <form action="javascript:loginFormWithKakao()">
+                           <input type="hidden" id="memberRole" th:value="*{member.role}">
                            <div class="form-group">
                               <label class="d-block mb-2">카카오 계정 연동</label>
-                              <div th:if="*{member.kakaoJoin eq 'y'}" class='text-muted small'>카카오 연동이 되어있습니다.</div>
-                              <button th:unless="*{member.kakaoJoin eq 'y'}" class="btn" type="submit">
+                              <div th:if="*{member.kakaoJoin ne null}" class='text-muted small'>카카오 연동이 되어있습니다.</div>
+                              <button th:unless="*{member.kakaoJoin ne null}" class="btn" type="submit">
                                  <img src="/img/kakaoLogo.png">
                               </button>
-                              <div class='text-muted small'>버튼을 클릭해 카카오아이디로 로그인 하세요~</div>
+                              <div th:unless="*{member.kakaoJoin ne null}" class='text-muted small'>버튼을 클릭해 카카오아이디로 로그인 하세요~</div>
                            </div>
                         </form>
                      </div>

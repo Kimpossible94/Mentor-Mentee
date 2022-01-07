@@ -1,5 +1,6 @@
 package com.mm.kim.mentormentee.member;
 
+import com.mm.kim.mentormentee.common.util.file.FileInfo;
 import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -28,7 +29,9 @@ public class Mentor {
     private String requirement;
     private String history; //이력
     private int mentoringCnt;
-    private int profileImg;
     private String accountNum;
     private String bank;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private FileInfo fileInfo;
 }

@@ -15,9 +15,12 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Controller
@@ -246,4 +249,48 @@ public class MemberController {
         return "/common/result";
     }
 
+    @GetMapping("kakao-auth")
+    @ResponseBody
+    public String kakaoAuth(String kakao, String type, HttpSession session){
+        if(memberService.findMemberByKaKaoId(kakao) != null) return "unavailable";
+        if(type.contains("MO")){
+            Mentor mentor = (Mentor) session.getAttribute("authentication");
+            mentor.getMember().setKakaoJoin(kakao);
+            memberService.modifyMemberKakaoJoin(mentor.getMember());
+        } else {
+            Mentee mentee = (Mentee) session.getAttribute("authentication");
+            mentee.getMember().setKakaoJoin(kakao);
+            memberService.modifyMemberKakaoJoin(mentee.getMember());
+        }
+
+        return "available";
+    }
+
+    @PostMapping("upload-img")
+    public String uploadImg(MultipartFile image, @SessionAttribute(name = "authentication") Mentor mentor
+            , HttpSession session){
+        Mentor modifiedMentor = memberService.modifyMentorImage(image, mentor);
+
+        session.removeAttribute("authentication");
+        session.setAttribute("authentication", modifiedMentor);
+
+        return "/member/mypage";
+    }
+
+    @GetMapping("confirm-pw")
+    public void confirmPw(){}
+
+    @PostMapping("delete-member")
+    public String deleteMember(RedirectAttributes redirectAttr, String password, String role, HttpSession session, Model model){
+        if(!memberService.deleteMember(session, role, password)){
+            redirectAttr.addFlashAttribute("error", "비밀번호가 일치하지 않습니다.");
+            return "redirect:/member/confirm-pw";
+        }
+
+        session.removeAttribute("authentication");
+
+        model.addAttribute("msg", "회원탈퇴 되었습니다.");
+        model.addAttribute("url", "/");
+        return "/common/result";
+    }
 }

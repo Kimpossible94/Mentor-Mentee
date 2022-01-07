@@ -143,4 +143,18 @@ class MemberControllerTest {
 
     }
 
+    @Test
+    @DisplayName("카카오 로그인 추가 테스트")
+    public void kakaoAuthTest() throws Exception{
+        Member member = new Member();
+        member.setUserId("test1");
+        String kakaoId = "123111111";
+
+        mockMvc.perform(get("/member/kakao-auth/" + kakaoId)
+                .sessionAttr("authentication", member))
+                .andExpect(status().isOk())
+                .andDo(print());
+
+    }
+
 }
