@@ -33,7 +33,7 @@ public class MemberController {
     private ModifyPasswordValidator passwordValidator;
 
     public MemberController(MemberService memberService, JoinFormValidator joinFormValidator
-            , ModifyPasswordValidator passwordValidator){
+            , ModifyPasswordValidator passwordValidator) {
         super();
         this.memberService = memberService;
         this.joinFormValidator = joinFormValidator;
@@ -41,17 +41,18 @@ public class MemberController {
     }
 
     @InitBinder(value = "joinForm")
-    public void initJoiFormBinder(WebDataBinder webDataBinder){
+    public void initJoiFormBinder(WebDataBinder webDataBinder) {
         webDataBinder.addValidators(joinFormValidator);
     }
 
     @InitBinder(value = "modifyPassword")
-    public void initPwModifyBinder(WebDataBinder webDataBinder){
+    public void initPwModifyBinder(WebDataBinder webDataBinder) {
         webDataBinder.addValidators(passwordValidator);
     }
 
     @GetMapping("login")
-    public void login() {}
+    public void login() {
+    }
 
     @PostMapping("login")
     public String loginImpl(RedirectAttributes redirectAttr, Member member, HttpSession session) {
@@ -62,7 +63,7 @@ public class MemberController {
             return "redirect:/member/login";
         }
 
-        if(certifiedMember.getRole().contains("MO")){
+        if (certifiedMember.getRole().contains("MO")) {
             Mentor certifiedMentor = memberService.findMentorByMember(certifiedMember);
             session.setAttribute("authentication", certifiedMentor);
         } else {
@@ -73,20 +74,44 @@ public class MemberController {
         return "redirect:/member/mypage";
     }
 
+    @GetMapping("kakao-login/{kakaoId}")
+    @ResponseBody
+    public Member kakaoLogin(@PathVariable(name = "kakaoId") String id) {
+        Member certifiedMember = memberService.findMemberByKaKaoId(id);
+        if (certifiedMember == null) {
+            Member member = new Member();
+            member.setKakaoJoin(id);
+            return member;
+        }
+
+        return certifiedMember;
+    }
+
     @GetMapping("join-rule")
-    public void joinRule() {}
+    public String joinRule(String kakao, Model model) {
+        if (kakao != null) {
+            model.addAttribute("joinKaKao", kakao);
+        }
+        return "/member/join-rule";
+    }
 
     @GetMapping("join-form")
-    public void joinForm(String type, Model model) {
-        model.addAttribute("joinForm", new JoinForm())
-                .addAttribute("error",new ValidateResult().getError())
+    public void joinForm(String type, String kakao, Model model) {
+        if (kakao != null) {
+            JoinForm joinForm = new JoinForm();
+            joinForm.setKakaoJoin(kakao);
+            model.addAttribute("joinForm", joinForm);
+        } else {
+            model.addAttribute("joinForm", new JoinForm());
+        }
+        model.addAttribute("error", new ValidateResult().getError())
                 .addAttribute("type", type);
     }
 
     @GetMapping("id-check")
     @ResponseBody
-    public String idCheck(String userId){
-        if(memberService.existsMemberById(userId)){
+    public String idCheck(String userId) {
+        if (memberService.existsMemberById(userId)) {
             return "not-available";
         }
         return "available";
@@ -94,18 +119,17 @@ public class MemberController {
 
     @PostMapping("join-mentor")
     public String join(@Validated JoinForm form, Errors errors
-            , Mentor mentor, Model model, HttpSession session){
+            , Mentor mentor, Model model, HttpSession session) {
         form.setRole("MO00");
         ValidateResult vr = new ValidateResult();
 
-        if(errors.hasErrors()){
+        if (errors.hasErrors()) {
             vr.addErrors(errors);
             model.addAttribute("joinForm", form)
                     .addAttribute("error", vr.getError())
                     .addAttribute("type", "mentor");
             return "/member/join-form";
         }
-
         mentor.setMember(form.convertToMember());
 
         sendEmail(form, session, model, mentor);
@@ -114,11 +138,11 @@ public class MemberController {
 
     @PostMapping("join-mentee")
     public String join(@Validated JoinForm form, Errors errors
-            , Mentee mentee, Model model, HttpSession session){
+            , Mentee mentee, Model model, HttpSession session) {
         form.setRole("ME00");
         ValidateResult vr = new ValidateResult();
 
-        if(errors.hasErrors()){
+        if (errors.hasErrors()) {
             vr.addErrors(errors);
             model.addAttribute("joinForm", form)
                     .addAttribute("error", vr.getError())
@@ -133,12 +157,12 @@ public class MemberController {
         return "/common/result";
     }
 
-    public void sendEmail(JoinForm form, HttpSession session, Model model, Object mm){
+    public void sendEmail(JoinForm form, HttpSession session, Model model, Object mm) {
         String token = UUID.randomUUID().toString();
-        if(form.getRole().equals("ME00")){
-            session.setAttribute("persistMentee", (Mentee)mm);
+        if (form.getRole().equals("ME00")) {
+            session.setAttribute("persistMentee", (Mentee) mm);
         } else {
-            session.setAttribute("persistMentor", (Mentor)mm);
+            session.setAttribute("persistMentor", (Mentor) mm);
         }
         session.setAttribute("persistToken", token);
 
@@ -153,16 +177,16 @@ public class MemberController {
                            @SessionAttribute(value = "persistToken", required = false) String persistToken,
                            @SessionAttribute(value = "persistMentor", required = false) Mentor mentor,
                            @SessionAttribute(value = "persistMentee", required = false) Mentee mentee,
-                           HttpSession session, Model model){
+                           HttpSession session, Model model) {
 
         System.out.println("token" + token);
         System.out.println("persistToken" + persistToken);
 
-        if(!token.equals(persistToken)){
+        if (!token.equals(persistToken)) {
             throw new HandlableException(ErrorCode.AUTHENTICATION_FAILED_ERROR);
         }
 
-        if(mentor != null){
+        if (mentor != null) {
             memberService.persistMentor(mentor);
             session.removeAttribute("persistMentor");
         } else {
@@ -179,22 +203,22 @@ public class MemberController {
     }
 
     @GetMapping("logout")
-    public String logout(HttpSession session){
+    public String logout(HttpSession session) {
         session.removeAttribute("authentication");
         return "redirect:/";
     }
 
     @GetMapping("mypage")
-    public void mypage(Model model){
+    public void mypage(Model model) {
         model.addAttribute(new ModifyPassword());
     }
 
     @PostMapping("modify-password")
-    public String modifyPw(@Validated ModifyPassword modifyPassword, Errors errors, Model model){
+    public String modifyPw(@Validated ModifyPassword modifyPassword, Errors errors, Model model) {
 
         ValidateResult vr = new ValidateResult();
 
-        if(errors.hasErrors()){
+        if (errors.hasErrors()) {
             vr.addErrors(errors);
             model.addAttribute(new ModifyPassword())
                     .addAttribute("error", vr.getError());
@@ -209,7 +233,7 @@ public class MemberController {
     }
 
     @PostMapping("modify-mentor")
-    public String modifyMentor(Member member, Mentor mentor, Model model, HttpSession session){
+    public String modifyMentor(Member member, Mentor mentor, Model model, HttpSession session) {
         mentor.setMember(member);
         Mentor modifedMentor = memberService.modifyMentor(mentor);
 
@@ -222,7 +246,7 @@ public class MemberController {
     }
 
     @PostMapping("modify-mentee")
-    public String modifyMentee(Member member, Mentee mentee, Model model, HttpSession session){
+    public String modifyMentee(Member member, Mentee mentee, Model model, HttpSession session) {
         mentee.setMember(member);
         Mentee modifiedMentee = memberService.modifyMentee(mentee);
 
@@ -235,7 +259,7 @@ public class MemberController {
     }
 
     @PostMapping("modify-account")
-    public String modifyAccount(String bank, String accountNum, Model model, HttpSession session){
+    public String modifyAccount(String bank, String accountNum, Model model, HttpSession session) {
         Mentor mentor = (Mentor) session.getAttribute("authentication");
         mentor.setBank(bank);
         mentor.setAccountNum(accountNum);
@@ -251,9 +275,9 @@ public class MemberController {
 
     @GetMapping("kakao-auth")
     @ResponseBody
-    public String kakaoAuth(String kakao, String type, HttpSession session){
-        if(memberService.findMemberByKaKaoId(kakao) != null) return "unavailable";
-        if(type.contains("MO")){
+    public String kakaoAuth(String kakao, String type, HttpSession session) {
+        if (memberService.findMemberByKaKaoId(kakao) != null) return "unavailable";
+        if (type.contains("MO")) {
             Mentor mentor = (Mentor) session.getAttribute("authentication");
             mentor.getMember().setKakaoJoin(kakao);
             memberService.modifyMemberKakaoJoin(mentor.getMember());
@@ -268,7 +292,7 @@ public class MemberController {
 
     @PostMapping("upload-img")
     public String uploadImg(MultipartFile image, @SessionAttribute(name = "authentication") Mentor mentor
-            , HttpSession session){
+            , HttpSession session) {
         Mentor modifiedMentor = memberService.modifyMentorImage(image, mentor);
 
         session.removeAttribute("authentication");
@@ -278,11 +302,12 @@ public class MemberController {
     }
 
     @GetMapping("confirm-pw")
-    public void confirmPw(){}
+    public void confirmPw() {
+    }
 
     @PostMapping("delete-member")
-    public String deleteMember(RedirectAttributes redirectAttr, String password, String role, HttpSession session, Model model){
-        if(!memberService.deleteMember(session, role, password)){
+    public String deleteMember(RedirectAttributes redirectAttr, String password, String role, HttpSession session, Model model) {
+        if (!memberService.deleteMember(session, role, password)) {
             redirectAttr.addFlashAttribute("error", "비밀번호가 일치하지 않습니다.");
             return "redirect:/member/confirm-pw";
         }

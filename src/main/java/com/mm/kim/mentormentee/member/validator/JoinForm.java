@@ -15,6 +15,7 @@ public class JoinForm {
     private String phone;
     private String nickname;
     private String role;
+    private String kakaoJoin;
 
     public Member convertToMember(){
         Member member = new Member();
@@ -28,6 +29,7 @@ public class JoinForm {
         member.setCountryCode(countryCode);
         member.setNickname(nickname);
         member.setRole(role);
+        member.setKakaoJoin(kakaoJoin);
         return member;
     }
 
