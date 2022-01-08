@@ -61,9 +61,9 @@
                                                 <a href="/mentoring/apply-page" class="nav-link">멘토신청</a>
                                             </li>
                                             <li>
-                                                <a th:if="*{member.role.contains('MO')}" href="/board/mentor"
+                                                <a th:if="*{member.role.contains('MO')}" href="/board/board-list?type=MO"
                                                    class="nav-link">멘토게시판</a>
-                                                <a th:if="*{member.role.contains('ME')}" href="/board/mentor"
+                                                <a th:if="*{member.role.contains('ME')}" href="/board/board-list?type=ME"
                                                    class="nav-link">멘티게시판</a>
                                             </li>
                                             <li><a href="/todo/main" class="nav-link">일정관리</a></li>

@@ -83,8 +83,23 @@ public class MemberController {
             member.setKakaoJoin(id);
             return member;
         }
-
+        certifiedMember.setJoinDate(null);
         return certifiedMember;
+    }
+
+    @PostMapping("kakao-login-impl")
+    @ResponseBody
+    public String kakaoLoginImpl(@RequestBody Member member, HttpSession session){
+        System.out.println(member);
+        if(member.getRole().contains("MO")){
+            Mentor mentor = memberService.findMentorByMember(member);
+            session.setAttribute("authentication", mentor);
+        } else {
+            Mentee mentee = memberService.findMenteeByMember(member);
+            session.setAttribute("authentication", mentee);
+        }
+
+        return "success";
     }
 
     @GetMapping("join-rule")

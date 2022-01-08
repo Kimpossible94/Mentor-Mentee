@@ -1,5 +1,5 @@
 (() => {
-    Kakao.init("301666567c882d68ede3425ac4a18848");
+    Kakao.init("2");
 })();
 
 function loginFormWithKakao() {
@@ -28,12 +28,22 @@ function loginFormWithKakao() {
                                     if (res.userId == null) {
                                         alert("회원가입되어 있지 않은 카카오계정입니다.\n회원가입페이지로 이동합니다." +
                                             "\n회원가입 후 자동으로 카카오 연동이 됩니다.");
-                                        location.href="/member/join-rule?kakao=" + res.kakaoJoin;
+                                        location.href = "/member/join-rule?kakao=" + res.kakaoJoin;
                                     } else {
                                         fetch("/member/kakao-login-impl",
                                             {
                                                 method: 'POST',
+                                                headers: {
+                                                    'content-type' : 'application/json'
+                                                },
                                                 body: JSON.stringify(res)
+                                            })
+                                            .then(res => {
+                                                if (res.ok) {
+                                                    location.href = "/member/mypage";
+                                                } else {
+                                                    throw new Error(res.status);
+                                                }
                                             })
                                     }
                                 })
