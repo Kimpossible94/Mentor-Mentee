@@ -20,12 +20,15 @@
             <input type="hidden" name="type" th:value="*{member.role.contains('MO')} ? 'MO' : 'ME'">
             <div id="searchList">
                 <select id="selectBox" name="condition">
-                    <option th:selected="${search.condition eq bdTitle}" value="bdTitle">제목</option>
-                    <option th:selected="${search.condition eq userId}" value="userId">작성자</option>
+                    <option th:if="${search eq null}" value="bdTitle">제목</option>
+                    <option th:if="${search eq null}" value="userId">작성자</option>
+                    <option th:if="${search ne null}" th:selected="${search.condition} eq 'bdTitle'" value="bdTitle">제목</option>
+                    <option th:if="${search ne null}" th:selected="${search.condition} eq 'userId'" value="userId">작성자</option>
                 </select>
             </div>
             <div id="searchBox">
-                <input id="inputBox" type="text" placeholder="검색어를 입력하세요" name="word" th:value="${search.word}"/>
+                <input id="inputBox" th:if="${search eq null}" type="text" placeholder="검색어를 입력하세요" name="word"/>
+                <input id="inputBox" th:if="${search ne null}" type="text" placeholder="검색어를 입력하세요" name="word" th:value="${search.word}"/>
                 <div id="buttonBox">
                     <button type="submit">검색</button>
                 </div>
@@ -91,7 +94,8 @@
             </div>
         </div>
         <div id="writerButton">
-            <button type="button" onclick="location.href='mentee/mentee-board-create-form'">글작성</button>
+            <button type="button" th:onclick="*{member.role.contains('MO')} ? 'location.href=\'/board/create-form?type=MO\''
+                                                                            : 'location.href=\'/board/create-form?type=ME\''">글작성</button>
         </div>
     </div>
 </div>
