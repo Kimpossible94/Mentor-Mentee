@@ -74,7 +74,7 @@
                      <div class="tab-pane active" id="profile">
                         <h6>프로필 정보</h6>
                         <hr>
-                        <form th:action="*{member.role.contains('MO') ? '/member/modify-mentor' : '/member/modify-mentee'}" method="post">
+                        <form th:action="*{member.role.contains('MO')} ? '/member/modify-mentor' : '/member/modify-mentee'" method="post">
                            <input type="hidden" th:name="*{member.role.contains('MO')} ? mentorIdx : menteeIdx"
                                   th:value="*{member.role.contains('MO')} ? *{mentorIdx} : *{menteeIdx}">
                            <div class="mb-3">

@@ -1,15 +1,14 @@
 package com.mm.kim.mentormentee.board;
 
+import com.mm.kim.mentormentee.common.code.ErrorCode;
+import com.mm.kim.mentormentee.common.exception.HandlableException;
 import com.mm.kim.mentormentee.member.Member;
 import com.mm.kim.mentormentee.member.Mentee;
 import com.mm.kim.mentormentee.member.Mentor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
@@ -23,14 +22,10 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping("board-list")
-    public void boardList(HttpSession session, Model model, String type, Search search) {
-        System.out.println("-===-=--=-=-=-=-=========================== " + type);
-        if (type.equals("MO")) {
-            Mentor mentor = (Mentor) session.getAttribute("authentication");
-        } else {
-            Mentee mentee = (Mentee) session.getAttribute("authentication");
-        }
-        model.addAttribute("search", search);
+    public void boardList(HttpSession session, Model model, String type, Search search
+            , @RequestParam(required = false, defaultValue = "1") int page) {
+        model.addAllAttributes(boardService.findBoardByPage(page, type));
+        model.addAttribute("type", type);
     }
 
     @GetMapping("create-form")
@@ -47,7 +42,7 @@ public class BoardController {
     }
 
     @PostMapping("upload")
-    public String upload(@RequestParam List<MultipartFile> fileList, Board board, String type, HttpSession session) {
+    public String upload(@RequestParam List<MultipartFile> fileList, Board board, String type, HttpSession session, Model model) {
         if (type.equals("MO")) {
             Mentor mentor = (Mentor) session.getAttribute("authentication");
             board.setMentor(mentor);
@@ -56,6 +51,48 @@ public class BoardController {
             board.setMentee(mentee);
         }
         boardService.persistBoard(fileList, board);
+        model.addAllAttributes(boardService.findBoardByPage(1, type));
+        model.addAttribute("type", type);
         return "/board/board-list";
+    }
+
+    @GetMapping("board-detail")
+    public void boardDetail(Model model, Long bdIdx){
+        Board board = boardService.findBoardByBdIdx(bdIdx);
+        model.addAttribute("board", board);
+    }
+
+    @PostMapping("regist-comment")
+    public String registComment(Model model, Long bdIdx, String type, HttpSession session, String coComment){
+        Member member = new Member();
+        if(type.equals("MO")){
+            Mentor mentor = (Mentor) session.getAttribute("authentication");
+            member = mentor.getMember();
+        } else {
+            Mentee mentee = (Mentee) session.getAttribute("authentication");
+            member = mentee.getMember();
+        }
+        Board board = boardService.persistComment(bdIdx, member, coComment);
+
+        if(board == null){
+            throw new HandlableException(ErrorCode.FAILED_REGIST_BOARD_COMMENT);
+        } else {
+            model.addAttribute("board", board);
+        }
+
+        return "/board/board-detail";
+    }
+
+    @GetMapping("recommend-comment")
+    public String recommendComment(Model model, Long coIdx, String type, HttpSession session){
+        Board board = boardService.recommendComment(coIdx, type, session);
+
+        return "/board/board-detail";
+    }
+
+    @GetMapping("delete-comment")
+    public String deleteComment(Model model, Long coIdx, String type){
+
+        return "/board/board-detail";
     }
 }

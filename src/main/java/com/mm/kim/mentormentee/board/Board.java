@@ -41,4 +41,7 @@ public class Board {
 
     @OneToMany(cascade = CascadeType.ALL)
     private List<FileInfo> files;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Comment> comments;
 }

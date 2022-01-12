@@ -1,41 +1,49 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-    <title>Mentor & Mentee - 게시글 작성</title>
-    <th:block th:replace="fragments::flg_head"></th:block>
-    <link rel="stylesheet" href="/static/css/board/board-create.css">
+   <title>Mentor & Mentee - 게시글 작성</title>
+   <th:block th:replace="fragments::flg_head"></th:block>
+   <link rel="stylesheet" href="/static/css/board/board-create.css">
 </head>
 <body class="d-flex flex-column h-100">
 <th:block th:replace="fragments::flg_nav"></th:block>
 <!-- Header-->
 <div class="create_section">
-    <div id="contentHeader">
-        <div id="contentTitle">
-            <p>멘티 게시판</p>
-        </div>
-    </div>
-    <hr>
-    <form action="/board/upload" enctype="multipart/form-data" method="post">
-        <input type="hidden" name="type" th:value="${type}">
-        <div id="createBody">
-            <div id=createHeader>
-                <p>제목 : </p><input type="text" name="title" id="createTitle"/>
-                <input type="file" id="fileBtn" name="fileList" value="파일" multiple/>
+   <div id="contentHeader">
+      <div id="contentTitle">
+         <p>멘티 게시판</p>
+      </div>
+   </div>
+   <hr>
+   <form class="p-5 mt-5" action="/board/upload" enctype="multipart/form-data" method="post">
+      <input type="hidden" name="type" th:value="${type}">
+      <div id="createBody">
+         <div id=createHeader>
+            <div class="d-flex">
+               <p>제목 : </p>
+               <input type="text" name="title" id="createTitle"/>
             </div>
             <hr>
-            <div>
-                <textarea id="createBox" name="bdContent" required="required" maxlength="1000"></textarea>
+            <div class="d-flex">
+               <p>파일 첨부 : </p>
+               <input type="file" id="fileBtn" name="fileList" value="파일" multiple/>
             </div>
-            <hr>
-        </div>
+         </div>
+         <hr>
+         <div>
+            <textarea id="createBox" name="bdContent" required="required" maxlength="1000" style="width: 1000px; height: 500px;"></textarea>
+         </div>
+         <hr>
+      </div>
 
-        <div class="create_footer">
-            <button id="returnButton" type="button" onclick="location.href='/board/board-list'">목록</button>
+      <div class="create_footer d-flex">
+         <button type="button" th:onclick="${session.authentication.member.role.contains('MO')} ? 'location.href=\'/board/board-list?type=MO\''
+                                                                            : 'location.href=\'/board/board-list?type=ME\''">목록
             <div id="wrapButton">
-                <button type="submit">등록</button>
+               <button type="submit">등록</button>
             </div>
-        </div>
-    </form>
+      </div>
+   </form>
 </div>
 <th:block th:replace="fragments::flg_footer"></th:block>
 <th:block th:replace="fragments::flg_jsFiles"></th:block>

@@ -85,6 +85,20 @@
     </main>
 </th:block>
 
+<div th:object="${paging}" th:fragment="flg_pagination">
+    <ul class="pagination justify-content-center">
+        <li class="page-item disabled">
+            <a class="page-link" th:href="|*{url}?type=${type}|"><i class="fas fa-angle-double-left"></i></a>
+        </li>
+        <li class="page-item disabled" th:each = "p : ${#numbers.sequence(paging.blockStart,paging.blockEnd)}">
+            <a class="page-link" th:href="|*{url}?page=${p}&type=${type}|" th:text="${p}"></a>
+        </li>
+        <li class="page-item">
+            <a class="page-link"  th:href="|*{url}?page=${paging.lastPage}&type=${type}|" href="#">Next</a>
+        </li>
+    </ul>
+</div>
+
 <th:block th:fragment="flg_footer">
     <footer class="py-4 mt-auto" style="background-color: #343a40">
         <div class="container px-5">

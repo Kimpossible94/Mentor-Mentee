@@ -7,6 +7,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Entity
@@ -19,14 +20,17 @@ public class Comment {
     private Long coIdx;
 
     @ManyToOne
-    @JoinColumn(name = "bdIdx")
-    private Board board;
-
-    @ManyToOne
     @JoinColumn(name = "userIdx")
     private Member member;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "rdIdx")
+    private List<RecommendMember> recommendMembers;
+
     private String coContent;
+    @Column(columnDefinition = "date default sysdate")
     private LocalDate regDate;
+    @Column(columnDefinition = "number default 0")
     private int recommendCnt;
 
 }

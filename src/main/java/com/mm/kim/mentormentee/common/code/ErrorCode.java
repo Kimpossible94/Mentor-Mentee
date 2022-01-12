@@ -13,6 +13,8 @@ public enum ErrorCode {
     ACCESS_ONLY_MENTOR("멘토만 접근할 수 있습니다."),
     ACCESS_ONLY_MENTEE("멘티만 접근할 수 있습니다."),
     FAILED_FILE_UPLOAD_ERROR("파일업로드에 실패하였습니다."),
+    FAILED_LOAD_BOARD("게시글을 불러올 수 없습니다."),
+    FAILED_REGIST_BOARD_COMMENT("댓글을 등록할 수 없습니다."),
     REDIRECT("");
 
 

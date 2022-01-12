@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-    <th:block th:replace="fragments::flg_head"></th:block>
-    <link rel="stylesheet" href="/css/board/board-main.css">
+   <th:block th:replace="fragments::flg_head"></th:block>
+   <link rel="stylesheet" href="/css/board/board-main.css">
 </head>
 <body class="d-flex flex-column h-100">
 <th:block th:replace="fragments::flg_nav"></th:block>
@@ -12,92 +12,69 @@
 <!--<c:set var="lastNum" value="${count}" />-->
 
 <div class="board_section" th:object="${session.authentication}">
-    <div id="boardHeader">
-        <div id="boardTitle">
-            <p th:text="*{member.role.contains('MO')} ? '멘토 게시판' : '멘티 게시판'"></p>
-        </div>
-        <form class="wrap_search" method="get">
-            <input type="hidden" name="type" th:value="*{member.role.contains('MO')} ? 'MO' : 'ME'">
-            <div id="searchList">
-                <select id="selectBox" name="condition">
-                    <option th:if="${search eq null}" value="bdTitle">제목</option>
-                    <option th:if="${search eq null}" value="userId">작성자</option>
-                    <option th:if="${search ne null}" th:selected="${search.condition} eq 'bdTitle'" value="bdTitle">제목</option>
-                    <option th:if="${search ne null}" th:selected="${search.condition} eq 'userId'" value="userId">작성자</option>
-                </select>
+   <div id="boardHeader">
+      <div id="boardTitle">
+         <p th:text="*{member.role.contains('MO')} ? '멘토 게시판' : '멘티 게시판'"></p>
+      </div>
+      <form class="wrap_search" method="get">
+         <input type="hidden" name="type" th:value="*{member.role.contains('MO')} ? 'MO' : 'ME'">
+         <div id="searchList">
+            <select id="selectBox" name="condition">
+               <option th:if="${search eq null}" value="bdTitle">제목</option>
+               <option th:if="${search eq null}" value="userId">작성자</option>
+               <option th:if="${search ne null}" th:selected="${search.condition} eq 'bdTitle'" value="bdTitle">제목</option>
+               <option th:if="${search ne null}" th:selected="${search.condition} eq 'userId'" value="userId">작성자</option>
+            </select>
+         </div>
+         <div id="searchBox">
+            <input id="inputBox" th:if="${search eq null}" type="text" placeholder="검색어를 입력하세요" name="word"/>
+            <input id="inputBox" th:if="${search ne null}" type="text" placeholder="검색어를 입력하세요" name="word" th:value="${search.word}"/>
+            <div id="buttonBox">
+               <button type="submit">검색</button>
             </div>
-            <div id="searchBox">
-                <input id="inputBox" th:if="${search eq null}" type="text" placeholder="검색어를 입력하세요" name="word"/>
-                <input id="inputBox" th:if="${search ne null}" type="text" placeholder="검색어를 입력하세요" name="word" th:value="${search.word}"/>
-                <div id="buttonBox">
-                    <button type="submit">검색</button>
-                </div>
-            </div>
-        </form>
-    </div>
-    <hr>
-    <div id="boardBody">
-        <table class="board_table" border="1">
-            <thead class="board_thead">
-            <tr class="board_tr">
-                <th class="board_th">No.</th>
-                <th class="board_th">제목</th>
-                <th class="board_th">작성자</th>
-                <th class="board_th">작성일</th>
-                <th class="board_th"><a href="/member/board-list?sort=view">조회수↑</a></th>
-                <th class="board_th"><a href="/member/board-list?sort=recommend">추천수↑</a></th>
-            </tr>
-            </thead>
-            <tbody class="board_tbody">
-            <!--            <c:forEach items="${boardMenteeList}" var="list" varStatus="status">-->
-            <!--                <tr class="board_tr">-->
-            <!--                    <td class="board_td">${list.bdIdx}</td>-->
-            <!--                    <td class="board_td">-->
-            <!--                        <a href="mentee/mentee-board-detail?bdIdx=${list.bdIdx}&userId=${list.userId}">-->
-            <!--                            <c:out value="${list.bdTitle}" />-->
-            <!--                        </a>-->
-            <!--                    </td>-->
-            <!--                    <td class="board_td"><c:out value="${list.userId}" /></td>-->
-            <!--                    <td class="board_td"><c:out value="${list.regDate}" /></td>-->
-            <!--                    <td class="board_td"><c:out value="${list.viewCount}" /></td>-->
-            <!--                    <td class="board_td"><c:out value="${list.recCount}" /></td>-->
-            <!--                </tr>-->
-            <!--            </c:forEach>-->
-            </tbody>
-        </table>
-    </div>
-    <hr>
-    <div id="boardFooter">
-        <div id="pagingWraaper">
-            <div id="pagingBox">
-                <!--                <c:if test="${startNum>1}">-->
-                <!--                    <i class="fas fa-chevron-left" id="leftArrow" onclick="location.href='mentee?p=${startNum-1}&searchCondition=${param.searchCondition}&searchKeyWord=${param.searchKeyWord}'"></i>-->
-                <!--                </c:if>-->
-                <!--                <c:if test="${startNum<=1}">-->
-                <!--                    <i class="fas fa-chevron-left" id="leftArrow" onclick="alert('이전 페이지가 없습니다.')"></i>-->
-                <!--                </c:if>-->
-                <div id="buttonWrapper">
-                    <!--                    <c:forEach var="i" begin="0" end="2">-->
-                    <!--                        <c:if test="${(startNum+i) <= lastNum}">-->
-                    <!--                            <button id="firstButton" onclick="location.href='mentee?p=${startNum+i}&searchCondition=${param.searchCondition}&searchKeyWord=${param.searchKeyWord}'">-->
-                    <!--                                ${startNum+i}-->
-                    <!--                            </button>-->
-                    <!--                        </c:if>-->
-                    <!--                    </c:forEach>-->
-                </div>
-                <!--                <c:if test="${startNum+2<lastNum}">-->
-                <!--                    <i class="fas fa-chevron-right" id="rightArrow" onclick="location.href='mentee?p=${startNum+3}&searchCondition=${param.searchCondition}&searchKeyWord=${param.searchKeyWord}'"></i>-->
-                <!--                </c:if>-->
-                <!--                <c:if test="${startNum+2>=lastNum}">-->
-                <!--                    <i class="fas fa-chevron-right" id="rightArrow" onclick="alert('다음페이지가 없습니다.')"></i>-->
-                <!--                </c:if>-->
-            </div>
-        </div>
-        <div id="writerButton">
-            <button type="button" th:onclick="*{member.role.contains('MO')} ? 'location.href=\'/board/create-form?type=MO\''
-                                                                            : 'location.href=\'/board/create-form?type=ME\''">글작성</button>
-        </div>
-    </div>
+         </div>
+      </form>
+   </div>
+   <hr>
+   <div id="boardBody">
+      <table class="board_table" border="1">
+         <thead class="board_thead">
+         <tr class="board_tr">
+            <th class="board_th">No.</th>
+            <th class="board_th">제목</th>
+            <th class="board_th">작성자</th>
+            <th class="board_th">작성일</th>
+            <th class="board_th"><a href="/member/board-list?sort=view">조회수↑</a></th>
+            <th class="board_th"><a href="/member/board-list?sort=recommend">추천수↑</a></th>
+         </tr>
+         </thead>
+         <tbody class="board_tbody">
+         <tr class="board_tr" th:each="board : ${boardList}">
+            <td class="board_td" th:text="${board.bdIdx}"></td>
+            <td class="board_td">
+               <a th:href="@{board-detail(bdIdx=${board.bdIdx})}" th:text="${board.title}"></a>
+            </td>
+            <td class="board_td" th:text="${board.mentor.member.userId}"></td>
+            <td class="board_td" th:text="${board.regDate}"></td>
+            <td class="board_td" th:text="${board.viewCount}"></td>
+            <td class="board_td" th:text="${board.recCount}"></td>
+         </tr>
+         </tbody>
+      </table>
+   </div>
+   <hr>
+   <div id="boardFooter">
+      <div id="pagingWraaper">
+         <div id="pagingBox">
+            <th:block th:replace="fragments :: flg_pagination"></th:block>
+         </div>
+      </div>
+      <div id="writerButton">
+         <button type="button" th:onclick="*{member.role.contains('MO')} ? 'location.href=\'/board/create-form?type=MO\''
+                                                                            : 'location.href=\'/board/create-form?type=ME\''">글작성
+         </button>
+      </div>
+   </div>
 </div>
 <th:block th:replace="fragments::flg_footer"></th:block>
 <th:block th:replace="fragments::flg_jsFiles"></th:block>
