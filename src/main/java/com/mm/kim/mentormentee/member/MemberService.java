@@ -60,13 +60,11 @@ public class MemberService {
         emailSender.send(form.getEmail(), "회원가입을 축하합니다.", htmlText);
     }
 
-    @Transactional
     public void persistMentor(Mentor mentor) {
         mentor.getMember().setPassword(passwordEncoder.encode(mentor.getMember().getPassword()));
         mentorRepository.save(mentor);
     }
 
-    @Transactional
     public void persistMentee(Mentee mentee) {
         mentee.getMember().setPassword(passwordEncoder.encode(mentee.getMember().getPassword()));
         menteeRepository.save(mentee);

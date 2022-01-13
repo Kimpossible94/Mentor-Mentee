@@ -194,9 +194,6 @@ public class MemberController {
                            @SessionAttribute(value = "persistMentee", required = false) Mentee mentee,
                            HttpSession session, Model model) {
 
-        System.out.println("token" + token);
-        System.out.println("persistToken" + persistToken);
-
         if (!token.equals(persistToken)) {
             throw new HandlableException(ErrorCode.AUTHENTICATION_FAILED_ERROR);
         }

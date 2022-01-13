@@ -57,17 +57,17 @@
       <hr>
       <table th:if="${board.comments ne null}" class="comment_table" border="0" th:each="comment : ${board.comments}">
             <tr class="comment_tr">
-               <th class="comment_info" th:text="${comment.member.userId}"></th>
+               <th class="comment_info" th:text="${session.authentication.member.role.contains('MO')} ?
+                  ${comment.mentor.member.userId} : ${comment.mentee.member.userId}"></th>
                <th class="comment_info" th:text="${comment.coContent}"></th>
                <th class="comment_info">
                   <i class="far fa-thumbs-up" id="commentRecommend"
-                     th:onclick="recommendComment([[${comment.coIdx}]],[[${session.authentication.member.role}]])"
+                     th:onclick="recommendComment([[${board.bdIdx}]],[[${comment.coIdx}]],[[${session.authentication.member.role}]])"
                      th:text="${comment.recommendCnt}"></i>
                </th>
                <th class="comment_info">
                   <i class="fas fa-times" id="commentDelete"
-                     th:onclick="|location.href='/board/delete-comment?coIdx=' + ${comment.coIdx} +
-                     '&type=' + ${session.authentication.member.role}|"></i>
+                     th:onclick="recommendComment([[${board.bdIdx}]],[[${comment.coIdx}]],[[${session.authentication.member.role}]])"></i>
                </th>
                <th class="comment_info" th:text="${comment.regDate}"></th>
             </tr>
@@ -134,15 +134,10 @@
         location.href = '/download?' + urlEncoder(paramObj);
     }
 
-    let recommendComment = (coIdx, role) => {
-        fetch("/board/recommend-comment", {
-            method : post,
+    let recommendComment = (bdIdx, coIdx, role) => {
+        fetch("/board/recommend-comment?bdIdx=" + bdIdx +"&coIdx=" + coIdx + "&type=" + role, {
             headers : {
                 'Content-Type' : 'application/json'
-            },
-            body : {
-              'coIdx' : coIdx,
-              'type' : role
             }
         })
         .then((response)=> {

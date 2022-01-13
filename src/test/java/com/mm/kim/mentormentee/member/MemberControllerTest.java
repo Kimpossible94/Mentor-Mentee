@@ -89,9 +89,10 @@ class MemberControllerTest {
         Member member = new Member();
         Mentor mentor = new Mentor();
         member.setUserId("test");
-        member.setPassword("123abc!@");
+        member.setPassword("1234");
         member.setEmail("zerotiger94@gmail.com");
         member.setPhone("01011112222");
+        member.setRole("MO01");
 
         mentor.setMember(member);
         mentor.setGrade(2);

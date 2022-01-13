@@ -1,6 +1,8 @@
 package com.mm.kim.mentormentee.board;
 
 import com.mm.kim.mentormentee.member.Member;
+import com.mm.kim.mentormentee.member.Mentee;
+import com.mm.kim.mentormentee.member.Mentor;
 import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -20,12 +22,15 @@ public class Comment {
     private Long coIdx;
 
     @ManyToOne
-    @JoinColumn(name = "userIdx")
-    private Member member;
+    @JoinColumn(name = "mentorIdx")
+    private Mentor mentor;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "rdIdx")
-    private List<RecommendMember> recommendMembers;
+    @ManyToOne
+    @JoinColumn(name = "menteeIdx")
+    private Mentee mentee;
+
+    @OneToMany
+    private List<Member> recommendMembers;
 
     private String coContent;
     @Column(columnDefinition = "date default sysdate")

@@ -64,15 +64,12 @@ public class BoardController {
 
     @PostMapping("regist-comment")
     public String registComment(Model model, Long bdIdx, String type, HttpSession session, String coComment){
-        Member member = new Member();
         if(type.equals("MO")){
             Mentor mentor = (Mentor) session.getAttribute("authentication");
-            member = mentor.getMember();
         } else {
             Mentee mentee = (Mentee) session.getAttribute("authentication");
-            member = mentee.getMember();
         }
-        Board board = boardService.persistComment(bdIdx, member, coComment);
+        Board board = boardService.persistComment(bdIdx, type, coComment, session);
 
         if(board == null){
             throw new HandlableException(ErrorCode.FAILED_REGIST_BOARD_COMMENT);
@@ -83,10 +80,10 @@ public class BoardController {
         return "/board/board-detail";
     }
 
-    @PostMapping("recommend-comment")
+    @GetMapping("recommend-comment")
     @ResponseBody
-    public String recommendComment(Model model, Long coIdx, String type, HttpSession session){
-        Board board = boardService.recommendComment(coIdx, type, session);
+    public String recommendComment(Long bdIdx, Long coIdx, String type, HttpSession session){
+        Board board = boardService.recommendComment(bdIdx, coIdx, type, session);
         if(board == null){
             return "unavailable";
         }

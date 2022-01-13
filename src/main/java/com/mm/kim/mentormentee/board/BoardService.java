@@ -27,7 +27,6 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
-    private final RecommendMemberRepository recommendMemberRepository;
 
     public void persistBoard(List<MultipartFile> multiparts, Board board) {
         List<FileInfo> fileInfos = new ArrayList<FileInfo>();
@@ -86,29 +85,34 @@ public class BoardService {
     }
 
     @Transactional
-    public Board persistComment(Long bdIdx, Member member, String coComment) {
+    public Board persistComment(Long bdIdx, String type, String coComment, HttpSession session) {
         Board board = boardRepository.findByBdIdx(bdIdx).orElse(null);
+        if (board == null) return null;
         Comment comment = new Comment();
-        comment.setMember(member);
-        comment.setCoContent(coComment);
-        if (board != null) {
-            List<Comment> commentList = new ArrayList<Comment>();
-            commentList.add(comment);
-            board.setComments(commentList);
+        if (type.equals("MO")) {
+            Mentor mentor = (Mentor) session.getAttribute("authentication");
+            comment.setMentor(mentor);
+        } else {
+            Mentee mentee = (Mentee) session.getAttribute("authentication");
+            comment.setMentee(mentee);
         }
+        comment.setCoContent(coComment);
+        List<Comment> commentList = new ArrayList<Comment>();
+        commentList.add(comment);
+        board.setComments(commentList);
 
         return board;
     }
 
     @Transactional
-    public Board recommendComment(Long coIdx, String type, HttpSession session) {
-        Comment comment = commentRepository.findByCoIdx(coIdx).orElse(null);
-        //comment 없을 때 리턴
-        if (comment == null) return null;
+    public Board recommendComment(Long bdIdx, Long coIdx, String type, HttpSession session) {
+        Board board = boardRepository.findByBdIdx(bdIdx).orElse(null);
+        //board 없을 때 리턴
+        if (board == null) return null;
+        List<Comment> comments = board.getComments();
 
-        Board board = boardRepository.findBoardByComments(comment);
         Member member = new Member();
-        if (type.equals("MO")) {
+        if (type.contains("MO")) {
             Mentor mentor = (Mentor) session.getAttribute("authentication");
             member = mentor.getMember();
         } else {
@@ -116,23 +120,28 @@ public class BoardService {
             member = mentee.getMember();
         }
 
-        //추천한 멤버 등록하기
-        ArrayList<RecommendMember> recommendMembers = (ArrayList<RecommendMember>) comment.getRecommendMembers();
-        RecommendMember recommendMember = new RecommendMember();
+        Comment comment = null;
+
+        for (Comment cm : comments) {
+            if(cm.getCoIdx().equals(coIdx)){
+                comment = cm;
+            }
+        }
+
+        List<Member> recommendMembers = comment.getRecommendMembers();
 
         //이미 추천을 했는지 비교하고 추천했으면 RecommendMember에서 삭제하고 추천수 -1해줌
-        for (RecommendMember rdMember : comment.getRecommendMembers()) {
-            if (rdMember.getMember().getUserId().equals(member.getUserId())) {
+        for (Member recommendMember : recommendMembers) {
+            if (recommendMember.getUserId().equals(member.getUserId())) {
                 comment.setRecommendCnt(comment.getRecommendCnt() - 1);
-                recommendMemberRepository.deleteByCommentAndMember(comment, member);
+                recommendMembers.remove(recommendMember);
                 return board;
             }
         }
 
+        //추천을 안했다면 추천수를 올리고 추천멤버리스트에 추가
         comment.setRecommendCnt(comment.getRecommendCnt() + 1);
-        recommendMember.setMember(member);
-        recommendMember.setComment(comment);
-        recommendMembers.add(recommendMember);
+        recommendMembers.add(member);
         comment.setRecommendMembers(recommendMembers);
 
         return board;
