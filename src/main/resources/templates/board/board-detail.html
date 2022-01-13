@@ -61,8 +61,7 @@
                <th class="comment_info" th:text="${comment.coContent}"></th>
                <th class="comment_info">
                   <i class="far fa-thumbs-up" id="commentRecommend"
-                     th:onclick="|location.href='/board/recommend-comment?coIdx=' + ${comment.coIdx} +
-                     '&type=' + ${session.authentication.member.role}|"
+                     th:onclick="recommendComment([[${comment.coIdx}]],[[${session.authentication.member.role}]])"
                      th:text="${comment.recommendCnt}"></i>
                </th>
                <th class="comment_info">
@@ -133,7 +132,35 @@
             savePath: path
         }
         location.href = '/download?' + urlEncoder(paramObj);
-    };
+    }
+
+    let recommendComment = (coIdx, role) => {
+        fetch("/board/recommend-comment", {
+            method : post,
+            headers : {
+                'Content-Type' : 'application/json'
+            },
+            body : {
+              'coIdx' : coIdx,
+              'type' : role
+            }
+        })
+        .then((response)=> {
+            if(response.ok){
+                return response.text();
+            } else {
+                throw new Error(response.status);
+            }
+        })
+        .then(text => {
+            if(text == "available"){
+                return;
+            }else{
+                alert("댓글 추천에 실패하였습니다.");
+                return;
+            }
+        })
+    }
 
 </script>
 

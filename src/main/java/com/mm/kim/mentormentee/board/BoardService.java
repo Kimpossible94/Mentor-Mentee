@@ -27,6 +27,7 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
+    private final RecommendMemberRepository recommendMemberRepository;
 
     public void persistBoard(List<MultipartFile> multiparts, Board board) {
         List<FileInfo> fileInfos = new ArrayList<FileInfo>();
@@ -104,10 +105,10 @@ public class BoardService {
         Comment comment = commentRepository.findByCoIdx(coIdx).orElse(null);
         //comment 없을 때 리턴
         if (comment == null) return null;
-        
+
         Board board = boardRepository.findBoardByComments(comment);
         Member member = new Member();
-        if(type.equals("MO")){
+        if (type.equals("MO")) {
             Mentor mentor = (Mentor) session.getAttribute("authentication");
             member = mentor.getMember();
         } else {
@@ -115,24 +116,26 @@ public class BoardService {
             member = mentee.getMember();
         }
 
-
-        comment.setRecommendCnt(comment.getRecommendCnt() + 1);
-        ArrayList<RecommendMember> recommendMembers = new ArrayList<RecommendMember>();
+        //추천한 멤버 등록하기
+        ArrayList<RecommendMember> recommendMembers = (ArrayList<RecommendMember>) comment.getRecommendMembers();
         RecommendMember recommendMember = new RecommendMember();
-        recommendMember.setMember(member);
-        recommendMember.setComment(comment);
 
-        if(comment.getRecommendMembers().size() == 0){
-            recommendMembers.add(recommendMember);
-            comment.setRecommendMembers(recommendMembers);
-            return board;
-        } else {
-            for (RecommendMember rdMember : comment.getRecommendMembers()) {
-
+        //이미 추천을 했는지 비교하고 추천했으면 RecommendMember에서 삭제하고 추천수 -1해줌
+        for (RecommendMember rdMember : comment.getRecommendMembers()) {
+            if (rdMember.getMember().getUserId().equals(member.getUserId())) {
+                comment.setRecommendCnt(comment.getRecommendCnt() - 1);
+                recommendMemberRepository.deleteByCommentAndMember(comment, member);
+                return board;
             }
         }
 
-        return null;
+        comment.setRecommendCnt(comment.getRecommendCnt() + 1);
+        recommendMember.setMember(member);
+        recommendMember.setComment(comment);
+        recommendMembers.add(recommendMember);
+        comment.setRecommendMembers(recommendMembers);
+
+        return board;
 
     }
 }

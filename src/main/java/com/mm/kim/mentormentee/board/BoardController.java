@@ -83,11 +83,14 @@ public class BoardController {
         return "/board/board-detail";
     }
 
-    @GetMapping("recommend-comment")
+    @PostMapping("recommend-comment")
+    @ResponseBody
     public String recommendComment(Model model, Long coIdx, String type, HttpSession session){
         Board board = boardService.recommendComment(coIdx, type, session);
-
-        return "/board/board-detail";
+        if(board == null){
+            return "unavailable";
+        }
+        return "available";
     }
 
     @GetMapping("delete-comment")

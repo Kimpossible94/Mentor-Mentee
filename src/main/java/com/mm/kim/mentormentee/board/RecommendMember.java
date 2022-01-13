@@ -17,7 +17,7 @@ public class RecommendMember {
     @GeneratedValue
     private Long rdIdx;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "coIdx")
     private Comment comment;
 
