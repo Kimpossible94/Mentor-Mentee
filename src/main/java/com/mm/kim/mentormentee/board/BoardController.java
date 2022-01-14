@@ -82,17 +82,36 @@ public class BoardController {
 
     @GetMapping("recommend-comment")
     @ResponseBody
-    public String recommendComment(Long bdIdx, Long coIdx, String type, HttpSession session){
-        Board board = boardService.recommendComment(bdIdx, coIdx, type, session);
-        if(board == null){
-            return "unavailable";
+    public Comment recommendComment(Long coIdx, String type, HttpSession session){
+        Comment comment = boardService.recommendComment(coIdx, type, session);
+        if(comment == null){
+            return null;
         }
-        return "available";
+
+        Comment newComment = new Comment();
+        newComment.setRecommendCnt(comment.getRecommendCnt());
+        newComment.setCoIdx(comment.getCoIdx());
+        return newComment;
     }
 
     @GetMapping("delete-comment")
-    public String deleteComment(Model model, Long coIdx, String type){
+    @ResponseBody
+    public String deleteComment(Long coIdx, String type, HttpSession session){
+        String alertMsg = boardService.deleteComment(coIdx, type, session);
+        return alertMsg;
+    }
 
+    @GetMapping("board-recommend")
+    public String recommendBoard(Long bdIdx, String type, HttpSession session, Model model){
+        boardService.recommendBoard(bdIdx, type, session);
+        Board board = boardService.findBoardByBdIdx(bdIdx);
+        model.addAttribute("board", board);
         return "/board/board-detail";
+    }
+
+    @GetMapping("modify-board")
+    public void modifyBoard(Long bdIdx, String type){
+
+
     }
 }

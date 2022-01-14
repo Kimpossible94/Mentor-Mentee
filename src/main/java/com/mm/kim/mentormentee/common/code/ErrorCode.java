@@ -15,6 +15,7 @@ public enum ErrorCode {
     FAILED_FILE_UPLOAD_ERROR("파일업로드에 실패하였습니다."),
     FAILED_LOAD_BOARD("게시글을 불러올 수 없습니다."),
     FAILED_REGIST_BOARD_COMMENT("댓글을 등록할 수 없습니다."),
+    FAILED_RECOMMEND_BOARD("게시글을 추천할 수 없습니다."),
     REDIRECT("");
 
 

@@ -29,7 +29,7 @@ public class Comment {
     @JoinColumn(name = "menteeIdx")
     private Mentee mentee;
 
-    @OneToMany
+    @ManyToMany
     private List<Member> recommendMembers;
 
     private String coContent;

@@ -51,7 +51,7 @@
          </ol>
       </div>
       <div id="otherUtil">
-         <a href="mentee/mentee-board-detail/content-recommend?bdIdx=${datas.boardMentee.bdIdx}&userId=${datas.boardMentee.userId}">추천</a>
+         <a th:href="'/board/board-recommend?bdIdx='+${board.bdIdx}+'&type='+${session.authentication.member.role}">추천</a>
          <a id="shareURL" onclick="clip(); return false;">공유</a>
       </div>
       <hr>
@@ -61,13 +61,13 @@
                   ${comment.mentor.member.userId} : ${comment.mentee.member.userId}"></th>
                <th class="comment_info" th:text="${comment.coContent}"></th>
                <th class="comment_info">
-                  <i class="far fa-thumbs-up" id="commentRecommend"
-                     th:onclick="recommendComment([[${board.bdIdx}]],[[${comment.coIdx}]],[[${session.authentication.member.role}]])"
+                  <i class="far fa-thumbs-up" th:id="${comment.coIdx}"
+                     th:onclick="recommendComment([[${comment.coIdx}]],[[${session.authentication.member.role}]])"
                      th:text="${comment.recommendCnt}"></i>
                </th>
                <th class="comment_info">
                   <i class="fas fa-times" id="commentDelete"
-                     th:onclick="recommendComment([[${board.bdIdx}]],[[${comment.coIdx}]],[[${session.authentication.member.role}]])"></i>
+                     th:onclick="deleteComment([[${comment.coIdx}]],[[${session.authentication.member.role}]])"></i>
                </th>
                <th class="comment_info" th:text="${comment.regDate}"></th>
             </tr>
@@ -82,15 +82,12 @@
       <hr>
    </div>
 
-   <div class="content_footer">
+   <div class="content_footer pb-5 mb-3">
       <button id="returnButton" type="button"
               onclick="location.href='mentee'">목록
       </button>
       <div id="wrapButton">
-         <button type="button"
-                 onclick="location.href='mentee/mentee-board-modify?bdIdx=${datas.boardMentee.bdIdx}&userId=${datas.boardMentee.userId}'">
-            수정
-         </button>
+         <button type="button" th:onclick="'location.href=\'' + @{/board/modify-board(bdIdx=${board.bdIdx},type=${session.authentication.member.role})} + '\';'">수정</button>
          <button type="button"
                  onclick="location.href='mentee/mentee-board-delete?bdIdx=${datas.boardMentee.bdIdx}&userId=${datas.boardMentee.userId}'">
             삭제
@@ -100,7 +97,9 @@
 </div>
 <th:block th:replace="fragments::flg_footer"></th:block>
 <th:block th:replace="fragments::flg_jsFiles"></th:block>
-<script type="text/javascript">
+<script th:inline="javascript">
+
+    console.dir([[${comment}]]);
 
     function clip() {
 
@@ -134,26 +133,47 @@
         location.href = '/download?' + urlEncoder(paramObj);
     }
 
-    let recommendComment = (bdIdx, coIdx, role) => {
-        fetch("/board/recommend-comment?bdIdx=" + bdIdx +"&coIdx=" + coIdx + "&type=" + role, {
+    let recommendComment = (coIdx, role) => {
+        fetch("/board/recommend-comment?coIdx=" + coIdx + "&type=" + role, {
             headers : {
                 'Content-Type' : 'application/json'
             }
         })
         .then((response)=> {
             if(response.ok){
+                return response.json();
+            } else {
+                throw new Error(response.status);
+            }
+        })
+        .then(res => {
+            console.dir(res);
+            if(res == null){
+                alert("댓글 추천에 실패하였습니다.");
+                return;
+            } else {
+                document.getElementById(res.coIdx).innerText = res.recommendCnt;
+                return;
+            }
+        })
+    }
+
+    let deleteComment = (coIdx, role) => {
+        fetch("/board/delete-comment?coIdx=" + coIdx + "&type=" + role, {
+            headers : {
+                'Content-Type' : 'applocation.json'
+            }
+        })
+        .then(response => {
+            if(response.ok){
                 return response.text();
             } else {
                 throw new Error(response.status);
             }
         })
-        .then(text => {
-            if(text == "available"){
-                return;
-            }else{
-                alert("댓글 추천에 실패하였습니다.");
-                return;
-            }
+        .then(res => {
+            alert(res);
+            location.reload();
         })
     }
 

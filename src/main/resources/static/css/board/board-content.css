@@ -151,7 +151,7 @@
 	text-align: left;
 }
 .comment_info:nth-child(2){
-	width: 71%;
+	width: 65%;
 	text-align: left;
 }
 .comment_info:nth-child(3){
@@ -161,7 +161,7 @@
 	width: 13%;
 }
 .comment_info:nth-child(5){
-	width: 3%;
+	width: 6%;
 }
 #commentDelete,#commentRecommend{
 	cursor:pointer;

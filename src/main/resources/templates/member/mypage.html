@@ -305,6 +305,7 @@
 <script src="/js/member/mypage.js"></script>
 <script th:inline="javascript">
     var authentication = [[${session.authentication}]];
+    console.dir(authentication);
     (() => {
         if (authentication.member.role.includes('MO')) {
             var dataArr = [authentication.grade, authentication.major, authentication.wantDay, authentication.wantTime,

@@ -39,6 +39,9 @@ public class Board {
     @JoinColumn(name = "menteeIdx")
     private Mentee mentee;
 
+    @ManyToMany
+    private List<Member> recommendMembers;
+
     @OneToMany(cascade = CascadeType.ALL)
     private List<FileInfo> files;
 
