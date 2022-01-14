@@ -11,7 +11,7 @@
 <div class="content_section">
    <div id="contentHeader">
       <div id="contentTitle">
-         <p th:text="${board.mentor ne null} ? '멘토 게시판' : '멘티 게시판'">멘티 게시판</p>
+         <p th:text="${board.mentor ne null} ? '멘토 게시판' : '멘티 게시판'"></p>
       </div>
    </div>
    <hr>
@@ -87,7 +87,8 @@
               onclick="location.href='mentee'">목록
       </button>
       <div id="wrapButton">
-         <button type="button" th:onclick="'location.href=\'' + @{/board/modify-board(bdIdx=${board.bdIdx},type=${session.authentication.member.role})} + '\';'">수정</button>
+         <button type="button" th:onclick="'location.href=\'' +
+         @{/board/modify-board(bdIdx=${board.bdIdx},type=${session.authentication.member.role})} + '\';'">수정</button>
          <button type="button"
                  onclick="location.href='mentee/mentee-board-delete?bdIdx=${datas.boardMentee.bdIdx}&userId=${datas.boardMentee.userId}'">
             삭제

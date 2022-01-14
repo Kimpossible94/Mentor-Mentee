@@ -2,33 +2,46 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <title>Mentor & Mentee - 게시글 수정</title>
-    <th:block th:replace="flagments::flg_head"></th:block>
-    <link rel="stylesheet" href="/static/css/board/board-create.css">
+    <th:block th:replace="fragments::flg_head"></th:block>
+    <link rel="stylesheet" href="/css/board/board-create.css">
 </head>
 <body class="d-flex flex-column h-100">
 <!-- Header-->
-<th:block th:replace="flagments::flg_nav"></th:block>
+<th:block th:replace="fragments::flg_nav"></th:block>
 <div class="create_section">
     <div id="contentHeader">
         <div id="contentTitle">
-            <p>멘티 게시판</p>
+           <p th:text="${board.mentor ne null} ? '멘토 게시판' : '멘티 게시판'"></p>
         </div>
     </div>
     <hr>
-    <form action="/meboard/mentee/mentee-board-update" encType="multipart/form-data" method="post">
+    <form th:action="@{/board/modify-board}" th:object="${board}" encType="multipart/form-data" method="post">
         <div id="createBody">
-<!--            <input type="hidden" name="bdIdx" value="${datas.boardMentee.bdIdx}"/>-->
-            <div>
-<!--                제목 : <input type="text" name="bdTitle" value="${datas.boardMentee.bdTitle}"/>-->
-                파일 : <input type="file" name="fileName" multiple/>
-            </div>
+           <div id=createHeader>
+              <div class="d-flex">
+                 <p>제목 : </p>
+                 <input type="text" name="title" id="createTitle" th:value="*{title}"/>
+              </div>
+              <hr>
+              <div class="d-flex">
+                 <p>파일 첨부 : </p>
+                 <input type="file" id="fileBtn" name="fileList" value="파일" multiple/>
+              </div>
+           </div>
             <hr>
             <div>
-<!--                <textarea id="createBox" name="bdContent" required="required" maxlength="1000"><c:out value="${datas.boardMentee.bdContent}"/></textarea>-->
+                <textarea id="createBox" name="bdContent" required="required" maxlength="1000" th:value="*{bdContent}"></textarea>
             </div>
             <hr>
         </div>
-
+       <div class='info file_info'>
+          <ol th:each="file : *{files}">
+             <li id="liTag" class="d-flex">
+                <i class="fas fa-paperclip" id="fileClip"></i>[[${file.originFileName}]]
+                <i class="fas fa-times"></i>
+             </li>
+          </ol>
+       </div>
         <div class="create_footer">
             <button id="returnButton" type="button" onclick="location.href='mentee'">목록</button>
             <div id="wrapButton">
@@ -37,7 +50,7 @@
         </div>
     </form>
 </div>
-<th:block th:replace="flagments::flg_footer"></th:block>
-<th:block th:replace="flagments::flg_jsFiles"></th:block>
+<th:block th:replace="fragments::flg_footer"></th:block>
+<th:block th:replace="fragments::flg_jsFiles"></th:block>
 </body>
 </html>

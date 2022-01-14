@@ -11,7 +11,7 @@
 <div class="create_section">
    <div id="contentHeader">
       <div id="contentTitle">
-         <p>멘티 게시판</p>
+         <p th:text="${session.authentication.member.role.contains('MO')} ? '멘토 게시판' : '멘티 게시판'"></p>
       </div>
    </div>
    <hr>

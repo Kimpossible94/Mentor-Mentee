@@ -110,8 +110,24 @@ public class BoardController {
     }
 
     @GetMapping("modify-board")
-    public void modifyBoard(Long bdIdx, String type){
-
-
+    public String modifyBoard(Long bdIdx, String type, Model model, HttpSession session){
+        Board board = boardService.findBoardByBdIdx(bdIdx);
+        model.addAttribute("board",board);
+        if(type.contains("MO")){
+            Mentor mentor = (Mentor) session.getAttribute("authentication");
+            if(!board.getMentor().getMember().getUserId().equals(mentor.getMember().getUserId())){
+                model.addAttribute("msg", "게시글 작성자만 수정이 가능합니다.");
+                model.addAttribute("url", "/board/board-list?type=MO");
+                return "/common/result";
+            }
+        } else {
+            Mentee mentee = (Mentee) session.getAttribute("authentication");
+            if(!board.getMentee().getMember().getUserId().equals(mentee.getMember().getUserId())){
+                model.addAttribute("msg", "게시글 작성자만 수정이 가능합니다.");
+                model.addAttribute("url", "/board/board-list?type=ME");
+                return "/common/result";
+            }
+        }
+        return "/board/modify-board";
     }
 }
