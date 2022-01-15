@@ -16,7 +16,8 @@
    </div>
    <hr>
    <form th:action="@{/board/modify-board}" th:object="${board}" encType="multipart/form-data" method="post">
-      <input type="hidden" name="bdIdxList">
+      <input type="hidden" id="flIdxList" name="flIdxList" value="13">
+      <input type="hidden" name="bdIdx" th:value="*{bdIdx}">
       <div id="createBody">
          <div id=createHeader>
             <div class="d-flex">
@@ -31,7 +32,7 @@
          </div>
          <hr>
          <div>
-            <textarea id="createBox" name="bdContent" required="required" maxlength="1000">[[*{bdContent}]]</textarea>
+            <textarea id="createBox" name="bdContent" required="required" maxlength="1000" th:value="*{bdContent}">[[*{bdContent}]]</textarea>
          </div>
          <hr>
       </div>
@@ -60,16 +61,17 @@
     for (let file of fileList) {
         flIdxs.push(parseInt(file.value));
     }
-    document.getElementsByName('bdIdxList').value = flIdxs;
+    document.getElementById('flIdxList').value = flIdxs;
 
     let removeFlIdx = (flIdx) => {
-        if(flIdxs.indexOf(flIdx) == 0){
+        if (flIdxs.indexOf(flIdx) == 0) {
             flIdxs.shift();
+            flIdxs.unshift(-1);
         } else {
-            flIdxs.splice(flIdxs.indexOf(flIdx), flIdxs.indexOf(flIdx));
+            flIdxs.splice(flIdxs.indexOf(flIdx), flIdxs.indexOf(flIdx), -1);
         }
-        document.getElementById("flIdx-"+flIdx).parentNode.style.display = "none";
-        document.getElementsByName('bdIdxList').value = flIdxs;
+        document.getElementById("flIdx-" + flIdx).parentNode.style.display = "none";
+        document.getElementById('flIdxList').value = flIdxs;
     }
 </script>
 </body>

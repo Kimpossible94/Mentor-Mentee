@@ -80,8 +80,11 @@ public class BoardService {
       }
    }
 
+   @Transactional
    public Board findBoardByBdIdx(Long bdIdx) {
-      return boardRepository.findByBdIdx(bdIdx).orElseThrow(() -> new HandlableException(ErrorCode.FAILED_LOAD_BOARD));
+      Board board = boardRepository.findByBdIdx(bdIdx).orElseThrow(() -> new HandlableException(ErrorCode.FAILED_LOAD_BOARD));
+      board.setViewCount(board.getViewCount() + 1);
+      return board;
    }
 
    @Transactional
@@ -107,7 +110,7 @@ public class BoardService {
    @Transactional
    public Comment recommendComment(Long coIdx, String type, HttpSession session) {
       Comment comment = commentRepository.findByCoIdx(coIdx).orElse(null);
-      if(comment == null) return null;
+      if (comment == null) return null;
 
       List<Member> memberList = comment.getRecommendMembers();
       Member sessionMember = new Member();
@@ -121,7 +124,7 @@ public class BoardService {
       }
 
       for (Member member : memberList) {
-         if(member.getUserId().equals(sessionMember.getUserId())){
+         if (member.getUserId().equals(sessionMember.getUserId())) {
             comment.setRecommendCnt(comment.getRecommendCnt() - 1);
             memberList.remove(member);
             return comment;
@@ -138,17 +141,17 @@ public class BoardService {
       Comment comment = commentRepository.findByCoIdx(coIdx).orElse(null);
       Board board = boardRepository.findBoardByComments(comment);
 
-      if(comment == null){
+      if (comment == null) {
          return "댓글을 삭제할 수 없습니다.";
       }
       if (type.contains("MO")) {
          Mentor mentor = (Mentor) session.getAttribute("authentication");
-         if(!comment.getMentor().getMember().getUserId().equals(mentor.getMember().getUserId())){
+         if (!comment.getMentor().getMember().getUserId().equals(mentor.getMember().getUserId())) {
             return "자신의 댓글만 삭제할 수 있습니다.";
          }
       } else {
          Mentee mentee = (Mentee) session.getAttribute("authentication");
-         if(!comment.getMentee().getMember().getUserId().equals(mentee.getMember().getUserId())){
+         if (!comment.getMentee().getMember().getUserId().equals(mentee.getMember().getUserId())) {
             return "자신의 댓글만 삭제할 수 있습니다.";
          }
       }
@@ -160,7 +163,7 @@ public class BoardService {
 
    public void recommendBoard(Long bdIdx, String type, HttpSession session) {
       Board board = boardRepository.findByBdIdx(bdIdx).orElseThrow(() ->
-              new HandlableException(ErrorCode.FAILED_RECOMMEND_BOARD.setURL("/board/board-detail?bdIdx="+bdIdx)));
+              new HandlableException(ErrorCode.FAILED_RECOMMEND_BOARD.setURL("/board/board-detail?bdIdx=" + bdIdx)));
 
       List<Member> memberList = board.getRecommendMembers();
       Member sessionMember = new Member();
@@ -173,7 +176,7 @@ public class BoardService {
       }
 
       for (Member member : memberList) {
-         if(member.getUserId().equals(sessionMember.getUserId())){
+         if (member.getUserId().equals(sessionMember.getUserId())) {
             board.setRecCount(board.getRecCount() - 1);
             memberList.remove(member);
             board.setRecommendMembers(memberList);
@@ -184,5 +187,30 @@ public class BoardService {
       board.setRecCount(board.getRecCount() + 1);
       memberList.add(sessionMember);
       board.setRecommendMembers(memberList);
+   }
+
+   @Transactional
+   public Board modifyBoard(List<Long> flIdxList, Board board, List<MultipartFile> fileList) {
+      Board certifiedBoard = boardRepository.findByBdIdx(board.getBdIdx()).orElse(null);
+      if (certifiedBoard == null) return null;
+
+      //flIdx똑같으면 삭제
+      certifiedBoard.getFiles().removeIf(fileInfo ->
+              !fileInfo.getFlIdx().equals(flIdxList.get(certifiedBoard.getFiles().indexOf(fileInfo))));
+
+      List<FileInfo> fileInfos = new ArrayList<FileInfo>();
+      FileUtil fileUtil = new FileUtil();
+
+      for (MultipartFile multipartFile : fileList) {
+         if (!multipartFile.isEmpty()) {
+            certifiedBoard.getFiles().add(fileUtil.fileUpload(multipartFile));
+         }
+      }
+
+      certifiedBoard.setTitle(board.getTitle());
+      certifiedBoard.setBdContent(board.getBdContent());
+
+      return certifiedBoard;
+
    }
 }

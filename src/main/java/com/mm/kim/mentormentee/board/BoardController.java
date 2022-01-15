@@ -132,5 +132,9 @@ public class BoardController {
     }
 
     @PostMapping("modify-board")
-    public String modifyBoardImpl()
+    public String modifyBoardImpl(@RequestParam List<Long> flIdxList, Board board, @RequestParam List<MultipartFile> fileList, Model model){
+        Board modifyBoard = boardService.modifyBoard(flIdxList, board, fileList);
+        model.addAttribute("board", modifyBoard);
+        return "/board/board-detail";
+    }
 }
