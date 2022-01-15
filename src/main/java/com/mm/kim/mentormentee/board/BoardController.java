@@ -130,4 +130,7 @@ public class BoardController {
         }
         return "/board/modify-board";
     }
+
+    @PostMapping("modify-board")
+    public String modifyBoardImpl()
 }

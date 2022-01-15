@@ -1,5 +1,5 @@
 (() => {
-    Kakao.init("301666567c882d68ede3425ac4a18848");
+    Kakao.init("2");
 })();
 
 function loginFormWithKakao() {

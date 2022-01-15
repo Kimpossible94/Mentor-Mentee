@@ -1,56 +1,76 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-    <title>Mentor & Mentee - 게시글 수정</title>
-    <th:block th:replace="fragments::flg_head"></th:block>
-    <link rel="stylesheet" href="/css/board/board-create.css">
+   <title>Mentor & Mentee - 게시글 수정</title>
+   <th:block th:replace="fragments::flg_head"></th:block>
+   <link rel="stylesheet" href="/css/board/board-create.css">
 </head>
 <body class="d-flex flex-column h-100">
 <!-- Header-->
 <th:block th:replace="fragments::flg_nav"></th:block>
 <div class="create_section">
-    <div id="contentHeader">
-        <div id="contentTitle">
-           <p th:text="${board.mentor ne null} ? '멘토 게시판' : '멘티 게시판'"></p>
-        </div>
-    </div>
-    <hr>
-    <form th:action="@{/board/modify-board}" th:object="${board}" encType="multipart/form-data" method="post">
-        <div id="createBody">
-           <div id=createHeader>
-              <div class="d-flex">
-                 <p>제목 : </p>
-                 <input type="text" name="title" id="createTitle" th:value="*{title}"/>
-              </div>
-              <hr>
-              <div class="d-flex">
-                 <p>파일 첨부 : </p>
-                 <input type="file" id="fileBtn" name="fileList" value="파일" multiple/>
-              </div>
-           </div>
-            <hr>
-            <div>
-                <textarea id="createBox" name="bdContent" required="required" maxlength="1000" th:value="*{bdContent}"></textarea>
+   <div id="contentHeader">
+      <div id="contentTitle">
+         <p th:text="${board.mentor ne null} ? '멘토 게시판' : '멘티 게시판'"></p>
+      </div>
+   </div>
+   <hr>
+   <form th:action="@{/board/modify-board}" th:object="${board}" encType="multipart/form-data" method="post">
+      <input type="hidden" name="bdIdxList">
+      <div id="createBody">
+         <div id=createHeader>
+            <div class="d-flex">
+               <p>제목 : </p>
+               <input type="text" name="title" id="createTitle" th:value="*{title}"/>
             </div>
             <hr>
-        </div>
-       <div class='info file_info'>
-          <ol th:each="file : *{files}">
-             <li id="liTag" class="d-flex">
-                <i class="fas fa-paperclip" id="fileClip"></i>[[${file.originFileName}]]
-                <i class="fas fa-times"></i>
-             </li>
-          </ol>
-       </div>
-        <div class="create_footer">
-            <button id="returnButton" type="button" onclick="location.href='mentee'">목록</button>
-            <div id="wrapButton">
-                <button type="submit">수정</button>
+            <div class="d-flex">
+               <p>파일 첨부 : </p>
+               <input type="file" id="fileBtn" name="fileList" value="파일" multiple/>
             </div>
-        </div>
-    </form>
+         </div>
+         <hr>
+         <div>
+            <textarea id="createBox" name="bdContent" required="required" maxlength="1000">[[*{bdContent}]]</textarea>
+         </div>
+         <hr>
+      </div>
+      <div class='info file_info'>
+         <ol th:each="file : *{files}">
+            <li th:id="|flIdx-${file.flIdx}|" class="d-flex">
+               <input type="hidden" class="fileList" th:value="${file.flIdx}">
+               [[${file.originFileName}]]
+               <i class="fas fa-times" th:onclick="removeFlIdx([[${file.flIdx}]])"></i>
+            </li>
+         </ol>
+      </div>
+      <div class="create_footer">
+         <button id="returnButton" type="button" onclick="location.href='mentee'">목록</button>
+         <div id="wrapButton">
+            <button type="submit">수정</button>
+         </div>
+      </div>
+   </form>
 </div>
 <th:block th:replace="fragments::flg_footer"></th:block>
 <th:block th:replace="fragments::flg_jsFiles"></th:block>
+<script th:inline="javascript">
+    var fileList = document.querySelectorAll('.fileList');
+    let flIdxs = [];
+    for (let file of fileList) {
+        flIdxs.push(parseInt(file.value));
+    }
+    document.getElementsByName('bdIdxList').value = flIdxs;
+
+    let removeFlIdx = (flIdx) => {
+        if(flIdxs.indexOf(flIdx) == 0){
+            flIdxs.shift();
+        } else {
+            flIdxs.splice(flIdxs.indexOf(flIdx), flIdxs.indexOf(flIdx));
+        }
+        document.getElementById("flIdx-"+flIdx).parentNode.style.display = "none";
+        document.getElementsByName('bdIdxList').value = flIdxs;
+    }
+</script>
 </body>
 </html>
