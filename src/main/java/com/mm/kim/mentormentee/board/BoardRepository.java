@@ -8,4 +8,8 @@ public interface BoardRepository extends JpaRepository<Board, String> {
     Optional<Board> findByBdIdx(Long bdIdx);
 
     Board findBoardByComments(Comment comment);
+
+   int countByMenteeNull();
+
+   int countByMentorNull();
 }

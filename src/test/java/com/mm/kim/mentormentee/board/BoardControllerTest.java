@@ -57,4 +57,23 @@ public class BoardControllerTest {
 
 
     }
+
+    @Test
+    @DisplayName("게시글 삭제 테스트")
+    public void deleteBoard() throws Exception{
+        String bdIdx = "21";
+        String type = "MO01";
+        Mentor mentor = new Mentor();
+        Member member = new Member();
+        member.setUserId("test");
+        member.setRole("MO");
+        mentor.setMember(member);
+
+        mockMvc.perform(get("/board/delete-board")
+                .param("bdIdx", bdIdx)
+                .param("type", type)
+                .sessionAttr("authentication", mentor))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
 }

@@ -162,9 +162,9 @@
                                     <option value="rentalSpace">카페나 스터디룸 대여희망</option>
                                  </select>
                               </div>
-                              <div class="mb-3">
+                              <div th:unless="*{history eq null}" class="mb-3">
                                  <label for="originHistory" class="form-label">이력사항</label>
-                                 <div th:if="*{history ne null}" class='myHistory' id="originHistory" name="history"
+                                 <div class='myHistory' id="originHistory" name="history"
                                       th:each="prod : *{history.split(',')}">
                                     <div th:text="${prod}"></div>
                                  </div>

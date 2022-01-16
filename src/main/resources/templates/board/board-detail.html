@@ -89,10 +89,8 @@
       <div id="wrapButton">
          <button type="button" th:onclick="'location.href=\'' +
          @{/board/modify-board(bdIdx=${board.bdIdx},type=${session.authentication.member.role})} + '\';'">수정</button>
-         <button type="button"
-                 onclick="location.href='mentee/mentee-board-delete?bdIdx=${datas.boardMentee.bdIdx}&userId=${datas.boardMentee.userId}'">
-            삭제
-         </button>
+         <button type="button" th:onclick="'location.href=\'' +
+         @{/board/delete-board(bdIdx=${board.bdIdx},type=${session.authentication.member.role})} + '\';'">삭제</button>
       </div>
    </div>
 </div>

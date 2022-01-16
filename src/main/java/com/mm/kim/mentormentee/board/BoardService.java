@@ -43,10 +43,13 @@ public class BoardService {
    }
 
    public Map<String, Object> findBoardByPage(int pageNumber, String type) {
+      System.out.println("pageNumber : "+pageNumber);
       int cntPerPage = 10;
 
-      Page<Board> page = boardRepository.findAll(PageRequest.of(pageNumber - 1, cntPerPage, Sort.Direction.DESC, "bdIdx"));
+      Page<Board> page = boardRepository.findAll(PageRequest.of(pageNumber-1, cntPerPage, Sort.Direction.DESC, "bdIdx"));
       List<Board> boardList = page.getContent();
+      System.out.println("/..././././././///." + boardList);
+      System.out.println("/..././././././///." + boardList.size());
       List<Board> boardListMentor = new ArrayList<Board>();
       List<Board> boardListMentee = new ArrayList<Board>();
       for (Board board : boardList) {
@@ -61,7 +64,7 @@ public class BoardService {
 
       if (type.equals("MO")) {
          pageUtil = Paging.builder()
-                 .total(boardListMentor.size())
+                 .total(boardRepository.countByMenteeNull())
                  .url("/board/board-list")
                  .cntPerPage(cntPerPage)
                  .blockCnt(5)
@@ -70,7 +73,7 @@ public class BoardService {
          return Map.of("boardList", boardListMentor, "paging", pageUtil);
       } else {
          pageUtil = Paging.builder()
-                 .total(boardListMentee.size())
+                 .total(boardRepository.countByMentorNull())
                  .url("/board/board-list")
                  .cntPerPage(cntPerPage)
                  .blockCnt(5)
@@ -212,5 +215,31 @@ public class BoardService {
 
       return certifiedBoard;
 
+   }
+
+   public boolean checkWriter(Board board, String type, HttpSession session) {
+      if(type.contains("MO")){
+         Mentor mentor = (Mentor) session.getAttribute("authentication");
+         if(!board.getMentor().getMember().getUserId().equals(mentor.getMember().getUserId())){
+            return false;
+         }
+      } else {
+         Mentee mentee = (Mentee) session.getAttribute("authentication");
+         if(!board.getMentee().getMember().getUserId().equals(mentee.getMember().getUserId())){
+            return false;
+         }
+      }
+      return true;
+   }
+
+   @Transactional
+   public boolean deleteBoard(Long bdIdx, String type, HttpSession session) {
+      Board board = findBoardByBdIdx(bdIdx);
+      if(!checkWriter(board, type, session)){
+         return false;
+      }
+
+      boardRepository.delete(board);
+      return true;
    }
 }
