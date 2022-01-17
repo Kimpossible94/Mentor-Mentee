@@ -20,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -45,9 +46,9 @@ public class MemberService {
         return memberRepository.existsById(userId);
     }
 
-    public void authenticateByEmail(JoinForm form, String token) {
+    public void authenticateByEmail(JoinForm form, String token, String template, String subject) {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<String, String>();
-        body.add("mailTemplate", "join-auth-mail");
+        body.add("mailTemplate", template);
         body.add("userId", form.getUserId());
         body.add("persistToken", token);
 
@@ -57,7 +58,7 @@ public class MemberService {
                         .body(body);
 
         String htmlText = http.exchange(request, String.class).getBody();
-        emailSender.send(form.getEmail(), "회원가입을 축하합니다.", htmlText);
+        emailSender.send(form.getEmail(), subject, htmlText);
     }
 
     public void persistMentor(Mentor mentor) {
@@ -169,5 +170,17 @@ public class MemberService {
 
     private boolean checkMatches(String password, String encodedPassword) {
         return passwordEncoder.matches(password, encodedPassword);
+    }
+
+    public Member checkMember(String userId) {
+        return memberRepository.findById(userId).orElse(null);
+    }
+
+    @Transactional
+    public Member resetPassword(String userId, String resetPw) {
+        Member member = memberRepository.findById(userId).orElse(null);
+        member.setPassword(passwordEncoder.encode(resetPw));
+
+        return member;
     }
 }

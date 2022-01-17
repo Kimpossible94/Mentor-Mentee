@@ -2,11 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <title>비밀번호 찾기</title>
-    <th:block th:replace="flagments::flg_head"></th:block>
+    <th:block th:replace="fragments::flg_head"></th:block>
     <link rel="stylesheet" href="/static/css/member/style.css">
 </head>
 <body style="height: 100vh">
-<th:block th:replace="flagments::flg_nav"></th:block>
+<th:block th:replace="fragments::flg_nav"></th:block>
 <div class="section" style="min-height:92vh;">
     <div class="container">
         <div class="row justify-content-center">
@@ -16,20 +16,17 @@
                         <div class="card-3d-wrapper">
                             <div class="card-front">
                                 <div class="center-wrap">
-                                    <form class="section text-left" action="/member/reset-password">
+                                    <form class="section text-left mt-5" th:action="@{/member/reset-pw}" method="post">
                                         <h3 class="mb-4">비밀번호를 잊으셨나요?</h3>
                                         <div class="mb-4">
-                                            <div>가입시 작성한 이메일을 적어주십시오.</div>
-                                            <div>재설정 안내 이메일을 발송해드립니다.</div>
+                                            <div>가입시 작성한 아이디를 적어주십시오.</div>
+                                            <div>가입시 작성한 이메일로 비밀번호 재설정 이메일을 발송해드립니다.</div>
                                         </div>
                                         <div class="form-group">
-                                            <input type="email" name="logemail" class="form-style" placeholder="Your Email" id="logemail" autocomplete="off">
-                                            <i class="input-icon uil uil-at"></i>
+                                            <input type="text" name="userId" class="form-style" placeholder="Your Id" id="logemail" autocomplete="off">
                                         </div>
                                         <p class='text-muted small' id="infoPw">
-                                            <!--                                            <c:if test="${not empty param.err}">-->
-                                            <!--                                                등록되지 않은 이메일 입니다.-->
-                                            <!--                                            </c:if>-->
+                                            <span th:if="${errUser}" th:text="*{errUser}" class="valid-msg"></span>
                                         </p>
                                         <button type="submit" class="btn mt-4" style="width:100%">submit</button>
                                     </form>
@@ -42,8 +39,8 @@
         </div>
     </div>
 </div>
-<th:block th:replace="flagments::flg_footer"></th:block>
-<th:block th:replace="flagments::flg_jsFiles"></th:block>
+<th:block th:replace="fragments::flg_footer"></th:block>
+<th:block th:replace="fragments::flg_jsFiles"></th:block>
 <script src="/static/js/member/script.js"></script>
 </body>
 </html>

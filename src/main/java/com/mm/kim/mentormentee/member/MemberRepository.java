@@ -8,4 +8,6 @@ public interface MemberRepository extends JpaRepository<Member, String> {
     Member findMemberByUserId(String userId);
 
     Optional<Member> findMemberByKakaoJoin(String id);
+
+    Optional<Member> findByEmail(String email);
 }

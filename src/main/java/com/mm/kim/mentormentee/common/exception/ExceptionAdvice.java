@@ -23,6 +23,7 @@ public class ExceptionAdvice {
     public String handleExceptionProcess(HandlableException e, Model model){
         model.addAttribute("msg", e.errorCode.MESSAGE);
         model.addAttribute("url", e.errorCode.URL);
+        e.printStackTrace();
         return "/common/result";
     }
 

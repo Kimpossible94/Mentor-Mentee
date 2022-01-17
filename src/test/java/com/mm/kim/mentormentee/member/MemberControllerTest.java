@@ -158,4 +158,20 @@ class MemberControllerTest {
 
     }
 
+    @Test
+    @DisplayName("비밀번호 찾기 페이지")
+    public void forgetPW() throws Exception{
+        mockMvc.perform(get("/member/forget-pw"))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("비밀번호 초기화 테스트")
+    public void resetPwImplTest() throws Exception{
+        mockMvc.perform(get("/member/reset-pw-impl/1234/test")
+                        .sessionAttr("resetToken", "1234"))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
 }
