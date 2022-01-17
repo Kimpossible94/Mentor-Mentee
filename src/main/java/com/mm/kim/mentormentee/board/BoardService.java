@@ -11,6 +11,7 @@ import com.mm.kim.mentormentee.member.Mentor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,14 +43,33 @@ public class BoardService {
       boardRepository.save(board);
    }
 
-   public Map<String, Object> findBoardByPage(int pageNumber, String type) {
-      System.out.println("pageNumber : "+pageNumber);
+   public Map<String, Object> findBoardByPage(int pageNumber, String type, Search search) {
       int cntPerPage = 10;
+      Page<Board> page = null;
+      Paging pageUtil = null;
+      if (search.getCondition() != null) {
+         if (search.getCondition().equals("bdTitle")) {
+            if (type.contains("MO")) {
+               page = boardRepository.findAllByTitleIsContaining(
+                       (Pageable) PageRequest.of(pageNumber - 1, cntPerPage, Sort.Direction.DESC, "title"), search.getWord());
+            }
+            pageUtil = pageUtilByTypeAndCondition("title", cntPerPage, pageNumber, search.getWord(), type);
+         } else {
+            if (type.contains("MO")) {
+               page = boardRepository.findAllByMentor_Member_UserId(
+                       (Pageable) PageRequest.of(pageNumber - 1, cntPerPage, Sort.Direction.DESC, "mentor_member_userId"), search.getWord());
+            } else {
+               page = boardRepository.findAllByMentee_Member_UserId(
+                       (Pageable) PageRequest.of(pageNumber - 1, cntPerPage, Sort.Direction.DESC, "mentee_member_userId"), search.getWord());
+            }
+            pageUtil = pageUtilByTypeAndCondition("userId", cntPerPage, pageNumber, search.getWord(), type);
+         }
+      } else {
+         page = boardRepository.findAll(PageRequest.of(pageNumber - 1, cntPerPage, Sort.Direction.DESC, "bdIdx"));
+         pageUtil = pageUtilByTypeAndCondition("bdIdx", cntPerPage, pageNumber, search.getWord(), type);
+      }
 
-      Page<Board> page = boardRepository.findAll(PageRequest.of(pageNumber-1, cntPerPage, Sort.Direction.DESC, "bdIdx"));
       List<Board> boardList = page.getContent();
-      System.out.println("/..././././././///." + boardList);
-      System.out.println("/..././././././///." + boardList.size());
       List<Board> boardListMentor = new ArrayList<Board>();
       List<Board> boardListMentee = new ArrayList<Board>();
       for (Board board : boardList) {
@@ -60,28 +80,46 @@ public class BoardService {
          }
       }
 
-      Paging pageUtil = null;
-
-      if (type.equals("MO")) {
-         pageUtil = Paging.builder()
-                 .total(boardRepository.countByMenteeNull())
-                 .url("/board/board-list")
-                 .cntPerPage(cntPerPage)
-                 .blockCnt(5)
-                 .curPage(pageNumber)
-                 .build();
+      if (type.contains("MO")) {
          return Map.of("boardList", boardListMentor, "paging", pageUtil);
       } else {
-         pageUtil = Paging.builder()
-                 .total(boardRepository.countByMentorNull())
-                 .url("/board/board-list")
-                 .cntPerPage(cntPerPage)
-                 .blockCnt(5)
-                 .curPage(pageNumber)
-                 .build();
          return Map.of("boardList", boardListMentee, "paging", pageUtil);
       }
    }
+
+   private Paging pageUtilByTypeAndCondition(String condition, int cntPerPage, int pageNumber, String word, String type) {
+      Paging pageUtil = null;
+      int blockCnt = 5;
+      if (condition.equals("title")) {
+         pageUtil = Paging.builder()
+                 .total(type.contains("MO") ? boardRepository.countByTitleIsContainingAndMenteeNull(word) :
+                         boardRepository.countByTitleIsContainingAndMentorNull(word))
+                 .url("/board/board-list")
+                 .cntPerPage(cntPerPage)
+                 .blockCnt(blockCnt)
+                 .curPage(pageNumber)
+                 .build();
+      } else if (condition.equals("userId")) {
+         pageUtil = Paging.builder()
+                 .total(type.contains("MO") ? boardRepository.countByMentor_Member_UserId(word) :
+                                 boardRepository.countByMentee_Member_UserId(word))
+                 .url("/board/board-list")
+                 .cntPerPage(cntPerPage)
+                 .blockCnt(blockCnt)
+                 .curPage(pageNumber)
+                 .build();
+      } else {
+         pageUtil = Paging.builder()
+                 .total(type.contains("MO") ? boardRepository.countByMenteeNull() : boardRepository.countByMentorNull())
+                 .url("/board/board-list")
+                 .cntPerPage(cntPerPage)
+                 .blockCnt(blockCnt)
+                 .curPage(pageNumber)
+                 .build();
+      }
+
+      return pageUtil;
+}
 
    @Transactional
    public Board findBoardByBdIdx(Long bdIdx) {
@@ -218,14 +256,14 @@ public class BoardService {
    }
 
    public boolean checkWriter(Board board, String type, HttpSession session) {
-      if(type.contains("MO")){
+      if (type.contains("MO")) {
          Mentor mentor = (Mentor) session.getAttribute("authentication");
-         if(!board.getMentor().getMember().getUserId().equals(mentor.getMember().getUserId())){
+         if (!board.getMentor().getMember().getUserId().equals(mentor.getMember().getUserId())) {
             return false;
          }
       } else {
          Mentee mentee = (Mentee) session.getAttribute("authentication");
-         if(!board.getMentee().getMember().getUserId().equals(mentee.getMember().getUserId())){
+         if (!board.getMentee().getMember().getUserId().equals(mentee.getMember().getUserId())) {
             return false;
          }
       }
@@ -235,7 +273,7 @@ public class BoardService {
    @Transactional
    public boolean deleteBoard(Long bdIdx, String type, HttpSession session) {
       Board board = findBoardByBdIdx(bdIdx);
-      if(!checkWriter(board, type, session)){
+      if (!checkWriter(board, type, session)) {
          return false;
       }
 

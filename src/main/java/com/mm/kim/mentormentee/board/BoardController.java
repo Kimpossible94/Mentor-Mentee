@@ -2,7 +2,6 @@ package com.mm.kim.mentormentee.board;
 
 import com.mm.kim.mentormentee.common.code.ErrorCode;
 import com.mm.kim.mentormentee.common.exception.HandlableException;
-import com.mm.kim.mentormentee.member.Member;
 import com.mm.kim.mentormentee.member.Mentee;
 import com.mm.kim.mentormentee.member.Mentor;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +24,7 @@ public class BoardController {
    public void boardList(Model model, String type, Search search
            , @RequestParam(required = false, defaultValue = "1") int page) {
       System.out.println(search);
-      model.addAllAttributes(boardService.findBoardByPage(page, type));
+      model.addAllAttributes(boardService.findBoardByPage(page, type, search));
       model.addAttribute("type", type);
    }
 
@@ -52,7 +51,9 @@ public class BoardController {
          board.setMentee(mentee);
       }
       boardService.persistBoard(fileList, board);
-      model.addAllAttributes(boardService.findBoardByPage(1, type));
+      Search search = new Search();
+      search.setCondition(null);
+      model.addAllAttributes(boardService.findBoardByPage(1, type, search));
       model.addAttribute("type", type);
       return "/board/board-list";
    }
@@ -149,7 +150,9 @@ public class BoardController {
          return "/common/result";
       }
 
-      model.addAllAttributes(boardService.findBoardByPage(1, type));
+      Search search = new Search();
+      search.setCondition(null);
+      model.addAllAttributes(boardService.findBoardByPage(1, type, search));
       model.addAttribute("type", type);
       return "/board/board-list";
    }
