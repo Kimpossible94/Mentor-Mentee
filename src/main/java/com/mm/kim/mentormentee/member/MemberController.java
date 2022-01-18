@@ -68,6 +68,7 @@ public class MemberController {
             Mentee certifiedMentee = memberService.findMenteeByMember(certifiedMember);
             session.setAttribute("authentication", certifiedMentee);
         }
+        session.setAttribute("certified", certifiedMember);
 
         return "redirect:/member/mypage";
     }
@@ -88,13 +89,14 @@ public class MemberController {
     @PostMapping("kakao-login-impl")
     @ResponseBody
     public String kakaoLoginImpl(@RequestBody Member member, HttpSession session){
-        System.out.println(member);
         if(member.getRole().contains("MO")){
             Mentor mentor = memberService.findMentorByMember(member);
             session.setAttribute("authentication", mentor);
+            session.setAttribute("certified", mentor.getMember());
         } else {
             Mentee mentee = memberService.findMenteeByMember(member);
             session.setAttribute("authentication", mentee);
+            session.setAttribute("certified", mentee.getMember());
         }
 
         return "success";
@@ -217,6 +219,7 @@ public class MemberController {
     @GetMapping("logout")
     public String logout(HttpSession session) {
         session.removeAttribute("authentication");
+        session.removeAttribute("certified");
         return "redirect:/";
     }
 
@@ -250,7 +253,9 @@ public class MemberController {
         Mentor modifedMentor = memberService.modifyMentor(mentor);
 
         session.removeAttribute("authentication");
+        session.removeAttribute("certified");
         session.setAttribute("authentication", modifedMentor);
+        session.setAttribute("certified", modifedMentor.getMember());
 
         model.addAttribute("msg", "회원정보 수정이 완료되었습니다.");
         model.addAttribute("url", "/member/mypage");
@@ -263,7 +268,9 @@ public class MemberController {
         Mentee modifiedMentee = memberService.modifyMentee(mentee);
 
         session.removeAttribute("authentication");
+        session.removeAttribute("certified");
         session.setAttribute("authentication", modifiedMentee);
+        session.setAttribute("certified", modifiedMentee.getMember());
 
         model.addAttribute("msg", "회원정보 수정이 완료되었습니다.");
         model.addAttribute("url", "/member/mypage");
@@ -278,7 +285,9 @@ public class MemberController {
         Mentor modifiedMentor = memberService.modifyAccount(mentor, bank, accountNum);
 
         session.removeAttribute("authentication");
+        session.removeAttribute("certified");
         session.setAttribute("authentication", modifiedMentor);
+        session.setAttribute("certified", modifiedMentor.getMember());
 
         model.addAttribute("msg", "계좌정보 수정이 완료되었습니다.");
         model.addAttribute("url", "/member/mypage");
@@ -289,15 +298,9 @@ public class MemberController {
     @ResponseBody
     public String kakaoAuth(String kakao, String type, HttpSession session) {
         if (memberService.findMemberByKaKaoId(kakao) != null) return "unavailable";
-        if (type.contains("MO")) {
-            Mentor mentor = (Mentor) session.getAttribute("authentication");
-            mentor.getMember().setKakaoJoin(kakao);
-            memberService.modifyMemberKakaoJoin(mentor.getMember());
-        } else {
-            Mentee mentee = (Mentee) session.getAttribute("authentication");
-            mentee.getMember().setKakaoJoin(kakao);
-            memberService.modifyMemberKakaoJoin(mentee.getMember());
-        }
+        Member member = (Member) session.getAttribute("certified");
+        member.setKakaoJoin(kakao);
+        memberService.modifyMemberKakaoJoin(member);
 
         return "available";
     }
@@ -308,7 +311,9 @@ public class MemberController {
         Mentor modifiedMentor = memberService.modifyMentorImage(image, mentor);
 
         session.removeAttribute("authentication");
+        session.removeAttribute("certified");
         session.setAttribute("authentication", modifiedMentor);
+        session.setAttribute("certified", modifiedMentor.getMember());
 
         return "/member/mypage";
     }
@@ -325,6 +330,7 @@ public class MemberController {
         }
 
         session.removeAttribute("authentication");
+        session.removeAttribute("certified");
 
         model.addAttribute("msg", "회원탈퇴 되었습니다.");
         model.addAttribute("url", "/");

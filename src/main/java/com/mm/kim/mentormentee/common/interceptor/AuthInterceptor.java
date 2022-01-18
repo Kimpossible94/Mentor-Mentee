@@ -40,8 +40,8 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     private void loginAuthorize(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        Object user = session.getAttribute("authentication");
-        if (user == null) {
+        Member member = (Member) session.getAttribute("certified");
+        if (member == null) {
             throw new HandlableException(ErrorCode.UNLOGINED_ERROR);
         }
     }

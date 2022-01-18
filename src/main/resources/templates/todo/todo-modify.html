@@ -1,49 +1,33 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>Insert title here</title>
-  <link rel="stylesheet" href="/static/css/todo/reset.css">
-  <link rel="stylesheet" href="/static/css/todo/popup.css">
-  <!-- full calendar -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.9.0/main.min.css">
-  <script src='https://cdn.jsdelivr.net/combine/npm/fullcalendar@5.9.0/main.min.js,npm/fullcalendar@5.9.0/locales-all.min.js'></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+   <meta charset="UTF-8">
+   <title>Insert title here</title>
+   <link rel="stylesheet" href="/css/todo/reset.css">
+   <link rel="stylesheet" href="/css/todo/popup.css">
+   <!-- full calendar -->
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.9.0/main.min.css">
+   <script src='https://cdn.jsdelivr.net/combine/npm/fullcalendar@5.9.0/main.min.js,npm/fullcalendar@5.9.0/locales-all.min.js'></script>
+   <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+           crossorigin="anonymous"></script>
 </head>
 <body>
-<div class="wrap-input">
-  <input type="hidden" name="todoIdx" id="todoIdx" />
-  <div class="top-div">일정 제목</div>
-  <div>
-    <input type="text" name="title" id="titleInput" />
-  </div>
-  <div>일정 시작일</div>
-  <div>
-    <input type="date" name="startDate" id="startInput" />
-  </div>
-  <div>일정 종료일</div>
-  <div>
-    <input type="date" name="endDate" id="endInput" />
-  </div>
-  <div>색상</div>
-  <div>
-    <input type="color" name="color" id="colorInput" />
-  </div>
-  <input type="hidden" id="done" name="done" value="0" />
-
+<div class="wrap-input" th:object="${todo}">
+   <input type="hidden" name="todoIdx" id="todoIdx" th:value="*{todoIdx}"/>
+   <input type="hidden" id="done" name="done" th:value="*{done}"/>
+   <div class="top-div">일정 제목</div>
+   <div><input type="text" name="title" id="titleInput" th:value="*{title}"/></div>
+   <div>일정 시작일</div>
+   <div><input type="date" name="startDate" id="startInput" th:value="*{startDate}"/></div>
+   <div>일정 종료일</div>
+   <div><input type="date" name="endDate" id="endInput" th:value="*{endDate}"/></div>
+   <div>색상</div>
+   <div><input type="color" name="color" id="colorInput" th:value="*{color}"/></div>
 </div>
 <div class="wrap-button">
-  <!-- 	<input type="submit" value="일정 수정" formaction="/todo/modify" id="modifyButton" onclick="todoModify()"/> -->
-  <button type="button" id="modifyButton" onclick="todoModify()">일정 수정</button>
-  <button type="button" id="deleteButton" onclick="deleteEntry()">일정 삭제</button>
+   <button type="button" id="modifyButton" onclick="todoModify()">일정 수정</button>
+   <button type="button" id="deleteButton" onclick="todoDelete()">일정 삭제</button>
 </div>
 </body>
-
-<!--
-<div class="wrap-button">
-	<button id="modifyButton">일정  수정</button>
-	<button id="deleteButton">일정 삭제</button>
-</div>
- -->
-<script src="/static/js/todo/todo-modify.js"></script>
+<script src="/js/todo/todo-modify.js"></script>
 
