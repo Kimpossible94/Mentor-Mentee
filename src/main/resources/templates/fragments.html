@@ -58,7 +58,7 @@
                                         </th:block>
                                         <th:block th:if="${session.authentication}">
                                             <li th:if="*{member.role.contains('ME')}">
-                                                <a href="/mentoring/apply-page" class="nav-link">멘토신청</a>
+                                                <a href="/mentoring/choose-condition" class="nav-link">멘토신청</a>
                                             </li>
                                             <li>
                                                 <a th:if="*{member.role.contains('MO')}" href="/board/board-list?type=MO"

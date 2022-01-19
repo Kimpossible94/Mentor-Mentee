@@ -98,9 +98,9 @@
                            <i class="fas fa-home text-muted"></i>
                         </span>
                         </div>
-                        <input id="address" type="text" name="address" placeholder="주소" required
+                        <input id="address" type="text" name="address" placeholder="주소"
                                class="form-control bg-white border-left-0 border-md"
-                               th:value="*{#fields.hasErrors('*') ? '' : address}">
+                               th:value="*{#fields.hasErrors('*') ? '' : address}" required>
                     </div>
 
                     <!-- Phone Number -->
@@ -116,9 +116,9 @@
                             <option value="019">019</option>
                             <option value="017">017</option>
                         </select>
-                        <input id="phone" type="tel" name="phone" placeholder="전화번호(-빼고 입력)" required
+                        <input id="phone" type="tel" name="phone" placeholder="전화번호(-빼고 입력)"
                                class="form-control bg-white border-md border-left-0 pl-3"
-                               th:value="*{#fields.hasErrors('phone') ? '' : phone}">
+                               th:value="*{#fields.hasErrors('phone') ? '' : phone}" required>
                     </div>
                     <span id="tellCheck" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" class="valid-msg"></span>
 
@@ -159,8 +159,8 @@
                                     <i class="fas fa-school text-muted"></i>
                                 </span>
                             </div>
-                            <select id="universityType" name="universityType" required class="form-control custom-select bg-white border-left-0 border-md">
-                                <option selected disabled>학교 유형</option>
+                            <select id="universityType" name="universityType" class="form-control custom-select bg-white border-left-0 border-md" required>
+                                <option selected disabled value="">학교 유형</option>
                                 <option value="university">대학교</option>
                                 <option value="college">전문대</option>
                             </select>
@@ -174,8 +174,8 @@
                                     <i class="fas fa-user-graduate text-muted"></i>
                                 </span>
                             </div>
-                            <select id="grade" name="grade" required class="form-control custom-select bg-white border-left-0 border-md">
-                                <option selected disabled>현재 학년</option>
+                            <select id="grade" name="grade" class="form-control custom-select bg-white border-left-0 border-md" required>
+                                <option selected disabled value="">현재 학년</option>
                                 <option value="1">1학년</option>
                                 <option value="2">2학년</option>
                                 <option value="3">3학년</option>
@@ -190,8 +190,8 @@
                                     <i class="fas fa-university text-muted"></i>
                                 </span>
                             </div>
-                            <select id="major" name="major" required class="form-control custom-select bg-white border-left-0 border-md">
-                                <option selected disabled>전공 계열</option>
+                            <select id="major" name="major" class="form-control custom-select bg-white border-left-0 border-md" required>
+                                <option selected disabled value="">전공 계열</option>
                                 <option value="humanities">인문계열</option>
                                 <option value="education">교육계열</option>
                                 <option value="engineering">공학계열</option>
@@ -216,7 +216,7 @@
                                 </span>
                             </div>
                             <select id="wantDay" name="wantDay" required class="form-control custom-select bg-white border-left-0 border-md">
-                                <option selected disabled>희망 요일</option>
+                                <option selected disabled value="">희망 요일</option>
                                 <option value="mon">월요일</option>
                                 <option value="tue">화요일</option>
                                 <option value="wed">수요일</option>
@@ -236,7 +236,7 @@
                                 </span>
                             </div>
                             <select id="wantTime" name="wantTime" required class="form-control custom-select bg-white border-left-0 border-md">
-                                <option selected disabled>희망 시간</option>
+                                <option selected disabled value="">희망 시간</option>
                                 <option value="am">오전(09:00 ~ 12:00)</option>
                                 <option value="pm">오후(12:00 ~ 17:00)</option>
                                 <option value="evening">저녁(17:00 ~ 21:00)</option>
@@ -252,7 +252,7 @@
                                 </span>
                             </div>
                             <select id="requirement" name="requirement" required class="form-control custom-select bg-white border-left-0 border-md">
-                                <option selected disabled>원하는 진행방식</option>
+                                <option selected disabled value="">원하는 진행방식</option>
                                 <option value="videoChat">비대면(화상채팅)</option>
                                 <option value="myTown">멘토의 동네에서 대면 수업</option>
                                 <option value="yourTown">멘티의 동네에서 대면 수업</option>
@@ -325,7 +325,7 @@
                         </span>
                             </div>
                             <select id="major" name="major" required class="form-control custom-select bg-white border-left-0 border-md text-muted">
-                                <option selected disabled>현재 계열</option>
+                                <option selected disabled value="">현재 계열</option>
                                 <option value="문과">문과</option>
                                 <option value="이과">이과</option>
                                 <option value="예체능">예체능</option>
@@ -341,7 +341,7 @@
                         </span>
                             </div>
                             <select id="grade" name="grade" required class="form-control custom-select bg-white border-left-0 border-md text-muted">
-                                <option selected disabled>현재 학년</option>
+                                <option selected disabled value="">현재 학년</option>
                                 <option value="1">1학년</option>
                                 <option value="2">2학년</option>
                                 <option value="3">3학년</option>

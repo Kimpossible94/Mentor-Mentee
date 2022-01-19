@@ -164,9 +164,7 @@ let nextBtn = () => {
 let submitBtn = () => {
 	let lastParams = registParams(3);
 	params.push(lastParams);
-	
-	console.dir(params);
-	location.href = "/mentoring/mentor-list?school_type="+params[0]+"&major_type="+params[1]+"&want_time="+params[2]+"&want_date="+params[3]+"&want_place="+params[4];
+	location.href = "/mentoring/mentor-list?universityType="+params[0]+"&majorType="+params[1]+"&wantTime="+params[2]+"&wantDate="+params[3]+"&wantPlace="+params[4];
 }
 
 

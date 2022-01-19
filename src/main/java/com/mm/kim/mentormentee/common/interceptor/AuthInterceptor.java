@@ -58,7 +58,7 @@ public class AuthInterceptor implements HandlerInterceptor {
             case "mentor-list":
             case "regist-apply":
             case "apply-complete":
-            case "apply-page":
+            case "choose-condition":
             case "reapply-complete":
                 checkMentee(request);
                 break;
@@ -70,8 +70,8 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     private void checkMentor(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        Mentor mentor = (Mentor) session.getAttribute("authentication");
-        if (!mentor.getMember().getRole().contains("MO")) {
+        Member member = (Member) session.getAttribute("certified");
+        if (!member.getRole().contains("MO")) {
             throw new HandlableException(ErrorCode.ACCESS_ONLY_MENTOR);
         }
     }

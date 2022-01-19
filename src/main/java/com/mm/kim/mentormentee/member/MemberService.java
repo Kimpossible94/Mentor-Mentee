@@ -20,7 +20,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -183,4 +182,8 @@ public class MemberService {
 
         return member;
     }
+
+   public Mentor findMentorById(Long mentorIdx) {
+        return mentorRepository.findByMentorIdx(mentorIdx);
+   }
 }

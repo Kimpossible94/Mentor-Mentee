@@ -1,10 +1,9 @@
-let checkHistory = (userIdx) => {
-	console.dir(userIdx)
-   location.href = `/member/mentor-info?user_idx=${userIdx}`;
+let checkHistory = (mentorIdx) => {
+   location.href = `/member/mentor-info?mentorIdx=${mentorIdx}`;
 }
 
-let apply = (mentorUserIdx, mentorIdx) => {
-	location.href = `/mentoring/apply-complete?mentor_user_idx=${mentorUserIdx}&mentor_idx=${mentorIdx}`;
+let apply = (mentorIdx) => {
+	location.href = `/mentoring/apply?&mentorIdx=${mentorIdx}`;
 }
 
 

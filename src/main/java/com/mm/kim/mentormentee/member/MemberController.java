@@ -392,4 +392,9 @@ public class MemberController {
                 .addAttribute("url", "/index");
         return "common/result";
     }
+
+    @GetMapping("mentor-info")
+    public void mentorInfo(Long mentorIdx, Model model){
+        model.addAttribute("mentor", memberService.findMentorById(mentorIdx));
+    }
 }

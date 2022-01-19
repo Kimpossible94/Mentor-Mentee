@@ -2,10 +2,14 @@ package com.mm.kim.mentormentee.member;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
+import java.util.List;
 
-public interface MentorRepository extends JpaRepository<Mentor,String> {
-    Mentor findMentorByMember(Member member);
+public interface MentorRepository extends JpaRepository<Mentor, String> {
+   Mentor findMentorByMember(Member member);
 
-    Mentor findByMentorIdx(Long mentorIdx);
+   Mentor findByMentorIdx(Long mentorIdx);
+
+   List<Mentor> findAllByUniversityTypeInAndWantTimeInAndRequirementInAndMajorInAndWantDayIn(
+           String[] universityType, String[] wantTime, String[] wantPlace, String[] majorType, String[] wantDate);
+
 }
