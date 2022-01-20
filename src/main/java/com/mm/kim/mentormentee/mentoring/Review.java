@@ -1,6 +1,7 @@
 package com.mm.kim.mentormentee.mentoring;
 
 import com.mm.kim.mentormentee.member.Member;
+import com.mm.kim.mentormentee.member.Mentee;
 import com.mm.kim.mentormentee.member.Mentor;
 import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
@@ -23,8 +24,8 @@ public class Review {
     private Mentor mentor;
 
     @ManyToOne
-    @JoinColumn(name = "userIdx")
-    private Member member;
+    @JoinColumn(name = "menteeIdx")
+    private Mentee mentee;
 
     @Column(columnDefinition = "varchar2(1) default 'N'")
     private String kindness;

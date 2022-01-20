@@ -1,7 +1,7 @@
 let renderApplying = () => {
 	document.querySelector('#type_manage').innerHTML = "신청중인 멘토링";
 	
-	document.querySelector('#expiration-date').innerHTML = "* 신청일 기준 3일 내로 멘토의 수락이 없을 시 삭제됩니다."
+	document.querySelector('#expiration-date').innerHTML = "* 신청일 기준 7일 내로 멘토의 수락이 없을 시 삭제됩니다."
 	
 	document.getElementById("apply-mentoring").style.display = 'flex';
 	document.getElementById("process-mentoring").style.display ="none";	
@@ -32,7 +32,7 @@ let reapply = (aIdx, reapplyCnt) => {
 		alert("재신청은 최대 2회까지 가능합니다.");
 		return;
 	} else {
-		location.href=`/mentoring/reapply-complete?a_idx=${aIdx}`;
+		location.href=`/mentoring/reapply?ahIdx=${aIdx}`;
 	}
 }
 

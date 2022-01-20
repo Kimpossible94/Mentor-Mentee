@@ -88,16 +88,30 @@ class MemberControllerTest {
     public void joinImpl() throws Exception{
         Member member = new Member();
         Mentor mentor = new Mentor();
-        member.setUserId("test");
+        member.setUserId("mentor8");
         member.setPassword("1234");
-        member.setEmail("zerotiger94@gmail.com");
-        member.setPhone("01011112222");
-        member.setRole("MO01");
+        member.setEmail("kimpossible94@naver.com");
+        member.setPhone("00110011");
+        member.setRole("MO00");
+        member.setCountryCode("010");
+        member.setAddress("춘천");
+        member.setUserName("최춘천");
+        member.setNickname("춘천지박령");
 
         mentor.setMember(member);
         mentor.setGrade(2);
-        mentor.setMajor("dd");
-        mentor.setWantTime("day");
+        mentor.setBank("카카오뱅크");
+        mentor.setAccountNum("122312339922");
+//        mentor.setHistory("토익 스피킹 level 7, 토익 930점, 전기기사");
+//        mentor.setHistory("토익 930점, 화공기사, 수질기사 ,대기기사");
+        mentor.setHistory("포토샵, 대외활동 다수, 포크레인 기사 자격증, 해양구조 자격증, 다양한 기업의 서포터 활동");
+        mentor.setWantDay("sat"); // all, mon, tue, wed, thu, fri, sat, sun
+        mentor.setWantTime("pm"); // all, am, pm, evening
+        mentor.setUniversityType("college"); //university, college
+        mentor.setUniversityName("닭갈비대학교");
+        mentor.setMentoringCnt(0);
+        mentor.setRequirement("myTown"); //all, videoChat, myTown, yourTown, rentalSpace
+        mentor.setMajor("humanities"); //humanities, education, engineering, society, nature, anp, medicine
 
         mockMvc.perform(get("/member/join-impl/1234")
                 .sessionAttr("persistToken", "1234")

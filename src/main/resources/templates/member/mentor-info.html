@@ -51,7 +51,7 @@
                            <label for="exampleFormControlInput" class="form-label">전공 계열</label>
                            <div class="form-control" id="exampleFormControlInput" th:text="*{major}"></div>
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3" th:if="*{history ne null}">
                            <label for="exampleFormControlTextarea1" class="form-label">이력사항</label>
                            <div class='myHistory' id="exampleFormControlTextarea1"
                                 th:each="prod : *{history.split(',')}">

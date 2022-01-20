@@ -9,7 +9,10 @@ public interface MentorRepository extends JpaRepository<Mentor, String> {
 
    Mentor findByMentorIdx(Long mentorIdx);
 
+   List<Mentor> findAllByUniversityTypeInAndWantTimeInAndRequirementInAndMajorInAndWantDayInAndMentorIdxNotIn(
+           String[] universityType, String[] wantTime, String[] wantPlace, String[] majorType, String[] wantDate
+           , List<Long> alreadyApplyMentors);
+
    List<Mentor> findAllByUniversityTypeInAndWantTimeInAndRequirementInAndMajorInAndWantDayIn(
            String[] universityType, String[] wantTime, String[] wantPlace, String[] majorType, String[] wantDate);
-
 }

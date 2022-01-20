@@ -23,15 +23,27 @@ public class MentoringController {
    public void chooseMentorCondition(HttpSession session) {}
 
    @GetMapping("/mentor-list")
-   public void mentorList(MentoringCondition condition, Model model){
-      model.addAllAttributes(mentoringService.findMentorListByCondition(condition));
+   public void mentorList(MentoringCondition condition, Model model, HttpSession session){
+      Mentee mentee = (Mentee) session.getAttribute("authentication");
+      model.addAllAttributes(mentoringService.findMentorListByCondition(condition, mentee));
    }
 
    @GetMapping("apply")
    public String mentorApply(Long mentorIdx, HttpSession session){
       Mentee mentee = (Mentee) session.getAttribute("authentication");
       mentoringService.applyMentoring(mentorIdx, mentee);
-      return "redirect:/mentoring/apply-complete";
+      return "/mentoring/apply-complete";
+   }
+
+   @GetMapping("manage-page")
+   public void managePage(HttpSession session, Model model){
+      System.out.println(mentoringService.findHistory(session));
+      model.addAllAttributes(mentoringService.findHistory(session));
+   }
+
+   @GetMapping("reapply")
+   public String reapply(Long ahIdx){
+      return "/";
    }
 
 }

@@ -10,6 +10,7 @@ public enum ErrorCode {
     UNAUTHORIZED_PAGE_ERROR("접근 권한이 없는 페이지 입니다."),
     UNLOGINED_ERROR("로그인이 필요합니다.","/member/login"),
     ALREADY_REGISTERED_COMMENT("이미 이 멘토에 대한 평가를 등록 하셨습니다.","/mentoring/manage-page"),
+    ALREADY_APPLY_MENTOR("이미 이 멘토에 대한 멘토링을 신청하였습니다."),
     ACCESS_ONLY_MENTOR("멘토만 접근할 수 있습니다."),
     ACCESS_ONLY_MENTEE("멘티만 접근할 수 있습니다."),
     FAILED_FILE_UPLOAD_ERROR("파일업로드에 실패하였습니다."),

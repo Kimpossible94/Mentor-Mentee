@@ -60,6 +60,7 @@
                                             <li th:if="*{member.role.contains('ME')}">
                                                 <a href="/mentoring/choose-condition" class="nav-link">멘토신청</a>
                                             </li>
+                                            <li><a href="/mentoring/manage-page" class="nav-link">멘토링 관리</a></li>
                                             <li>
                                                 <a th:if="*{member.role.contains('MO')}" href="/board/board-list?type=MO"
                                                    class="nav-link">멘토게시판</a>
