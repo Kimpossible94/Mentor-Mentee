@@ -27,12 +27,12 @@ let renderCompleted = () => {
 	document.getElementById("finish-mentoring").style.display ="flex";
 }
 
-let reapply = (aIdx, reapplyCnt) => {
+let reapply = (ahIdx, reapplyCnt) => {
 	if(reapplyCnt > 1){
 		alert("재신청은 최대 2회까지 가능합니다.");
 		return;
 	} else {
-		location.href=`/mentoring/reapply?ahIdx=${aIdx}`;
+		location.href=`/mentoring/reapply?ahIdx=${ahIdx}`;
 	}
 }
 
@@ -59,12 +59,12 @@ let rating = (mIdx) => {
 	})
 }
 
-let acceptBtn = (userIdx) => {
-	location.href = `/mentoring/mentoring-accept?mentee_user_idx=${userIdx}`;
+let acceptBtn = (ahIdx) => {
+	location.href = `/mentoring/accept-page?ahIdx=${ahIdx}`;
 }
 
 let payment = (mentorIdx) => {
-	location.href = `/mentoring/payment?mentor_idx=${mentorIdx}`;
+	location.href = `/mentoring/payment?mentorIdx=${mentorIdx}`;
 }
 
 

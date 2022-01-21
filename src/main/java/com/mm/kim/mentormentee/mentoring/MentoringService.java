@@ -4,6 +4,7 @@ import com.mm.kim.mentormentee.common.code.Config;
 import com.mm.kim.mentormentee.common.code.ErrorCode;
 import com.mm.kim.mentormentee.common.exception.HandlableException;
 import com.mm.kim.mentormentee.common.mail.EmailSender;
+import com.mm.kim.mentormentee.common.util.file.FileInfo;
 import com.mm.kim.mentormentee.member.Member;
 import com.mm.kim.mentormentee.member.Mentee;
 import com.mm.kim.mentormentee.member.Mentor;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -104,7 +106,7 @@ public class MentoringService {
       List<ApplyHistory> applyHistorieList = new ArrayList<ApplyHistory>();
       List<MentoringHistory> mentoringHistoryList = new ArrayList<MentoringHistory>();
       Member member = (Member) session.getAttribute("certified");
-      if(member.getRole().contains("MO")){
+      if (member.getRole().contains("MO")) {
          Mentor mentor = (Mentor) session.getAttribute("authentication");
          applyHistorieList = applyHistoryRepository.findAllByMentor(mentor);
          mentoringHistoryList = mentoringHistoryRepository.findAllByMentor(mentor);
@@ -114,7 +116,24 @@ public class MentoringService {
          mentoringHistoryList = mentoringHistoryRepository.findAllByMentee(mentee);
       }
 
-      return Map.of("applyHistorieList", applyHistorieList, "mentoringHistoryList",mentoringHistoryList);
+      return Map.of("applyHistorieList", applyHistorieList, "mentoringHistoryList", mentoringHistoryList);
 
+   }
+
+   @Transactional
+   public void reapply(Long ahIdx) {
+      ApplyHistory applyHistory = applyHistoryRepository.findByAhIdx(ahIdx);
+      applyHistory.setReapplyCnt(applyHistory.getReapplyCnt() + 1);
+      applyHistory.setEpDate(applyHistory.getEpDate().plusDays(7));
+      sendNoticeMail(applyHistory.getMentor());
+   }
+
+   public FileInfo findQrInfo(Long mentorIdx) {
+      Mentor mentor = mentorRepository.findByMentorIdx(mentorIdx);
+      return mentor.getQrInfo();
+   }
+
+   public ApplyHistory findApplyHistoryByIdx(Long ahIdx) {
+      return applyHistoryRepository.findByAhIdx(ahIdx);
    }
 }

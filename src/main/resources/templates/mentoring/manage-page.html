@@ -74,13 +74,13 @@
                </div>
                <div class="d-flex flex-column">
                   <button class="btn btn-primary-dark my-1" style="font-size: 0.75rem" th:if="${session.certified.role.contains('ME')}"
-                          th:onclick="reapply([[${ah.aIdx}]],[[${ah.reapplyCnt}]])">재신청
+                          th:onclick="reapply([[${ah.ahIdx}]],[[${ah.reapplyCnt}]])">재신청
                   </button>
                   <button class="btn btn-primary-dark my-1" style="font-size: 0.75rem" th:if="${session.certified.role.contains('ME')}"
                           th:onclick="payment([[${ah.mentor.mentorIdx}]])">결제하기
                   </button>
                   <button class="btn btn-primary-dark my-1" style="font-size: 0.75rem" th:unless="${session.certified.role.contains('ME')}"
-                          th:onclick="acceptBtn([[${ah}]])">멘토 수락
+                          th:onclick="acceptBtn([[${ah.ahIdx}]])">멘토 수락
                   </button>
                </div>
             </div>

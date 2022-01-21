@@ -21,7 +21,7 @@ public class ApplyHistory {
 
     @Id
     @GeneratedValue
-    private Long aIdx;
+    private Long ahIdx;
 
     @ManyToOne
     @JoinColumn(name = "menteeIdx")

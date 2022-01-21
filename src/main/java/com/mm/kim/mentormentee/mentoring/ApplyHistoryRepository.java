@@ -10,4 +10,6 @@ public interface ApplyHistoryRepository extends JpaRepository<ApplyHistory, Stri
    List<ApplyHistory> findAllByMentee(Mentee mentee);
 
    List<ApplyHistory> findAllByMentor(Mentor mentor);
+
+   ApplyHistory findByAhIdx(Long ahIdx);
 }

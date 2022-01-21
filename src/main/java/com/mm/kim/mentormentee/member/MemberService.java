@@ -1,5 +1,12 @@
 package com.mm.kim.mentormentee.member;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageConfig;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 import com.mm.kim.mentormentee.common.code.Config;
 import com.mm.kim.mentormentee.common.code.ErrorCode;
 import com.mm.kim.mentormentee.common.exception.HandlableException;
@@ -19,7 +26,16 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpSession;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
+import java.util.Calendar;
+import java.util.Map;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -62,7 +78,96 @@ public class MemberService {
 
     public void persistMentor(Mentor mentor) {
         mentor.getMember().setPassword(passwordEncoder.encode(mentor.getMember().getPassword()));
+        FileInfo qrInfo = new FileInfo();
+
+        String link = createQrLink(mentor);
+        qrInfo = createQRImage(link, parseRGBStringToInt("#343a40"), 0xFFFFFFFF);
+
+        mentor.setQrInfo(qrInfo);
         mentorRepository.save(mentor);
+    }
+
+    private int parseRGBStringToInt(String color) {
+        color = color.substring(1);
+        color = "ff" + color;
+        long l = Long.parseLong(color, 16);
+        return (int)l;
+    }
+
+    private FileInfo createQRImage(String link, int qrColor, int qrBgColor) {
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+        FileInfo fileinfo = new FileInfo();
+        try {
+            //qr 생성
+            BitMatrix bitMatrix = qrCodeWriter.encode(link, BarcodeFormat.QR_CODE, 300, 300);
+            MatrixToImageConfig config = new MatrixToImageConfig(qrColor, qrBgColor); //qr코드 색지정
+
+            BufferedImage qrimage = MatrixToImageWriter.toBufferedImage(bitMatrix, config);
+
+            Calendar cal = Calendar.getInstance();
+            int year = cal.get(Calendar.YEAR);
+            int month = cal.get(Calendar.MONTH) + 1;
+            int date = cal.get(Calendar.DAY_OF_MONTH);
+            String subPath = year + "/" + month + "/" + date + "/";
+            String uploadPath = Config.UPLOAD_PATH.DESC + subPath;
+
+            File dir = new File(uploadPath);
+            if(!dir.exists()) {
+                dir.mkdirs();
+            }
+
+            String renameFileName = UUID.randomUUID().toString();
+            fileinfo.setRenameFileName(renameFileName);
+            fileinfo.setSavePath(subPath);
+            File qrImage = new File( uploadPath + renameFileName + ".png");
+
+            //경로에 이미지 생성
+            ImageIO.write(qrimage, "png", qrImage);
+        } catch (WriterException | IOException e) {
+            e.printStackTrace();
+        }
+
+        return fileinfo;
+    }
+
+    private String createQrLink(Mentor mentor) {
+        URL url = null;
+        URLConnection connection = null;
+        StringBuilder responseBody = new StringBuilder();
+        String link = null;
+
+        try {
+            url = new URL("https://toss.im/transfer-web/linkgen-api/link");
+            connection = url.openConnection();
+            connection.addRequestProperty("Content-Type", "application/json");
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
+
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String, Object> commandMap = Map.of("apiKey", "dcf102a946024eafb1c3d61cbdba3c47"
+                    , "bankName", mentor.getBank()
+                    , "bankAccountNo", mentor.getAccountNum()
+                    , "amount", "10000"
+                    , "message", "토스 입금");
+            String asString = mapper.writeValueAsString(commandMap);
+
+            BufferedOutputStream bos = new BufferedOutputStream(connection.getOutputStream());
+            bos.write(asString.getBytes(StandardCharsets.UTF_8));
+            bos.flush();
+            bos.close();
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                responseBody.append(line);
+            }
+            br.close();
+        } catch (Exception e) {
+            responseBody.append(e);
+        }
+        String resStr = responseBody.toString();
+        link = resStr.substring(resStr.indexOf("https"), resStr.lastIndexOf("\""));
+        return link;
     }
 
     public void persistMentee(Mentee mentee) {
@@ -124,6 +229,9 @@ public class MemberService {
         Mentor curMentor = mentorRepository.findByMentorIdx(mentor.getMentorIdx());
         curMentor.setBank(mentor.getBank());
         curMentor.setAccountNum(mentor.getAccountNum());
+        String link = createQrLink(curMentor);
+        FileInfo qrInfo = createQRImage(link, parseRGBStringToInt("#343a40"), 0xFFFFFFFF);
+        curMentor.setQrInfo(qrInfo);
         return curMentor;
     }
 

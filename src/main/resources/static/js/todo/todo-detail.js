@@ -25,11 +25,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         //날짜 클릭하면 일정추가 팝업
         dateClick: function (info) {
-            //alert('Clicked on: ' + info.dateStr); //클릭한 날짜
-            //localStorage.setItem("dateStr", info.dateStr);
-            var dateStr = info.dateStr;
-            document.getElementById("todo_start").value = dateStr;
-
             window.name = "parentForm";
             openAdd = window.open("/todo/todo-insert", "childForm", "width=600, height=520, left=100, top=100");
             //console.log(openAdd);

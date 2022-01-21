@@ -34,4 +34,7 @@ public class Mentor {
 
     @OneToOne(cascade = CascadeType.ALL)
     private FileInfo fileInfo;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private FileInfo qrInfo;
 }

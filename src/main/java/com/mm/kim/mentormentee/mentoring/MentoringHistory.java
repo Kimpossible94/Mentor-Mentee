@@ -21,7 +21,7 @@ import java.time.LocalDate;
 public class MentoringHistory {
     @Id
     @GeneratedValue
-    private Long mIdx;
+    private Long mhIdx;
 
     @ManyToOne
     @JoinColumn(name = "menteeIdx")
