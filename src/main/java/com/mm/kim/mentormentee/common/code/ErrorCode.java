@@ -18,6 +18,7 @@ public enum ErrorCode {
     FAILED_REGIST_BOARD_COMMENT("댓글을 등록할 수 없습니다."),
     FAILED_RECOMMEND_BOARD("게시글을 추천할 수 없습니다."),
     FAILED_LOAD_TODO("내용을 불러올 수 없습니다.", "/todo/todo-detail"),
+    ACCEPT_ONLY_SELF("자기자신의 신청만 수락할 수 있습니다."),
     REDIRECT("");
 
 

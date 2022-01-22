@@ -19,6 +19,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpSession;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -135,5 +136,22 @@ public class MentoringService {
 
    public ApplyHistory findApplyHistoryByIdx(Long ahIdx) {
       return applyHistoryRepository.findByAhIdx(ahIdx);
+   }
+
+   public void registMentoring(Long ahIdx, MentoringHistory mentoringHistory, HttpSession session) {
+      ApplyHistory applyHistory = applyHistoryRepository.findByAhIdx(ahIdx);
+      Mentor mentor = (Mentor) session.getAttribute("authentication");
+
+      if(!mentor.getMember().getUserId().equals(applyHistory.getMentor().getMember().getUserId())){
+         throw new HandlableException(ErrorCode.ACCEPT_ONLY_SELF);
+      }
+
+      mentoringHistory.setMentor(applyHistory.getMentor());
+      mentoringHistory.setMentee(applyHistory.getMentee());
+      mentoringHistory.setState("P");
+      mentoringHistory.setEpDate(LocalDate.now().plusYears(1));
+
+      mentoringHistoryRepository.save(mentoringHistory);
+      applyHistoryRepository.delete(applyHistory);
    }
 }

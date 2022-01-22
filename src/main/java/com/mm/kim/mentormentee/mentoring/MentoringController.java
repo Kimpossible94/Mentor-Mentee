@@ -1,5 +1,7 @@
 package com.mm.kim.mentormentee.mentoring;
 
+import com.mm.kim.mentormentee.common.code.ErrorCode;
+import com.mm.kim.mentormentee.common.exception.HandlableException;
 import com.mm.kim.mentormentee.common.util.file.FileInfo;
 import com.mm.kim.mentormentee.member.Member;
 import com.mm.kim.mentormentee.member.Mentee;
@@ -62,9 +64,10 @@ public class MentoringController {
    }
 
    @PostMapping("regist-mentoring")
-   public String acceptImpl(MentoringHistory mentoringHistory){
-      System.out.println(mentoringHistory);
-      return "/";
+   public String acceptImpl(Long ahIdx, MentoringHistory mentoringHistory, HttpSession session, Model model){
+      mentoringService.registMentoring(ahIdx, mentoringHistory, session);
+      model.addAllAttributes(mentoringService.findHistory(session));
+      return "/mentoring/manage-page";
    }
 
 

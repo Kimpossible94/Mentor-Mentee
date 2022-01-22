@@ -1,5 +1,5 @@
 (() => {
-    Kakao.init("2");
+    Kakao.init("2S");
 })();
 
 function loginFormWithKakao() {
