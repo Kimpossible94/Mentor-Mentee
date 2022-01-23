@@ -29,6 +29,7 @@ import java.util.Map;
 public class MentoringService {
    private final MentoringHistoryRepository mentoringHistoryRepository;
    private final ApplyHistoryRepository applyHistoryRepository;
+   private final ReviewRepository reviewRepository;
    private final MentorRepository mentorRepository;
    private final EmailSender emailSender;
    private final RestTemplate http;
@@ -106,6 +107,8 @@ public class MentoringService {
    public Map<String, Object> findHistory(HttpSession session) {
       List<ApplyHistory> applyHistorieList = new ArrayList<ApplyHistory>();
       List<MentoringHistory> mentoringHistoryList = new ArrayList<MentoringHistory>();
+      List<MentoringHistory> progressHistoryList = new ArrayList<MentoringHistory>();
+      List<MentoringHistory> finishHistoryList = new ArrayList<MentoringHistory>();
       Member member = (Member) session.getAttribute("certified");
       if (member.getRole().contains("MO")) {
          Mentor mentor = (Mentor) session.getAttribute("authentication");
@@ -117,8 +120,14 @@ public class MentoringService {
          mentoringHistoryList = mentoringHistoryRepository.findAllByMentee(mentee);
       }
 
-      return Map.of("applyHistorieList", applyHistorieList, "mentoringHistoryList", mentoringHistoryList);
-
+      for (MentoringHistory mentoringHistory : mentoringHistoryList) {
+         if(mentoringHistory.getState().equalsIgnoreCase("f")){
+            finishHistoryList.add(mentoringHistory);
+         } else {
+            progressHistoryList.add(mentoringHistory);
+         }
+      }
+      return Map.of("applyHistorieList", applyHistorieList, "progressHistoryList", progressHistoryList, "finishHistoryList", finishHistoryList);
    }
 
    @Transactional
@@ -153,5 +162,14 @@ public class MentoringService {
 
       mentoringHistoryRepository.save(mentoringHistory);
       applyHistoryRepository.delete(applyHistory);
+   }
+
+   public boolean checkComment(Long mhIdx, HttpSession session) {
+      MentoringHistory mentoringHistory = mentoringHistoryRepository.findByMhIdx(mhIdx);
+      Review review = reviewRepository.findByMentoringHistory(mentoringHistory);
+      if(review == null){
+         return true;
+      }
+      return false;
    }
 }

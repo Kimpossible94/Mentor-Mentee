@@ -36,7 +36,7 @@
                <div class="fs-5 fw-bold text-white">진행 중인 멘토링</div>
             </div>
             <div class="small text-white-50">
-               <button class="btn btn-outline-light" onclick="renderProceeding()" th:text="|${mentoringHistoryList.size}건|"></button>
+               <button class="btn btn-outline-light" onclick="renderProceeding()" th:text="|${progressHistoryList.size}건|"></button>
             </div>
          </div>
          <div class="d-flex flex-column align-items-center">
@@ -44,7 +44,7 @@
                <div class="fs-5 fw-bold text-white">완료한 멘토링</div>
             </div>
             <div class="small text-white-50">
-               <button class="btn btn-outline-light" onclick="renderCompleted()" th:text="|${mentoringHistoryList.size}건|"></button>
+               <button class="btn btn-outline-light" onclick="renderCompleted()" th:text="|${finishHistoryList.size}건|"></button>
             </div>
          </div>
       </div>
@@ -88,14 +88,14 @@
          </div>
       </div>
       <div class="row gx-5 justify-content-center" id="process-mentoring">
-         <h2 th:if="${mentoringHistoryList.size eq 0}" style="min-height: 55vh;" class="fw-bolder pt-5 text-sm-center my-5">신청 리스트가 없습니다.</h2>
-         <div th:if="${mentoringHistoryList.size ne 0}" class="col-lg-10 mb-4" th:each="mh : ${mentoringHistoryList}">
+         <h2 th:if="${progressHistoryList.size eq 0}" style="min-height: 55vh;" class="fw-bolder pt-5 text-sm-center my-5">신청 리스트가 없습니다.</h2>
+         <div th:if="${progressHistoryList.size ne 0}" class="col-lg-10 mb-4" th:each="ph : ${progressHistoryList}">
             <div class="d-flex align-items-center justify-content-between">
                <div class="d-flex align-items-center">
                   <div class="small">
                      <div class="fw-bold" th:text="${session.certified.role.contains('MO')} ?
-                             ${mh.mentee.member.userName} : ${mh.mentor.member.userName}"></div>
-                     <div class="text-muted" th:text="|멘토 진행 기간 : ${mh.startDate} ~ ${mh.endDate}|"></div>
+                             ${ph.mentee.member.userName} : ${ph.mentor.member.userName}"></div>
+                     <div class="text-muted" th:text="|멘토 진행 기간 : ${ph.startDate} ~ ${ph.endDate}|"></div>
                   </div>
                </div>
             </div>
@@ -103,38 +103,25 @@
          </div>
       </div>
       <div class="row gx-5 justify-content-center" id="finish-mentoring" style="display: none">
-         <!--      <c:if test="${fhlist.size() eq 0}">-->
-         <!--        <h2 class="fw-bolder pt-5 text-sm-center my-5" style="min-height: 55vh;">신청 리스트가 없습니다.</h2>-->
-         <!--      </c:if>-->
-         <!--      <c:if test="${fhlist.size() ne 0}">-->
-         <!--        <c:forEach items="${fhlist}" var="fh" varStatus="status">-->
-         <!--          <div class="col-lg-10 mb-4">-->
-         <!--            <div class="d-flex align-items-center justify-content-between">-->
-         <!--              <c:if test="${authentication.role eq 'ME00'}">-->
-         <!--                <div class="d-flex align-items-center">-->
-         <!--                  <div class="small">-->
-         <!--                    <div class="fw-bold"><c:out value="${fh.mentorName}"/></div>-->
-         <!--                    <div class="text-muted">멘토 진행 기간 : <c:out value="${fh.startDate}"/> ~ <c:out value="${fh.endDate}"/></div>-->
-         <!--                  </div>-->
-         <!--                </div>-->
-         <!--                <div class="d-flex flex-column">-->
-         <!--                  <button class="btn btn-primary-dark my-1" style="font-size: 0.75rem" onclick="registApply(${fh.mentorIdx},'${fh.mentorName}')">재신청</button>-->
-         <!--                  <button class="btn btn-primary-dark my-1" style="font-size: 0.75rem" onclick="rating('${fh.mIdx}')">평가하기</button>-->
-         <!--                </div>-->
-         <!--              </c:if>-->
-         <!--              <c:if test="${authentication.role eq 'MO00'}">-->
-         <!--                <div class="d-flex align-items-center">-->
-         <!--                  <div class="small">-->
-         <!--                    <div class="fw-bold"><c:out value="${fh.menteeName}"/></div>-->
-         <!--                    <div class="text-muted">멘토 진행 기간 : <c:out value="${fh.startDate}"/> ~ <c:out value="${fh.endDate}"/></div>-->
-         <!--                  </div>-->
-         <!--                </div>-->
-         <!--              </c:if>-->
-         <!--            </div>-->
-         <!--            <hr>-->
-         <!--          </div>-->
-         <!--        </c:forEach>-->
-         <!--      </c:if>-->
+         <h2 th:if="${finishHistoryList.size eq 0}" class="fw-bolder pt-5 text-sm-center my-5" style="min-height: 55vh;">신청 리스트가 없습니다.</h2>
+         <div th:if="${finishHistoryList.size ne 0}" class="col-lg-10 mb-4" th:each="fh : ${finishHistoryList}">
+            <div class="d-flex align-items-center justify-content-between">
+               <div class="d-flex align-items-center">
+                  <div class="small">
+                     <div class="fw-bold" th:text="${session.certified.role.contains('MO')} ?
+                             ${fh.mentee.member.userName} : ${fh.mentor.member.userName}"></div>
+                     <div class="text-muted" th:text="|멘토 진행 기간 : ${fh.startDate} ~ ${fh.endDate}|"></div>
+                  </div>
+               </div>
+               <div th:if="${session.certified.role.contains('MO')}" class="d-flex flex-column">
+                  <button class="btn btn-primary-dark my-1" style="font-size: 0.75rem"
+                          th:onclick="registApply([[${fh.mentor.mentorIdx}]])">재신청
+                  </button>
+                  <button class="btn btn-primary-dark my-1" style="font-size: 0.75rem" th:onclick="rating([[${fh.mhIdx}]])">평가하기</button>
+               </div>
+            </div>
+            <hr>
+         </div>
       </div>
    </div>
 </section>

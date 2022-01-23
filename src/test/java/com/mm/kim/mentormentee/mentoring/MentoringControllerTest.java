@@ -43,4 +43,40 @@ public class MentoringControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print());
     }
+
+    @Test
+    @DisplayName("멘토 관리 페이지 확인")
+    public void mentorManageTest() throws Exception{
+        Member member = new Member();
+        Mentee mentee = new Mentee();
+        member.setUserId("test");
+        member.setRole("ME00");
+        mentee.setMenteeIdx(1L);
+        mentee.setMember(member);
+
+        mockMvc.perform(get("/mentoring/manage-page")
+                .sessionAttr("certified", member)
+                .sessionAttr("authentication", mentee))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("리뷰 체크 테스트")
+    public void commentCheckTest() throws Exception{
+        Member member = new Member();
+        Mentee mentee = new Mentee();
+        member.setUserId("test");
+        member.setRole("ME00");
+        mentee.setMenteeIdx(1L);
+        mentee.setMember(member);
+
+        mockMvc.perform(get("/mentoring/comment-check")
+                        .sessionAttr("certified", member)
+                        .sessionAttr("authentication", mentee)
+                        .param("mhIdx", "1"))
+                .andExpect(status().isOk())
+                .andDo(print());
+
+    }
 }

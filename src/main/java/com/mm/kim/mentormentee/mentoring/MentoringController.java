@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -70,5 +71,17 @@ public class MentoringController {
       return "/mentoring/manage-page";
    }
 
+   @GetMapping("comment-check")
+   @ResponseBody
+   public String commentCheck(Long mhIdx, HttpSession session){
+      if(!mentoringService.checkComment(mhIdx, session)){
+         return "registered";
+      }
+
+      return "not-registered";
+   }
+
+   @GetMapping("rating-page")
+   public void ratingPage(Long mhIdx){}
 
 }

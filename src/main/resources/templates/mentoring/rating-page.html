@@ -3,10 +3,10 @@
 <head>
     <title>MENTOR & MENTEE - 멘토 평가</title>
     <link rel="stylesheet" href="/static/css/mentoring/toggle-btn.css">
-    <th:block th:replace="flagments::flg_head"></th:block>
+    <th:block th:replace="fragments::flg_head"></th:block>
 </head>
 <body class="d-flex flex-column h-75">
-<th:block th:replace="flagments::flg_nav"></th:block>
+<th:block th:replace="fragments::flg_nav"></th:block>
 <!--<c:set var="mh" value="${requestScope.mh}"/>-->
 <main class="flex-shrink-0">
     <section class="pt-5">
@@ -112,8 +112,8 @@
         </div>
     </section>
 </main>
-<th:block th:replace="flagments::flg_footer"></th:block>
-<th:block th:replace="flagments::flg_jsFiles"></th:block>
-<script src="/static/js/mentoring/mentor-rating.js"></script>
+<th:block th:replace="fragments::flg_footer"></th:block>
+<th:block th:replace="fragments::flg_jsFiles"></th:block>
+<script src="/js/mentoring/mentor-rating.js"></script>
 </body>
 </html>

@@ -36,12 +36,12 @@ let reapply = (ahIdx, reapplyCnt) => {
 	}
 }
 
-let registApply = (mentorIdx, mentorName) => {
-	location.href=`/mentoring/regist-apply?mentor_idx=${mentorIdx}&mentor_name=${mentorName}`;
+let registApply = (mentorIdx) => {
+	location.href=`/mentoring/apply?mentorIdx=${mentorIdx}`;
 }
 
-let rating = (mIdx) => {
-	fetch(`/mentoring/comment-check?m_idx=${mIdx}`)
+let rating = (mhIdx) => {
+	fetch(`/mentoring/comment-check?mhIdx=${mhIdx}`)
 	.then(response => {
 		if(response.ok){
 			return response.text();
@@ -51,7 +51,7 @@ let rating = (mIdx) => {
 	})
 	.then(text => {
 		if(text == 'not-registered'){
-			location.href = `/mentoring/rating-page?m_idx=${mIdx}`;
+			location.href = `/mentoring/rating-page?mhIdx=${mhIdx}`;
 		} else {
 			alert("이미 평가를 작성한 멘토입니다.");
 			return;

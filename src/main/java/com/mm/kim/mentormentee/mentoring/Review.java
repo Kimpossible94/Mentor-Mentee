@@ -8,6 +8,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
@@ -19,13 +20,9 @@ public class Review {
     @GeneratedValue
     private Long reviewIdx;
 
-    @ManyToOne
-    @JoinColumn(name = "mentorIdx")
-    private Mentor mentor;
-
-    @ManyToOne
-    @JoinColumn(name = "menteeIdx")
-    private Mentee mentee;
+    @OneToOne
+    @JoinColumn(name = "mhIdx")
+    MentoringHistory mentoringHistory;
 
     @Column(columnDefinition = "varchar2(1) default 'N'")
     private String kindness;

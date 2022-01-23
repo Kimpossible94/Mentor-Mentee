@@ -10,4 +10,6 @@ public interface MentoringHistoryRepository extends JpaRepository<MentoringHisto
    List<MentoringHistory> findAllByMentor(Mentor mentor);
 
    List<MentoringHistory> findAllByMentee(Mentee mentee);
+
+   MentoringHistory findByMhIdx(Long mhIdx);
 }
