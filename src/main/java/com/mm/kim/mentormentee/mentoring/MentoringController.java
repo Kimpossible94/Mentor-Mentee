@@ -74,14 +74,24 @@ public class MentoringController {
    @GetMapping("comment-check")
    @ResponseBody
    public String commentCheck(Long mhIdx, HttpSession session){
-      if(!mentoringService.checkComment(mhIdx, session)){
-         return "registered";
-      }
+//      if(!mentoringService.checkComment(mhIdx, session)){
+//         return "registered";
+//      }
 
       return "not-registered";
    }
 
    @GetMapping("rating-page")
-   public void ratingPage(Long mhIdx){}
+   public void ratingPage(Long mhIdx, Model model){
+      MentoringHistory mentoringHistory = mentoringService.findMentoringHistory(mhIdx);
+      model.addAttribute("mentoringHistory", mentoringHistory);
+   }
+
+   @PostMapping("regist-rating")
+   public String registRating(Long mhIdx, Review review, Model model, HttpSession session){
+      mentoringService.registRating(mhIdx, review);
+      model.addAllAttributes(mentoringService.findHistory(session));
+      return "/mentoring/manage-page";
+   }
 
 }

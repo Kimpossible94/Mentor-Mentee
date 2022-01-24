@@ -24,6 +24,14 @@ public class Review {
     @JoinColumn(name = "mhIdx")
     MentoringHistory mentoringHistory;
 
+    @ManyToOne
+    @JoinColumn(name = "mentorIdx")
+    private Mentor mentor;
+
+    @ManyToOne
+    @JoinColumn(name = "menteeIdx")
+    private Mentee mentee;
+
     @Column(columnDefinition = "varchar2(1) default 'N'")
     private String kindness;
     @Column(columnDefinition = "varchar2(1) default 'N'")
@@ -36,7 +44,7 @@ public class Review {
     private String appointment;
     @Column(columnDefinition = "varchar2(1) default 'N'")
     private String explain;
-    @Column(columnDefinition = "varchar2(1) default 'N'", name = "reviewComment")
+    @Column(columnDefinition = "varchar2(400)", name = "reviewComment")
     private String comment;
     @Column(columnDefinition = "number default 0")
     private int isDel;

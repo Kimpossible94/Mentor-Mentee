@@ -79,4 +79,11 @@ public class MentoringControllerTest {
                 .andDo(print());
 
     }
+
+    @Test
+    @DisplayName("리뷰 페이지 테스트")
+    public void reviewPage(){
+
+    }
+
 }

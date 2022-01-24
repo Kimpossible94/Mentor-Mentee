@@ -113,7 +113,7 @@
                      <div class="text-muted" th:text="|멘토 진행 기간 : ${fh.startDate} ~ ${fh.endDate}|"></div>
                   </div>
                </div>
-               <div th:if="${session.certified.role.contains('MO')}" class="d-flex flex-column">
+               <div th:if="${session.certified.role.contains('ME')}" class="d-flex flex-column">
                   <button class="btn btn-primary-dark my-1" style="font-size: 0.75rem"
                           th:onclick="registApply([[${fh.mentor.mentorIdx}]])">재신청
                   </button>

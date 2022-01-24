@@ -88,14 +88,14 @@ class MemberControllerTest {
     public void joinImpl() throws Exception{
         Member member = new Member();
         Mentor mentor = new Mentor();
-        member.setUserId("mentor6");
+        member.setUserId("mentor5");
         member.setPassword("1234");
         member.setEmail("kimpossible94@naver.com");
         member.setPhone("00110011");
         member.setRole("MO00");
         member.setCountryCode("010");
         member.setAddress("춘천");
-        member.setUserName("김춘천");
+        member.setUserName("김춘천5");
         member.setNickname("춘천지박령");
 
         mentor.setMember(member);

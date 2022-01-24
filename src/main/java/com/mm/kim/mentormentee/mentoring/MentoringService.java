@@ -10,8 +10,10 @@ import com.mm.kim.mentormentee.member.Mentee;
 import com.mm.kim.mentormentee.member.Mentor;
 import com.mm.kim.mentormentee.member.MentorRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MentoringService {
@@ -171,5 +174,72 @@ public class MentoringService {
          return true;
       }
       return false;
+   }
+
+   public MentoringHistory findMentoringHistory(Long mhIdx) {
+      return mentoringHistoryRepository.findByMhIdx(mhIdx);
+   }
+
+   @Transactional
+   public void registRating(Long mhIdx, Review review) {
+      MentoringHistory mentoringHistory = mentoringHistoryRepository.findByMhIdx(mhIdx);
+      review.setMentoringHistory(mentoringHistory);
+      review.setMentor(mentoringHistory.getMentor());
+      review.setMentee(mentoringHistory.getMentee());
+      reviewRepository.save(review);
+
+      List<Review> reviews = reviewRepository.findAllByMentor(mentoringHistory.getMentor());
+      Mentor mentorEntity = mentorRepository.findByMentorIdx(mentoringHistory.getMentor().getMentorIdx());
+      mentorEntity = checkMentorRole(reviews, mentorEntity);
+   }
+
+   private Mentor checkMentorRole(List<Review> reviews, Mentor mentor) {
+      int total = 0;
+      if(reviews.size() > 0){
+         for (Review review : reviews) {
+            if(review.getAppointment() != null && review.getAppointment().equalsIgnoreCase("Y")){
+               total++;
+            }
+            if(review.getExplain() != null && review.getExplain().equalsIgnoreCase("Y")){
+               total++;
+            }
+            if(review.getKindness() != null && review.getKindness().equalsIgnoreCase("Y")){
+               total++;
+            }
+            if(review.getProcess() != null && review.getProcess().equalsIgnoreCase("Y")){
+               total++;
+            }
+            if(review.getProfessional() != null && review.getProfessional().equalsIgnoreCase("Y")){
+               total++;
+            }
+            if(review.getCommunication() != null && review.getCommunication().equalsIgnoreCase("Y")){
+               total++;
+            }
+         }
+
+         if(total/reviews.size() > 3){
+            mentor.getMember().setRole("MO01");
+         }
+      }
+
+      return mentor;
+   }
+
+   @Transactional
+   public void updateState() throws Exception{
+      LocalDate today = LocalDate.now();
+      List<MentoringHistory> mentoringHistories = mentoringHistoryRepository.findAll();
+      for (MentoringHistory mentoringHistory : mentoringHistories) {
+         if(mentoringHistory.getState().equalsIgnoreCase("P")){
+            if(mentoringHistory.getEndDate().isEqual(today) || today.isAfter(mentoringHistory.getEndDate())){
+               mentoringHistory.setState("F");
+            }
+         } else {
+            if(mentoringHistory.getEpDate().isEqual(today) || today.isAfter(mentoringHistory.getEpDate())){
+               mentoringHistoryRepository.delete(mentoringHistory);
+            }
+         }
+      }
+
    }
 }
