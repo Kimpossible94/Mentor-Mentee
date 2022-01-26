@@ -1,6 +1,7 @@
 package com.mm.kim.mentormentee.board;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -8,10 +9,6 @@ import java.util.Optional;
 
 public interface BoardRepository extends JpaRepository<Board, String> {
    Optional<Board> findByBdIdx(Long bdIdx);
-
-   Page<Board> findAllByMentor_Member_UserId(Pageable word, String searchWord);
-
-   Page<Board> findAllByMentee_Member_UserId(Pageable word, String searchWord);
 
    Board findBoardByComments(Comment comment);
 
@@ -27,5 +24,20 @@ public interface BoardRepository extends JpaRepository<Board, String> {
 
    int countByMentee_Member_UserId(String word);
 
-   Page<Board> findAllByTitleIsContaining(Pageable title, String word);
+
+   Page<Board> findAllByTitleIsContainingOrderByViewCountDesc(Pageable title, String word);
+
+   Page<Board> findAllByTitleIsContainingOrderByRecCountDesc(Pageable title, String word);
+
+   Page<Board> findAllByMentor_Member_UserIdOrderByViewCountDesc(Pageable mentor_member_userId, String word);
+
+   Page<Board> findAllByMentor_Member_UserIdOrderByRecCountDesc(Pageable mentor_member_userId, String word);
+
+   Page<Board> findAllByMentee_Member_UserIdOrderByViewCountDesc(Pageable mentee_member_userId, String word);
+
+   Page<Board> findAllByMentee_Member_UserIdOrderByRecCountDesc(Pageable mentee_member_userId, String word);
+
+   Page<Board> findAllByBdIdxOrderByViewCountDesc(PageRequest of);
+
+   Page<Board> findAllByBdIdxOrderByRecCountDesc(PageRequest of);
 }

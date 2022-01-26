@@ -2,9 +2,11 @@ package com.mm.kim.mentormentee.board;
 
 import com.mm.kim.mentormentee.common.code.ErrorCode;
 import com.mm.kim.mentormentee.common.exception.HandlableException;
+import com.mm.kim.mentormentee.member.Member;
 import com.mm.kim.mentormentee.member.Mentee;
 import com.mm.kim.mentormentee.member.Mentor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("board")
@@ -21,10 +24,10 @@ public class BoardController {
    private final BoardService boardService;
 
    @GetMapping("board-list")
-   public void boardList(Model model, String type, Search search
-           , @RequestParam(required = false, defaultValue = "1") int page) {
-      System.out.println(search);
-      model.addAllAttributes(boardService.findBoardByPage(page, type, search));
+   public void boardList(Model model, Search search, @RequestParam(required = false, defaultValue = "1") int page, String sort
+           , HttpSession session) {
+      String type = ((Member) session.getAttribute("certified")).getRole();
+      model.addAllAttributes(boardService.findBoardByPage(page, type, search, sort));
       model.addAttribute("type", type);
    }
 
@@ -53,7 +56,8 @@ public class BoardController {
       boardService.persistBoard(fileList, board);
       Search search = new Search();
       search.setCondition(null);
-      model.addAllAttributes(boardService.findBoardByPage(1, type, search));
+      String sort = null;
+      model.addAllAttributes(boardService.findBoardByPage(1, type, search, sort));
       model.addAttribute("type", type);
       return "/board/board-list";
    }
@@ -152,7 +156,8 @@ public class BoardController {
 
       Search search = new Search();
       search.setCondition(null);
-      model.addAllAttributes(boardService.findBoardByPage(1, type, search));
+      String sort = null;
+      model.addAllAttributes(boardService.findBoardByPage(1, type, search, sort));
       model.addAttribute("type", type);
       return "/board/board-list";
    }

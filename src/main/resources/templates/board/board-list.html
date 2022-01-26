@@ -12,7 +12,6 @@
          <p th:text="*{member.role.contains('MO')} ? '멘토 게시판' : '멘티 게시판'"></p>
       </div>
       <form th:action="${paging.url}" class="wrap_search" method="get">
-         <input type="hidden" name="type" th:value="*{member.role.contains('MO')} ? 'MO' : 'ME'">
          <div id="searchList">
             <select id="selectBox" name="condition">
                <option th:if="${search eq null}" value="bdTitle">제목</option>
@@ -39,8 +38,12 @@
             <th class="board_th">제목</th>
             <th class="board_th">작성자</th>
             <th class="board_th">작성일</th>
-            <th class="board_th"><a href="/member/board-list?sort=view">조회수↑</a></th>
-            <th class="board_th"><a href="/member/board-list?sort=recommend">추천수↑</a></th>
+            <th class="board_th"><a th:href="${search ne null} ? @{board-list(sort='view', condition=${search.condition}
+                                                                     , word=${search.word}, type=)}
+                                                                 : @{board/board-list(sort=view)}">조회수↑</a></th>
+            <th class="board_th"><a th:href="${search ne null} ? @{board-list(sort='recommend', condition=${search.condition}
+                                                                     , word=${search.word})}
+                                                                 : @{board/board-list(sort=view)}">추천수↑</a></th>
          </tr>
          </thead>
          <tbody class="board_tbody">
@@ -49,7 +52,7 @@
             <td class="board_td">
                <a th:href="@{board-detail(bdIdx=${board.bdIdx})}" th:text="${board.title}"></a>
             </td>
-            <td class="board_td" th:text="${board.mentor.member.userId}"></td>
+            <td class="board_td" th:text="${type eq 'MO'} ? ${board.mentor.member.userId} : ${board.mentee.member.userId}"></td>
             <td class="board_td" th:text="${board.regDate}"></td>
             <td class="board_td" th:text="${board.viewCount}"></td>
             <td class="board_td" th:text="${board.recCount}"></td>
