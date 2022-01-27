@@ -24,8 +24,10 @@ public class BoardController {
    private final BoardService boardService;
 
    @GetMapping("board-list")
-   public void boardList(Model model, Search search, @RequestParam(required = false, defaultValue = "1") int page, String sort
+   public void boardList(Model model, Search search
+           , @RequestParam(required = false, defaultValue = "1") int page, String sort
            , HttpSession session) {
+      System.out.println(search);
       String type = ((Member) session.getAttribute("certified")).getRole();
       model.addAllAttributes(boardService.findBoardByPage(page, type, search, sort));
       model.addAttribute("type", type);
@@ -56,9 +58,9 @@ public class BoardController {
       boardService.persistBoard(fileList, board);
       Search search = new Search();
       search.setCondition(null);
-      String sort = null;
-      model.addAllAttributes(boardService.findBoardByPage(1, type, search, sort));
+      model.addAllAttributes(boardService.findBoardByPage(1, type, search, null));
       model.addAttribute("type", type);
+      model.addAttribute("search", search);
       return "/board/board-list";
    }
 

@@ -1,6 +1,7 @@
 package com.mm.kim.mentormentee.board;
 
 import com.mm.kim.mentormentee.member.Member;
+import com.mm.kim.mentormentee.member.Mentee;
 import com.mm.kim.mentormentee.member.Mentor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -11,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -21,6 +23,27 @@ public class BoardControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Test
+    @DisplayName("게시글 목록 확인")
+    public void boardListTest() throws Exception {
+        Search search = new Search();
+        String sort = "view";
+        Mentee mentee = new Mentee();
+        Member member = new Member();
+        member.setRole("ME00");
+        member.setUserId("test");
+        mentee.setMember(member);
+
+        mockMvc.perform(get("/board/board-list")
+                .param("sort", sort)
+                .param("condition", search.getCondition())
+                .param("word", search.getWord())
+                .sessionAttr("certified", member)
+                .sessionAttr("authentication", mentee))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
 
     @Test
     @DisplayName("게시글 상세 확인")

@@ -38,12 +38,12 @@
             <th class="board_th">제목</th>
             <th class="board_th">작성자</th>
             <th class="board_th">작성일</th>
-            <th class="board_th"><a th:href="${search ne null} ? @{board-list(sort='view', condition=${search.condition}
+            <th class="board_th"><a th:href="${search.condition ne null} ? @{board-list(sort='view', condition=${search.condition}
                                                                      , word=${search.word}, type=)}
-                                                                 : @{board/board-list(sort=view)}">조회수↑</a></th>
-            <th class="board_th"><a th:href="${search ne null} ? @{board-list(sort='recommend', condition=${search.condition}
+                                                                 : @{board-list(sort=view)}">조회수↑</a></th>
+            <th class="board_th"><a th:href="${search.condition ne null} ? @{board-list(sort='recommend', condition=${search.condition}
                                                                      , word=${search.word})}
-                                                                 : @{board/board-list(sort=view)}">추천수↑</a></th>
+                                                                 : @{board-list(sort=recCount)}">추천수↑</a></th>
          </tr>
          </thead>
          <tbody class="board_tbody">

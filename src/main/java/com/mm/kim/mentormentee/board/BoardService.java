@@ -50,21 +50,24 @@ public class BoardService {
       Page<Board> page = null;
       Paging pageUtil = null;
       if (search.getCondition() != null) {
-         page = pageBySearchAndSort(type, search, sort, cntPerPage, pageNumber);
-         if (search.getCondition().equals("bdTitle")) {
-            pageUtil = pageUtilByTypeAndCondition("title", cntPerPage, pageNumber, search.getWord(), type);
+         if (sort != null) {
+            page = pageBySearchAndSort(type, search, sort, cntPerPage, pageNumber);
          } else {
-            pageUtil = pageUtilByTypeAndCondition("userId", cntPerPage, pageNumber, search.getWord(), type);
+            page = pageBySearch(type, search, cntPerPage, pageNumber);
+         }
+         if (search.getCondition().equals("bdTitle")) {
+            pageUtil = pageUtilByTypeAndCondition("title", cntPerPage, pageNumber, search, type);
+         } else {
+            pageUtil = pageUtilByTypeAndCondition("userId", cntPerPage, pageNumber, search, type);
          }
       } else {
          page = pageBySort(pageNumber, cntPerPage, sort);
-         pageUtil = pageUtilByTypeAndCondition("bdIdx", cntPerPage, pageNumber, search.getWord(), type);
+         pageUtil = pageUtilByTypeAndCondition("bdIdx", cntPerPage, pageNumber, null, type);
       }
 
       List<Board> boardList = page.getContent();
       List<Board> boardListMentor = new ArrayList<Board>();
       List<Board> boardListMentee = new ArrayList<Board>();
-      log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> boardList" + boardList);
       for (Board board : boardList) {
          if (board.getMentor() != null) {
             boardListMentor.add(board);
@@ -80,32 +83,49 @@ public class BoardService {
       }
    }
 
+   private Page<Board> pageBySearch(String type, Search search, int cntPerPage, int pageNumber) {
+      Page<Board> page = null;
+      if (search.getCondition().equals("bdTitle")) {
+         page = boardRepository.findAllByTitleIsContaining(
+                 (Pageable) PageRequest.of(pageNumber - 1, cntPerPage), search.getWord());
+      } else {
+         if (type.contains("MO")) {
+            page = boardRepository.findAllByMentor_Member_UserId(
+                    (Pageable) PageRequest.of(pageNumber - 1, cntPerPage), search.getWord());
+         } else {
+            page = boardRepository.findAllByMentee_Member_UserId(
+                    (Pageable) PageRequest.of(pageNumber - 1, cntPerPage), search.getWord());
+         }
+      }
+      return page;
+   }
+
    private Page<Board> pageBySearchAndSort(String type, Search search, String sort, int cntPerPage, int pageNumber) {
       Page<Board> page = null;
       if (search.getCondition().equals("bdTitle")) {
          if (sort.equals("view")) {
-            page = boardRepository.findAllByTitleIsContainingOrderByViewCountDesc(
-                    (Pageable) PageRequest.of(pageNumber - 1, cntPerPage, Sort.Direction.DESC, "title"), search.getWord());
+            page = boardRepository.findAllByTitleIsContaining(
+                    (Pageable) PageRequest.of(pageNumber - 1, cntPerPage, Sort.Direction.DESC, "viewCount"), search.getWord());
          } else {
-            page = boardRepository.findAllByTitleIsContainingOrderByRecCountDesc(
-                    (Pageable) PageRequest.of(pageNumber - 1, cntPerPage, Sort.Direction.DESC, "title"), search.getWord());
+            page = boardRepository.findAllByTitleIsContaining(
+                    (Pageable) PageRequest.of(pageNumber - 1, cntPerPage, Sort.Direction.DESC, "recCount"), search.getWord());
          }
       } else {
          if (type.contains("MO")) {
             if (sort.equals("view")) {
-               page = boardRepository.findAllByMentor_Member_UserIdOrderByViewCountDesc(
-                       (Pageable) PageRequest.of(pageNumber - 1, cntPerPage, Sort.Direction.DESC, "mentor_member_userId"), search.getWord());
+               page = boardRepository.findAllByMentor_Member_UserId(
+                       (Pageable) PageRequest.of(pageNumber - 1, cntPerPage, Sort.Direction.DESC, "viewCount"), search.getWord());
             } else {
-               page = boardRepository.findAllByMentor_Member_UserIdOrderByRecCountDesc(
-                       (Pageable) PageRequest.of(pageNumber - 1, cntPerPage, Sort.Direction.DESC, "mentor_member_userId"), search.getWord());
+               page = boardRepository.findAllByMentor_Member_UserId(
+                       (Pageable) PageRequest.of(pageNumber - 1, cntPerPage, Sort.Direction.DESC, "recCount"), search.getWord());
             }
          } else {
             if (sort.equals("view")) {
-               page = boardRepository.findAllByMentee_Member_UserIdOrderByViewCountDesc(
-                       (Pageable) PageRequest.of(pageNumber - 1, cntPerPage, Sort.Direction.DESC, "mentee_member_userId"), search.getWord());
+               page = boardRepository.findAllByMentee_Member_UserId(
+                       (Pageable) PageRequest.of(pageNumber - 1, cntPerPage, Sort.Direction.DESC, "viewCount"), search.getWord());
             } else {
-               page = boardRepository.findAllByMentee_Member_UserIdOrderByRecCountDesc(
-                       (Pageable) PageRequest.of(pageNumber - 1, cntPerPage, Sort.Direction.DESC, "mentee_member_userId"), search.getWord());
+               page = boardRepository.findAllByMentee_Member_UserId(
+                       (Pageable) PageRequest.of(pageNumber - 1, cntPerPage, Sort.Direction.DESC, "recCount"), search.getWord());
             }
          }
       }
@@ -114,47 +134,41 @@ public class BoardService {
 
    private Page<Board> pageBySort(int pageNumber, int cntPerPage, String sort) {
       Page<Board> page = null;
-      log.info(">>>>>>>>>>>>>>>>>> sort" + sort);
-      log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>실행");
       if (sort != null) {
-         log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>실행2");
          if (sort.equals("view")) {
-            log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>실행3");
-            page = boardRepository.findAllByBdIdxOrderByViewCountDesc(PageRequest.of(pageNumber - 1, cntPerPage, Sort.Direction.DESC, "bdIdx"));
+            page = boardRepository.findAll(PageRequest.of(pageNumber - 1, cntPerPage, Sort.Direction.DESC, "viewCount"));
          } else {
-            log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>실행4");
-            page = boardRepository.findAllByBdIdxOrderByRecCountDesc(PageRequest.of(pageNumber - 1, cntPerPage, Sort.Direction.DESC, "bdIdx"));
+            page = boardRepository.findAll(PageRequest.of(pageNumber - 1, cntPerPage, Sort.Direction.DESC, "recCount"));
          }
       } else {
-         log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>실행5");
          page = boardRepository.findAll(PageRequest.of(pageNumber - 1, cntPerPage, Sort.Direction.DESC, "bdIdx"));
       }
-      log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + page.getContent().toString());
       return page;
    }
 
-   private Paging pageUtilByTypeAndCondition(String condition, int cntPerPage, int pageNumber, String word, String
-           type) {
+   private Paging pageUtilByTypeAndCondition(String condition, int cntPerPage, int pageNumber, Search search, String type) {
       Paging pageUtil = null;
       int blockCnt = 5;
-      if (condition.equals("title")) {
-         pageUtil = Paging.builder()
-                 .total(type.contains("MO") ? boardRepository.countByTitleIsContainingAndMenteeNull(word) :
-                         boardRepository.countByTitleIsContainingAndMentorNull(word))
-                 .url("/board/board-list")
-                 .cntPerPage(cntPerPage)
-                 .blockCnt(blockCnt)
-                 .curPage(pageNumber)
-                 .build();
-      } else if (condition.equals("userId")) {
-         pageUtil = Paging.builder()
-                 .total(type.contains("MO") ? boardRepository.countByMentor_Member_UserId(word) :
-                         boardRepository.countByMentee_Member_UserId(word))
-                 .url("/board/board-list")
-                 .cntPerPage(cntPerPage)
-                 .blockCnt(blockCnt)
-                 .curPage(pageNumber)
-                 .build();
+      if (search != null) {
+         if (condition.equals("title")) {
+            pageUtil = Paging.builder()
+                    .total(type.contains("MO") ? boardRepository.countByTitleIsContainingAndMenteeNull(search.getWord()) :
+                            boardRepository.countByTitleIsContainingAndMentorNull(search.getWord()))
+                    .url("/board/board-list")
+                    .cntPerPage(cntPerPage)
+                    .blockCnt(blockCnt)
+                    .curPage(pageNumber)
+                    .build();
+         } else {
+            pageUtil = Paging.builder()
+                    .total(type.contains("MO") ? boardRepository.countByMentor_Member_UserId(search.getWord()) :
+                            boardRepository.countByMentee_Member_UserId(search.getWord()))
+                    .url("/board/board-list")
+                    .cntPerPage(cntPerPage)
+                    .blockCnt(blockCnt)
+                    .curPage(pageNumber)
+                    .build();
+         }
       } else {
          pageUtil = Paging.builder()
                  .total(type.contains("MO") ? boardRepository.countByMenteeNull() : boardRepository.countByMentorNull())
