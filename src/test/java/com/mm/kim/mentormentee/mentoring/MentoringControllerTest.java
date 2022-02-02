@@ -86,4 +86,23 @@ public class MentoringControllerTest {
 
     }
 
+    @Test
+    @DisplayName("리뷰 조회페이지 테스트")
+    public void checkReview() throws Exception {
+        Member member = new Member();
+        Mentor mentor = new Mentor();
+        member.setUserId("mentor5");
+        member.setRole("MO00");
+        mentor.setMember(member);
+        mentor.setMentorIdx(10L);
+        long mentorIdx = 10;
+
+        mockMvc.perform(get("/mentoring/check-review?mentorIdx=" + mentorIdx)
+                .sessionAttr("certified", member)
+                .sessionAttr("authentication", mentor))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+
 }

@@ -9,10 +9,7 @@ import com.mm.kim.mentormentee.member.Mentor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -74,9 +71,9 @@ public class MentoringController {
    @GetMapping("comment-check")
    @ResponseBody
    public String commentCheck(Long mhIdx, HttpSession session){
-//      if(!mentoringService.checkComment(mhIdx, session)){
-//         return "registered";
-//      }
+      if(!mentoringService.checkComment(mhIdx, session)){
+         return "registered";
+      }
 
       return "not-registered";
    }
@@ -92,6 +89,11 @@ public class MentoringController {
       mentoringService.registRating(mhIdx, review);
       model.addAllAttributes(mentoringService.findHistory(session));
       return "/mentoring/manage-page";
+   }
+
+   @GetMapping("check-reviews")
+   public void checkReview(Model model, long mentorIdx, @RequestParam(required = false, defaultValue = "1") int page){
+      model.addAllAttributes(mentoringService.findReviewListByMentor(mentorIdx, page));
    }
 
 }

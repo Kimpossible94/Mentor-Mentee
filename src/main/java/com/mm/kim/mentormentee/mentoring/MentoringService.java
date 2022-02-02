@@ -5,15 +5,18 @@ import com.mm.kim.mentormentee.common.code.ErrorCode;
 import com.mm.kim.mentormentee.common.exception.HandlableException;
 import com.mm.kim.mentormentee.common.mail.EmailSender;
 import com.mm.kim.mentormentee.common.util.file.FileInfo;
+import com.mm.kim.mentormentee.common.util.pagination.Paging;
 import com.mm.kim.mentormentee.member.Member;
 import com.mm.kim.mentormentee.member.Mentee;
 import com.mm.kim.mentormentee.member.Mentor;
 import com.mm.kim.mentormentee.member.MentorRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -241,5 +244,26 @@ public class MentoringService {
          }
       }
 
+   }
+
+   public Map<String, Object> findReviewListByMentor(long mentorIdx, int pageNumber) {
+      Page<Review> page = null;
+      Paging pageUtil = null;
+
+      int cntPerPage = 10;
+
+      page = reviewRepository.findAll(PageRequest.of(pageNumber-1, cntPerPage, Sort.Direction.DESC, "reviewIdx"));
+
+      pageUtil = Paging.builder()
+              .total(reviewRepository.countByMentor_MentorIdx(mentorIdx))
+              .curPage(pageNumber)
+              .blockCnt(10)
+              .cntPerPage(cntPerPage)
+              .build();
+
+      log.info(page.getContent().toString());
+      log.info(pageUtil.toString());
+
+      return Map.of("reviewList", page.getContent(), "pageUtil", pageUtil);
    }
 }
