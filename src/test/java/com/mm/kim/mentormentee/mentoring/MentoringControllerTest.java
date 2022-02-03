@@ -95,11 +95,12 @@ public class MentoringControllerTest {
         member.setRole("MO00");
         mentor.setMember(member);
         mentor.setMentorIdx(10L);
-        long mentorIdx = 10;
+        String mentorIdx = "10";
 
-        mockMvc.perform(get("/mentoring/check-review?mentorIdx=" + mentorIdx)
+        mockMvc.perform(get("/mentoring/check-reviews")
                 .sessionAttr("certified", member)
-                .sessionAttr("authentication", mentor))
+                .sessionAttr("authentication", mentor)
+                        .param("mentorIdx", mentorIdx))
                 .andExpect(status().isOk())
                 .andDo(print());
     }

@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
@@ -249,10 +250,13 @@ public class MentoringService {
    public Map<String, Object> findReviewListByMentor(long mentorIdx, int pageNumber) {
       Page<Review> page = null;
       Paging pageUtil = null;
+      Mentor mentor = null;
+      List<Review> reviewList = new ArrayList<Review>();
 
+      mentor = mentorRepository.findByMentorIdx(mentorIdx);
       int cntPerPage = 10;
 
-      page = reviewRepository.findAll(PageRequest.of(pageNumber-1, cntPerPage, Sort.Direction.DESC, "reviewIdx"));
+      page = reviewRepository.findAllByMentor((Pageable) PageRequest.of(pageNumber-1, cntPerPage, Sort.Direction.DESC, "reviewIdx"), mentor);
 
       pageUtil = Paging.builder()
               .total(reviewRepository.countByMentor_MentorIdx(mentorIdx))
@@ -261,9 +265,8 @@ public class MentoringService {
               .cntPerPage(cntPerPage)
               .build();
 
-      log.info(page.getContent().toString());
-      log.info(pageUtil.toString());
 
-      return Map.of("reviewList", page.getContent(), "pageUtil", pageUtil);
+      reviewList = page.getContent();
+      return Map.of("reviewList", reviewList, "pageUtil", pageUtil, "mentor", mentor);
    }
 }
