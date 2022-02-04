@@ -28,6 +28,7 @@
       <div class="container px-5 my-5">
          <div class="row gx-5">
             <div th:each="review : ${reviewList}">
+               <div></div>
                <p th:text="|멘토 ${review.mentee.member.userName}님|"></p>
                <p th:text="|친절함 : ${review.kindness eq 'Y' ? 'YES' : 'NO'}|"></p>
                <p th:text="|소통 : ${review.communication eq 'Y' ? 'YES' : 'NO'}|"></p>
