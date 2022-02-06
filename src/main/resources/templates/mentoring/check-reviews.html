@@ -15,28 +15,28 @@
          </div>
       </div>
    </section>
-   <section th:if="${reviewList.size eq 0}" class="py-3" style="min-height: 50rem">
+   <section class="py-3" style="min-height: 50rem">
       <div class="container px-5 my-5">
+         <img th:if="${mentor.fileInfo ne null}" class="rounded-circle me-3" th:src="${mentor.fileInfo.link}" style="height: 100px; width: 100px"/>
+      </div>
+      <div th:if="${reviewList.size eq 0}" class="container px-5 my-5">
          <div class="row gx-5" style="text-align: center">
             <i class="fas fa-user-times" style="font-size: 10rem; margin-top: 10rem"></i>
             <h1 th:text="|${mentor.member.userName}님에 대한 평가가 없습니다.|"></h1>
             <h1 th:text="|${mentor.member.userName}님과 멘토링을 진행하고 평가를 남겨주세요 !|"></h1>
          </div>
       </div>
-   </section>
-   <section th:if="${reviewList.size ne 0}" class="py-3" style="min-height: 50rem">
-      <div class="container px-5 my-5">
+      <div th:if="${reviewList.size ne 0}" class="container px-5 my-5">
          <div class="row gx-5">
             <div th:each="review : ${reviewList}">
-               <div></div>
-               <p th:text="|멘토 ${review.mentee.member.userName}님|"></p>
-               <p th:text="|친절함 : ${review.kindness eq 'Y' ? 'YES' : 'NO'}|"></p>
-               <p th:text="|소통 : ${review.communication eq 'Y' ? 'YES' : 'NO'}|"></p>
-               <p th:text="|전문성 : ${review.professional eq 'Y' ? 'YES' : 'NO'}|"></p>
-               <p th:text="|진행방식 : ${review.process eq 'Y' ? 'YES' : 'NO'}|"></p>
-               <p th:text="|약속이행 : ${review.appointment eq 'Y' ? 'YES' : 'NO'}|"></p>
-               <p th:text="|설명능력 : ${review.explain eq 'Y' ? 'YES' : 'NO'}|"></p>
-               <p th:text="|내용 : ${review.comment}|"></p>
+               <p th:text="|멘티 ${review.mentee.member.userName}님|"></p>
+               <p th:text="|친절함 : ${review.kindness eq 'Y' ? '👍' : '👎'}|"></p>
+               <p th:text="|소통 : ${review.communication eq 'Y' ? '👍' : '👎'}|"></p>
+               <p th:text="|전문성 : ${review.professional eq 'Y' ? '👍' : '👎'}|"></p>
+               <p th:text="|진행방식 : ${review.process eq 'Y' ? '👍' : '👎'}|"></p>
+               <p th:text="|약속이행 : ${review.appointment eq 'Y' ? '👍' : '👎'}|"></p>
+               <p th:text="|설명능력 : ${review.explain eq 'Y' ? '👍' : '👎'}|"></p>
+               <p th:text="|내용 : ${review.comment eq null ? '없음' : review.comment}|"></p>
             </div>
          </div>
       </div>
